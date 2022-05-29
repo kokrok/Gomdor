@@ -1,25 +1,29 @@
+header{
+    background-color:aqua
+}
 nav, ul{
-    float: left;
+    position: left;
     list-style-type:none;/*순서 없는 목록 태그(ul)의 블릿을 제거*/
     margin: 0;/*순서 없는 목록 전체 범위의 외부여백값 제거*/
     padding: 0;/*순서 없는 목록 전체 범위의 내부 여백값 제거*/
 }
 nav{
+    float:left;
     height: 400px;
     background-color: #48f977;
 }
 section{
-    float:left;
+    height: 400px;    position:left;
     background-color: #8fbdf5;
 }
 article{
-    float: TOP;
+    height: 100px;
+    position: TOP;
     padding: 20px;    
     background-color: #f94848;
 }
 
 footer {
-    position:bottom;
     background-color: #777;
     padding: 10px;
     text-align: center;
