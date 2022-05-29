@@ -8,7 +8,6 @@ nav, ul{
     padding: 0;/*순서 없는 목록 전체 범위의 내부 여백값 제거*/
 }
 nav{
-    float:left;
     height: 400px;
     background-color: #48f977;
 }
