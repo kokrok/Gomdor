@@ -8,6 +8,7 @@ nav, ul{
     padding: 0;/*순서 없는 목록 전체 범위의 내부 여백값 제거*/
 }
 nav{
+    float:left;
     height: 400px;
     background-color: #48f977;
 }
@@ -35,6 +36,10 @@ a:link, a:visited{
     color: #FFFFFF;
     background-color: #98bf21;
     width: 120px;
+    text-align:center;/*텍스트 가로방향 정렬을 중간으로*/
+    padding: 4px;/*텍스트 링크 영역 안쪽에 4px 의 여백 부여*/
+    text-decoration:none; /*링크 걸린 텍스트의 밑줄을 없앰*/
+    text-transform:uppercase;/*영문 글자를 대문자로 표현*/
 }
 
 a:hover{
