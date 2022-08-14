@@ -1,49 +1,27 @@
-header{
-    background-color:aqua
+div.page{
+    border: 3px solid #CD5C5C;
+    overflow : auto;
 }
-nav, ul{
-    position: left;
-    list-style-type:none;/*순서 없는 목록 태그(ul)의 블릿을 제거*/
-    margin: 0;/*순서 없는 목록 전체 범위의 외부여백값 제거*/
-    padding: 0;/*순서 없는 목록 전체 범위의 내부 여백값 제거*/
+h2 {
+    text-align : ceneter;
+}
+header{
+    border: 3px solid #FFD700;
 }
 nav{
-    float:left;
-    height: 400px;
-    background-color: #48f977;
+    border: 3px solid #FF1493;
+    width : 150px;
+    float : left;
 }
 section{
-    height: 400px;    position:left;
-    background-color: #8fbdf5;
+    border: 3px solid #00BFFF;
+    margin-left:156px;
 }
 article{
-    height: 100%;
-    position: TOP;
-    padding: 20px;    
-    background-color: #f94848;
+    border: 3px solid #378854;
 }
-
-footer {
-    background-color: #777;
-    padding: 10px;
-    text-align: center;
-    color: white;
-  }
-
-a:link, a:visited{
-    display: block;/*<a> 요소의 레벨을 블록레벨요소로 속성 변경*/
-    font-weight: bold;
-    color: #FFFFFF;
-    background-color: #98bf21;
-    width: 120px;
-    text-align:center;/*텍스트 가로방향 정렬을 중간으로*/
-    padding: 4px;/*텍스트 링크 영역 안쪽에 4px 의 여백 부여*/
-    text-decoration:none; /*링크 걸린 텍스트의 밑줄을 없앰*/
-    text-transform:uppercase;/*영문 글자를 대문자로 표현*/
-}
-
-a:hover{
-    background-color: #7A991A;
+footer{
+    border: 3px solid #00FA9A;
 }
 img {
     margin-left: 20%;
