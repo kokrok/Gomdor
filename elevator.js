@@ -14,7 +14,7 @@ class Square{
   }
   draw(){
     ctx.fillRect(this.x, this.y,28,28);
-    ctx.fillStyle = "#dd0000";
+    ctx.fillStyle = "#000000";
   }
   clear(){
     ctx.clearRect(this.x+1, this.y+1,26,26);
