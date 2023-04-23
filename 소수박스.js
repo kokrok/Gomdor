@@ -6,6 +6,55 @@ canvas.width = window. innerWidth * 0.4;
 canvas.height = window.innerHeight * 0.6;
 
 /*Make Object*/
+
+class Graph{
+  #minX = 0;
+  #minY = 0;
+  #maxX = 10;
+  #maxY = 10;
+  constructor(minX,minY,maxX,maxY){
+    this.minX = minX;
+    this.minY = minY;
+    this.maxX = maxX;
+    this.maxY = maxY;
+  }
+  drawAxis(){
+    var rangeX = this.maxX-this.minX;
+    var rangeY = this.maxY-this.minY;
+    var axisYStart = canvas.height-200;
+    var axisYEnd = axisYStart - rangeY;
+    var originXinCanvas = 20;
+    var originYinCanvas = canvas.height-20;
+    
+    ctx.beginPath();
+    canvas_arrow(ctx, originXinCanvas, originYinCanvas, originXinCanvas+rangeX, originYinCanvas);
+    canvas_arrow(ctx, originXinCanvas, originYinCanvas, originXinCanvas, originYinCanvas-rangeY);
+    canvas_arrow(ctx, 100, 200, 400, 50);
+    canvas_arrow(ctx, 200, 30, 10, 150);
+    canvas_arrow(ctx, 400, 200, 100, 50);
+    ctx.stroke();
+  }
+}
+class PrimeBox{
+  constructor(x,y,number){
+
+  }
+
+}
+let grp = new Graph(0,0,450,450);
+
+function canvas_arrow(context, fromx, fromy, tox, toy) {
+  var headlen = 10; // length of head in pixels
+  var dx = tox - fromx;
+  var dy = toy - fromy;
+  var angle = Math.atan2(dy, dx);
+  context.moveTo(fromx, fromy);
+  context.lineTo(tox, toy);
+  context.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+  context.moveTo(tox, toy);
+  context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+}
+
 class Shell{
   constructor(){
     this.radius = 10;
@@ -67,10 +116,9 @@ function 프레임마다실행할거(){
   }
   ctx.clearRect(0,0,canvas.width,canvas.height);
   drawText(timer);
-  
+  grp.drawAxis();
   
   if(timer < 300){
-    
     drawShell(shell0);
     applyPhysics(shell0);
     initializePosition(shell1);

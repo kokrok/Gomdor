@@ -6,6 +6,54 @@ canvas.width = window. innerWidth * 0.4;
 canvas.height = window.innerHeight * 0.6;
 
 /*Make Object*/
+
+class 바둑판{
+  가로선
+  세로선
+  그리다()
+}
+
+class 바둑알{
+  플레이어=[플레이어1,플레이어2];
+  색상
+  가로좌표
+  세로좌표
+  그리다()
+}
+class 바둑규칙
+
+먹히다(점)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class Shell{
   constructor(){
     this.radius = 10;
@@ -68,9 +116,7 @@ function 프레임마다실행할거(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   drawText(timer);
   
-  
   if(timer < 300){
-    
     drawShell(shell0);
     applyPhysics(shell0);
     initializePosition(shell1);
