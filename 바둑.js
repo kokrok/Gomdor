@@ -7,19 +7,52 @@ canvas.height = window.innerHeight * 0.6;
 
 /*Make Object*/
 
-class Square{
-  constructor(x,y){
-    this.x = x;
-    this.y = y;
-  }
-  draw(){
-    ctx.fillRect(this.x, this.y,28,28);
-    ctx.fillStyle = "#000000";
-  }
-  clear(){
-    ctx.clearRect(this.x+1, this.y+1,26,26);
-  }
+class 바둑판{
+  가로선
+  세로선
+  그리다()
 }
+
+class 바둑알{
+  플레이어=[플레이어1,플레이어2];
+  색상
+  가로좌표
+  세로좌표
+  그리다()
+}
+class 바둑규칙
+
+먹히다(점)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class Shell{
   constructor(){
@@ -41,70 +74,6 @@ var n = 10;
 let shells = Array(n);
 for(var i=0; i<n; i++){
   shells[i] = new Shell();
-}
-let numSquare = 35;
-let Squares = Array(numSquare);
-let StateOfSquares = 0;
-
-for(let i=0; i<numSquare;i++){
-  let row = Math.floor(i/5);
-  let col = i%5;
-  Squares[i]= new Square(col*30,row*30);
-}
-function drawBackgroundSquare(){
-  for(let i=0;i<numSquare;i++){
-    Squares[i].draw();
-    Squares[i].clear();
-  }  
-}
-function updateStateOfSquare(n){
-  StateOfSquares = n;
-}
-function drawSquare(StateOfSquares){
-  switch(StateOfSquares){
-    case 1:
-      Squares[2].draw();
-      Squares[6].draw();
-      Squares[7].draw();
-      Squares[12].draw();
-      Squares[17].draw();
-      Squares[22].draw();
-      Squares[27].draw();
-      Squares[32].draw();
-      break;
-    case 2:
-      Squares[1].draw();
-      Squares[2].draw();
-      Squares[3].draw();
-      Squares[5].draw();
-      Squares[9].draw();
-      Squares[13].draw();
-      Squares[17].draw();
-      Squares[21].draw();
-      Squares[25].draw();
-      Squares[30].draw();
-      Squares[31].draw();
-      Squares[32].draw();
-      Squares[33].draw();
-      Squares[34].draw();
-      break;
-    case 3:
-      Squares[1].draw();
-      Squares[2].draw();
-      Squares[3].draw();
-      Squares[5].draw();
-      Squares[9].draw();
-      Squares[14].draw();
-      Squares[17].draw();
-      Squares[18].draw();
-      Squares[24].draw();
-      Squares[25].draw();
-      Squares[29].draw();
-      Squares[31].draw();
-      Squares[32].draw();
-      Squares[33].draw();
-      break;
-  }
 }
   
 function drawShell(Shell){;
@@ -146,8 +115,6 @@ function 프레임마다실행할거(){
   }
   ctx.clearRect(0,0,canvas.width,canvas.height);
   drawText(timer);
-  drawBackgroundSquare();
-  drawSquare(StateOfSquares);
   
   if(timer < 300){
     drawShell(shell0);
