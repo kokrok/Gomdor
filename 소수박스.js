@@ -1,3 +1,8 @@
+import {isPrime} from "./NumberTheory.js";
+import {valueOfPrimeFactors} from "./NumberTheory.js";
+import {valueOfPrimeFactor} from "./NumberTheory.js";
+
+//import whatever, { getName, getMajor } from "./student.js"
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
@@ -6,56 +11,70 @@ canvas.width = window.innerWidth * 0.85;
 canvas.height = window.innerHeight * 0.6;
 
 /*Make Object*/
+function drawGraph(){
+  let graphLeftMargin = 20;
+  let graphRightMargin = 20;
+  let graphTopMargin = 20;
+  let graphBottomMargin = 20;
 
-graphLeftMargin = 20;
-graphRightMargin = 20;
-graphTopMargin = 20;
-graphBottomMargin = 20;
+  let graph_start_x = graphLeftMargin;
+  let graph_end_x = canvas.width - graphLeftMargin;
+  let graph_width = graph_end_x - graph_start_x;
+  let graph_start_y = graphTopMargin;
+  let graph_end_y = canvas.height - graphBottomMargin;
+  let graph_height = graph_end_y - graph_start_y;
+  // constructor(height, width) {
+  //   this.height = height;
+  //   this.width = width;
+  // }
+  // draw(){
+  //   ctx.beginPath();
+  //   ctx.fillStyle = "white";
+  //   ctx.fillRect(graph_start_x, graph_start_y, graph_width, graph_height);
+  //   ctx.closePath();
+  // }
+  ctx.beginPath();
+  ctx.fillStyle = "white";
+  ctx.fillRect(graph_start_x, graph_start_y, graph_width, graph_height);
+  ctx.closePath();
+}
 
-graph_start_x = graphLeftMargin;
-graph_end_x = canvas.width - graphLeftMargin;
-graph_width = graph_end_x - graph_start_x;
-graph_start_y = graphTopMargin;
-graph_end_y = canvas.height - graphBottomMargin;
-graph_height = graph_end_y - graph_start_y;
-
-ctx.beginPath();
-ctx.fillStyle = "white";
-ctx.fillRect(graph_start_x, graph_start_y, graph_width, graph_height);
-ctx.closePath();
+// const graph1 = new graph(1,1);
+// graph.draw();
+drawGraph();
 
 
-Xdata_min = 0;
-Xdata_max = 100;
-Xdata_step = 10;
-Xdata_range = Xdata_max - Xdata_min;
-Xdata_count = Math.floor(Xdata_range - Xdata_step);
-Ydata_min = 0;
-Ydata_max = 100;
-Ydata_step = 20;
-Ydata_range = Ydata_max - Ydata_min;
-Ydata_count = Math.floor(Ydata_range - Ydata_step);
+let Xdata_min = 0;
+let Xdata_max = 100;
+let Xdata_step = 10;
+let Xdata_range = Xdata_max - Xdata_min;
+let Xdata_count = Math.floor(Xdata_range - Xdata_step);
+let Ydata_min = 0;
+let Ydata_max = 100;
+let Ydata_step = 20;
+let Ydata_range = Ydata_max - Ydata_min;
+let Ydata_count = Math.floor(Ydata_range - Ydata_step);
 
 //draw grid
-Xgrid_start = 20;
-Xgrid_number = 50;
-Ygrid_start = 20;
-Ygrid_number = 30;
+let Xgrid_start = 20;
+let Xgrid_number = 50;
+let Ygrid_start = 20;
+let Ygrid_number = 30;
 
-Xgrid_end = canvas.width - 20;
-Xgrid_width = Xgrid_end - Xgrid_start;
-Xgrid_space = Xgrid_width / Xgrid_number;
-Ygrid_end = canvas.height - 20;
-Ygrid_height = Ygrid_end - Ygrid_start;
-Ygrid_space = Ygrid_height / Ygrid_number;
+let Xgrid_end = canvas.width - 20;
+let Xgrid_width = Xgrid_end - Xgrid_start;
+let Xgrid_space = Xgrid_width / Xgrid_number;
+let Ygrid_end = canvas.height - 20;
+let Ygrid_height = Ygrid_end - Ygrid_start;
+let Ygrid_space = Ygrid_height / Ygrid_number;
 
-for (i = 0; i < Xgrid_number+1; i++) {
+for (let i = 0; i < Xgrid_number+1; i++) {
   ctx.beginPath();
   ctx.moveTo(Xgrid_start+Xgrid_space*(i), canvas.height - 20)
   ctx.lineTo(Xgrid_start+Xgrid_space*(i), 20);
   ctx.stroke();
 }
-for (j = 0; j < Ygrid_number+1; j++) {
+for (let j = 0; j < Ygrid_number+1; j++) {
   ctx.beginPath();
   ctx.moveTo(canvas.width - 20, Ygrid_start+Ygrid_space*(j))
   ctx.lineTo(20, Ygrid_start+Ygrid_space*j);
@@ -65,13 +84,13 @@ for (j = 0; j < Ygrid_number+1; j++) {
 
 function drawNumberBox(x,y,value,color){
   const value_string = (value).toString();
-  box_X = Xgrid_start + x*Xgrid_space;
-  box_Y = Ygrid_end - y*Ygrid_space;
-  box_X_width = 30;
-  box_Y_height = 10;
-  box_X_LeftTop = box_X-0.5*box_X_width;
-  box_Y_LeftTop = box_Y-0.5*box_Y_height;
-  box_Y_LeftBottom = box_Y+0.5*box_Y_height;
+  let box_X = Xgrid_start + x*Xgrid_space;
+  let box_Y = Ygrid_end - y*Ygrid_space;
+  let box_X_width = 10;
+  let box_Y_height = 10;
+  let box_X_LeftTop = box_X-0.5*box_X_width;
+  let box_Y_LeftTop = box_Y-0.5*box_Y_height;
+  let box_Y_LeftBottom = box_Y+0.5*box_Y_height;
   
   ctx.fillStyle = color;
   ctx.strokeStyle = "green";
@@ -83,76 +102,8 @@ function drawNumberBox(x,y,value,color){
   ctx.fillStyle = "black";
   ctx.fillText(value_string,box_X,box_Y);
 }
-function valueOfPrimeFactors(n){
-  let valueOfPrimeFactors = 0;
-  let initail_n = n;
-  let smallest_PrimeFactors = 2;
-  let smallest_PrimeFactors_index = 0;
-  for(let i=0; i<initail_n; i++){
-    if(n<smallest_PrimeFactors)continue;
-    if(n%smallest_PrimeFactors==0){
-      console.log("n1",n);
-      console.log("smallest_PrimeFactors",smallest_PrimeFactors_index,smallest_PrimeFactors);
-      n=n/smallest_PrimeFactors;      
-      console.log("n2",n);
-      valueOfPrimeFactors++;
-      console.log(valueOfPrimeFactors);
-    }
-    else{
-      console.log("s",smallest_PrimeFactors_index,smallest_PrimeFactors);
-      smallest_PrimeFactors++;
-      smallest_PrimeFactors_index++;
-      console.log("s",smallest_PrimeFactors_index,smallest_PrimeFactors);
-    }
-  }
-  return valueOfPrimeFactors;
-}
-function valueOfPrimeFactor(n,ii){
-  let valueOfPrimeFactors = 0;
-  let initail_n = n;
-  let smallest_PrimeFactors = 2;
-  let smallest_PrimeFactors_index = 1;
-  for(let i=0; i<initail_n; i++){
-    if(n<smallest_PrimeFactors)continue;
-    if(n%smallest_PrimeFactors==0){
-      //console.log("n1",n);
-      //console.log("smallest_PrimeFactors",smallest_PrimeFactors_index,smallest_PrimeFactors);
-      n=n/smallest_PrimeFactors;      
-      //console.log("n2",n);
-      valueOfPrimeFactors++;
-      //console.log(valueOfPrimeFactors);
-    }
-    else{
-      //console.log("s",smallest_PrimeFactors_index,smallest_PrimeFactors);
-      smallest_PrimeFactors++;
-      smallest_PrimeFactors_index++;
-      //console.log("s",smallest_PrimeFactors_index,smallest_PrimeFactors);
-    }
-  }
-}
-function isPrime(n){
-  const n_string = (n).toString();
-  valueOfTrueFalse = 0;
-  valueOfDivisors = 0;
-  if(n<2)return 2;
-  let i=0;
 
-  for(i=2; i<n; i++){
-    if(n%i==0)valueOfDivisors++;
-  }
-  if(valueOfDivisors!=0){
-    valueOfTrueFalse=0;
-    //console.log(n_string, "is not Prime");
-  }
-  else{
-    valueOfTrueFalse=1;
-    //console.log(n_string, "is Prime");
-  }
-  //console.log("valueOfDivisors:",valueOfDivisors);
-  //console.log("valueOfTrueFalse:",valueOfTrueFalse);
-  
-  return valueOfTrueFalse;
-}
+
 
 // for(i=0; i<50;i++){
 //   for(j=0;j<i+1;j++){
@@ -177,7 +128,7 @@ drawNumberBox(5,1,2,"green");
 drawNumberBox(6,1,2,"green");
 drawNumberBox(6,2,3,"green");
 
-for(i=0;i<10;i++){
+for(let i=0;i<10;i++){
   console.log(i,"번째 facotr",valueOfPrimeFactor(288,5));
 }
 let z = valueOfPrimeFactors(12);
