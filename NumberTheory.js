@@ -1,3 +1,66 @@
+export function canDivid(num,m){
+  if(num%m===0){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+export function isPrime(n){
+  
+  for(let i = 1; i*i<n;i++){
+    if(n%i===0){
+      return true;
+    }
+    else{
+      if(i===n-1){
+        return false;
+      }
+    }
+  }
+}
+
+export function printPrimeList(n){
+  console.log("number n = ", n)
+  let initail_n = n;
+  let PrimeList = [];
+  let m = 2;
+  while(m<=n){
+    //console.log("n0, n, m = ",initail_n, n,m);
+    if(n%m === 0){
+      n = Number(n/m);
+      PrimeList.push(m);
+    }
+    else{
+      m++;
+    }
+    //console.log(PrimeList);
+  }
+  return PrimeList;
+}
+  /*
+  const n_string = (n).toString();  
+  valueOfTrueFalse = 0;
+  valueOfDivisors = 0;
+  if(n<2)return 2;
+  let i=0;
+
+  for(i=2; i<n; i++){
+    if(n%i==0)valueOfDivisors++;
+  }
+  if(valueOfDivisors!=0){
+    valueOfTrueFalse=0;
+    //console.log(n_string, "is not Prime");
+  }
+  else{
+    valueOfTrueFalse=1;
+    //console.log(n_string, "is Prime");
+  }
+  //console.log("valueOfDivisors:",valueOfDivisors);
+  //console.log("valueOfTrueFalse:",valueOfTrueFalse);
+  
+  return valueOfTrueFalse;
+  */
 export function valueOfPrimeFactors(n){
     let valueOfPrimeFactors = 0;
     let initail_n = n;
@@ -45,27 +108,5 @@ export function valueOfPrimeFactors(n){
       }
     }
   }
-  export function isPrime(n){
-    const n_string = (n).toString();
-    valueOfTrueFalse = 0;
-    valueOfDivisors = 0;
-    if(n<2)return 2;
-    let i=0;
-  
-    for(i=2; i<n; i++){
-      if(n%i==0)valueOfDivisors++;
-    }
-    if(valueOfDivisors!=0){
-      valueOfTrueFalse=0;
-      //console.log(n_string, "is not Prime");
-    }
-    else{
-      valueOfTrueFalse=1;
-      //console.log(n_string, "is Prime");
-    }
-    //console.log("valueOfDivisors:",valueOfDivisors);
-    //console.log("valueOfTrueFalse:",valueOfTrueFalse);
-    
-    return valueOfTrueFalse;
-  }
+
 //export {valueOfPrimeFactors, valueOfPrimeFactor, isPrime};
