@@ -11,6 +11,16 @@ var ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth * 0.85;
 canvas.height = window.innerHeight * 0.6;
 
+
+//let option_gridSpace = "VALUEDEPEND";
+let option_gridSpace = "SPACEDEPEND";
+let value1 = document.getElementById('text1').value; //시작정수
+let value2 = document.getElementById('text2').value; //끝정수
+
+console.log(value1);
+console.log(value2);
+
+
 let grid_short_bar_space = 25;
 let grid_short_bar_length = 5;
 let x_grid_short_bar_space = 1 * grid_short_bar_space;
@@ -27,7 +37,7 @@ function clearCanvas(){
   ctx.closePath();
 }
 
-function drawGraph(){
+function drawGraph(value1, value2){
   let graphLeftMargin = 20;
   let graphRightMargin = 20;
   let graphTopMargin = 20;
@@ -82,45 +92,105 @@ function drawGraph(){
   ctx.stroke();
   ctx.closePath();
 
-  ////눈금그리기
-  //x 축 위 세로 눈금
-  for(let i = 0; i<100; i++){
-    ctx.beginPath();
-    ctx.strokeStyle="black";
-    ctx.moveTo(origin_X+(i-30)*x_grid_short_bar_space,origin_Y-grid_short_bar_length);
-    ctx.lineTo(origin_X+(i-30)*y_grid_short_bar_space,origin_Y+grid_short_bar_length);
-    ctx.stroke();
-    ctx.closePath();
-  }
-  //y 축 위 가로 눈금
-  for(let i = 0; i<100; i++){
-    ctx.beginPath();
-    ctx.strokeStyle="black";
-    ctx.moveTo(origin_X-grid_short_bar_length,origin_Y-(i-30)*y_grid_short_bar_space);
-    ctx.lineTo(origin_X+grid_short_bar_length,origin_Y-(i-30)*y_grid_short_bar_space);
-    ctx.stroke();
-    ctx.closePath();
-  }
+  if(option_gridSpace === "VALUEDEPEND"){
+      ////눈금그리기
+    //x 축 위 세로 눈금
+    for(let i = 0; i<100; i++){
+      ctx.beginPath();
+      ctx.strokeStyle="black";
+      ctx.moveTo(origin_X+(i-30)*x_grid_short_bar_space,origin_Y-grid_short_bar_length);
+      ctx.lineTo(origin_X+(i-30)*x_grid_short_bar_space,origin_Y+grid_short_bar_length);
+      ctx.stroke();
+      ctx.closePath();
+    }
+    //y 축 위 가로 눈금
+    for(let i = 0; i<100; i++){
+      ctx.beginPath();
+      ctx.strokeStyle="black";
+      ctx.moveTo(origin_X-grid_short_bar_length,origin_Y-(i-30)*y_grid_short_bar_space);
+      ctx.lineTo(origin_X+grid_short_bar_length,origin_Y-(i-30)*y_grid_short_bar_space);
+      ctx.stroke();
+      ctx.closePath();
+    }
 
-  //x 축 위 세로 grid
-  for(let i = 0; i<100; i++){
-    ctx.beginPath();
-    ctx.strokeStyle="black";
-    ctx.moveTo(origin_X+(i-30)*x_grid_short_bar_space,canvas.height);
-    ctx.lineTo(origin_X+(i-30)*y_grid_short_bar_space,0);
-    ctx.stroke();
-    ctx.closePath();
+    //x 축 위 세로 grid
+    for(let i = 0; i<100; i++){
+      ctx.beginPath();
+      ctx.strokeStyle="black";
+      ctx.moveTo(origin_X+(i-30)*x_grid_short_bar_space,canvas.height);
+      ctx.lineTo(origin_X+(i-30)*x_grid_short_bar_space,0);
+      ctx.stroke();
+      ctx.closePath();
+    }
+    //y 축 위 가로 grid
+    for(let i = 0; i<100; i++){
+      ctx.beginPath();
+      ctx.strokeStyle="#778855";
+      ctx.moveTo(0,origin_Y-(i-30)*y_grid_short_bar_space);
+      ctx.lineTo(canvas.width,origin_Y-(i-30)*y_grid_short_bar_space);
+      ctx.stroke();
+      ctx.closePath();
+    }
   }
-  //y 축 위 가로 grid
-  for(let i = 0; i<100; i++){
-    ctx.beginPath();
-    ctx.strokeStyle="#778855";
-    ctx.moveTo(0,origin_Y-(i-30)*y_grid_short_bar_space);
-    ctx.lineTo(canvas.width,origin_Y-(i-30)*y_grid_short_bar_space);
-    ctx.stroke();
-    ctx.closePath();
+  else(option_gridSpace === "SPACEDEPEND")
+  {
+    let X_START = value1;
+    let X_END = value2;
+    let X_STEP_COUNT = X_END;
+        
+    let Y_START = 0;
+    let Y_END = 10;
+    let Y_STEP_COUNT = 10;
+    let X_START_COORDINATES = origin_X;
+    let Y_START_COORDINATES = origin_Y;
+
+    let X_END_COORDINATES = canvas.width - 20;
+    let Y_END_COORDINATES = 20;
+
+    x_grid_short_bar_space = (X_END_COORDINATES - X_START_COORDINATES)/X_STEP_COUNT;
+    y_grid_short_bar_space = (Y_START_COORDINATES - Y_END_COORDINATES)/Y_STEP_COUNT;
+
+    //x 축 위 세로 눈금
+    for(let i = 0; i<X_STEP_COUNT+3; i++){
+      ctx.beginPath();
+      ctx.strokeStyle="black";
+      ctx.moveTo(origin_X+(i-3)*x_grid_short_bar_space,origin_Y-grid_short_bar_length);
+      ctx.lineTo(origin_X+(i-3)*x_grid_short_bar_space,origin_Y+grid_short_bar_length);
+      ctx.stroke();
+      ctx.closePath();
+    }
+    //y 축 위 가로 눈금
+    for(let i = 0; i<Y_STEP_COUNT+3; i++){
+      ctx.beginPath();
+      ctx.strokeStyle="red";
+      ctx.moveTo(origin_X-grid_short_bar_length,origin_Y-(i-3)*y_grid_short_bar_space);
+      ctx.lineTo(origin_X+grid_short_bar_length,origin_Y-(i-3)*y_grid_short_bar_space);
+      ctx.stroke();
+      ctx.closePath();
+    }
+
+    //x 축 위 세로 grid
+    for(let i = 0; i<X_STEP_COUNT+3; i++){
+      ctx.beginPath();
+      ctx.strokeStyle="green";
+      ctx.moveTo(origin_X+(i-3)*x_grid_short_bar_space,canvas.height);
+      ctx.lineTo(origin_X+(i-3)*x_grid_short_bar_space,0);
+      ctx.stroke();
+      ctx.closePath();
+    }
+    //y 축 위 가로 grid
+    for(let i = 0; i<Y_STEP_COUNT+3; i++){
+      ctx.beginPath();
+      ctx.strokeStyle="#778855";
+      ctx.moveTo(0,origin_Y-(i-3)*y_grid_short_bar_space);
+      ctx.lineTo(canvas.width,origin_Y-(i-3)*y_grid_short_bar_space);
+      ctx.stroke();
+      ctx.closePath();
+    }
   }
 }
+
+  
 
 // const graph1 = new graph(1,1);
 // graph.draw();
@@ -168,33 +238,27 @@ for (let j = 0; j < Ygrid_number+1; j++) {
 
 function drawNumberBox(x,y,value,color){
   const value_string = (value).toString();
-  let box_X = origin_X + x*x_grid_short_bar_space;
-  let box_Y = origin_Y - y*y_grid_short_bar_space;
-  let box_X_width = grid_short_bar_space*0.8;
-  let box_Y_height = grid_short_bar_space*0.8;
-  let box_X_LeftTop = box_X-0.5*box_X_width;
-  let box_Y_LeftTop = box_Y-0.5*box_Y_height;
-  let box_Y_LeftBottom = box_Y+0.5*box_Y_height;
-  
-  let colors = ["#E97132","#196B24","#0F9ED5","#A02B93","#4EA72E","#156082"];
-  ctx.fillStyle = colors[value%6];
-  ctx.strokeStyle = colors[value%6];
-  ctx.font = "bold 18px serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillRect(box_X_LeftTop, box_Y_LeftTop, box_X_width, box_Y_height);
-  ctx.strokeRect(box_X_LeftTop, box_Y_LeftTop, box_X_width, box_Y_height);
-  ctx.fillStyle = "black";
-  ctx.fillText(value_string,box_X,box_Y);
+    let box_X = origin_X + x*x_grid_short_bar_space;
+    let box_Y = origin_Y - y*y_grid_short_bar_space;
+    let box_X_width = x_grid_short_bar_space*0.8;
+    let box_Y_height = y_grid_short_bar_space*0.8;
+    let box_X_LeftTop = box_X-0.5*box_X_width;
+    let box_Y_LeftTop = box_Y-0.5*box_Y_height;
+    let box_Y_LeftBottom = box_Y+0.5*box_Y_height;
+    
+    let colors = ["#E97132","#196B24","#0F9ED5","#A02B93","#4EA72E","#156082"];
+    ctx.fillStyle = colors[value%6];
+    ctx.strokeStyle = colors[value%6];
+    ctx.font = "bold 18px serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillRect(box_X_LeftTop, box_Y_LeftTop, box_X_width, box_Y_height);
+    ctx.strokeRect(box_X_LeftTop, box_Y_LeftTop, box_X_width, box_Y_height);
+    ctx.fillStyle = "black";
+    ctx.fillText(value_string,box_X,box_Y);
 }
 
-function drawNumberBoxes(){
-  let value1 = document.getElementById('text1').value;
-  let value2 = document.getElementById('text2').value;
-
-  console.log(value1);
-  console.log(value2);  
-
+function drawNumberBoxes(value1, value2){
   for(let i=Number(value1); i<Number(value2);i++){
     //console.log(printPrimeList(i));
     let primeList = printPrimeList(i)
@@ -213,14 +277,22 @@ function drawNumberBoxes(){
 
 
 
-drawGraph();
-drawNumberBoxes();
+drawGraph(value1,value2);
+drawNumberBoxes(value1,value2);
 
 document.getElementById('submit').onclick = function() {
   clearCanvas();
-  drawGraph();
   let value1 = document.getElementById('text1').value;
   let value2 = document.getElementById('text2').value;
+  drawGraph(value1,value2);
+  drawNumberBoxes(value1,value2);
+};
+
+document.getElementById('text2').oninput = function() {
+  clearCanvas();
+  let value1 = document.getElementById('text1').value;
+  let value2 = document.getElementById('text2').value;
+  drawGraph(value1,value2);
   drawNumberBoxes(value1,value2);
 };
 
