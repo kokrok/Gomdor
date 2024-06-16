@@ -20,6 +20,13 @@ let origin_X = 20;
 let origin_Y = canvas.height - 20;
 
 /*Make Object*/
+function clearCanvas(){
+  ctx.beginPath();
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.closePath();
+}
+
 function drawGraph(){
   let graphLeftMargin = 20;
   let graphRightMargin = 20;
@@ -192,6 +199,8 @@ console.log(value1);
 console.log(value2);
 
 document.getElementById('submit').onclick = function() {
+  clearCanvas();
+  drawGraph();
   value1 = document.getElementById('text1').value;
   value2 = document.getElementById('text2').value;
 };
