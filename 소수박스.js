@@ -188,37 +188,43 @@ function drawNumberBox(x,y,value,color){
   ctx.fillText(value_string,box_X,box_Y);
 }
 
+function drawNumberBoxes(){
+  let value1 = document.getElementById('text1').value;
+  let value2 = document.getElementById('text2').value;
+
+  console.log(value1);
+  console.log(value2);  
+
+  for(let i=Number(value1); i<Number(value2);i++){
+    //console.log(printPrimeList(i));
+    let primeList = printPrimeList(i)
+    let length = primeList.length;
+    //console.log(primeList);
+    //console.log(length);
+    for(let j = 0; j<length; j++){
+      //console.log("J=",j);
+      //console.log("primeList[J]=",primeList[j]);
+  
+      let factor = primeList[j];
+      drawNumberBox(i,j+1,factor,"red");
+    }
+  }
+};
+
 
 
 drawGraph();
-
-let value1 = document.getElementById('text1').value;
-let value2 = document.getElementById('text2').value;
-
-console.log(value1);
-console.log(value2);
+drawNumberBoxes();
 
 document.getElementById('submit').onclick = function() {
   clearCanvas();
   drawGraph();
-  value1 = document.getElementById('text1').value;
-  value2 = document.getElementById('text2').value;
+  let value1 = document.getElementById('text1').value;
+  let value2 = document.getElementById('text2').value;
+  drawNumberBoxes(value1,value2);
 };
 
-for(let i=Number(value1); i<Number(value2);i++){
-  //console.log(printPrimeList(i));
-  let primeList = printPrimeList(i)
-  let length = primeList.length;
-  //console.log(primeList);
-  //console.log(length);
-  for(let j = 0; j<length; j++){
-    //console.log("J=",j);
-    //console.log("primeList[J]=",primeList[j]);
 
-    let factor = primeList[j];
-    drawNumberBox(i,j+1,factor,"red");
-  }
-}
 
 // console.log( document.forms[0] );
 // console.log( document.forms[0].elements[0].value );
