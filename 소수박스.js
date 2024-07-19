@@ -7,21 +7,22 @@ import "./NumberTheory.js";
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
+
 // Make Canvas
 canvas.width = window.innerWidth * 0.85;
 canvas.height = window.innerHeight * 0.6;
 
+//// canvas 배경 색
+ctx.beginPath();
+ctx.fillStyle = "white";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+ctx.closePath();
 
-//let option_gridSpace = "VALUEDEPEND";
-let option_gridSpace = "SPACEDEPEND";
-let value1 = document.getElementById('text1').value; //시작정수
-let value2 = document.getElementById('text2').value; //끝정수
+let value1 = 2;
+//let value1 = document.getElementById('text1').value; //시작정수
+//let value2 = document.getElementById('text2').value; //끝정수
 
-console.log(value1);
-console.log(value2);
-
-
-let grid_short_bar_space = 25;
+let grid_short_bar_space = 50;
 let grid_short_bar_length = 5;
 let x_grid_short_bar_space = 1 * grid_short_bar_space;
 let y_grid_short_bar_space = 1 * grid_short_bar_space;
@@ -37,7 +38,7 @@ function clearCanvas(){
   ctx.closePath();
 }
 
-function drawGraph(value1, value2){
+function drawGraph(){
   let graphLeftMargin = 20;
   let graphRightMargin = 20;
   let graphTopMargin = 20;
@@ -50,198 +51,136 @@ function drawGraph(value1, value2){
   let graph_end_y = canvas.height - graphBottomMargin;
   let graph_height = graph_end_y - graph_start_y;
 
+   //origin Spot 그리기
+   ctx.beginPath();
+   ctx.arc(origin_X, origin_Y, 3, 0, Math.PI*2);
+   ctx.fillStyle="brack";
+   ctx.fill();
+   ctx.closePath();
+ 
+        ////x,y axis 그리기
+    // X 축 그리기
+    ctx.beginPath();
+    ctx.strokeStyle="black";
+    ctx.moveTo(0,origin_Y);
+    ctx.lineTo(canvas.width,origin_Y);
+    ctx.stroke();
+    ctx.closePath();
+    // Y 축 그리기
+    ctx.beginPath();
+    ctx.strokeStyle="black";
+    ctx.moveTo(origin_X,canvas.height);
+    ctx.lineTo(origin_X,0);
+    ctx.stroke();
+    ctx.closePath();
+}
 
-  
-  // constructor(height, width) {
-  //   this.height = height;
-  //   this.width = width;
-  // }
-  // draw(){
-  //   ctx.beginPath();
-  //   ctx.fillStyle = "white";
-  //   ctx.fillRect(graph_start_x, graph_start_y, graph_width, graph_height);
-  //   ctx.closePath();
-  // }
-
-  //// canvas 배경 색
-  ctx.beginPath();
-  ctx.fillStyle = "white";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.closePath();
-
-  //origin Spot 그리기
-  ctx.beginPath();
-  ctx.arc(origin_X, origin_Y, 3, 0, Math.PI*2);
-  ctx.fillStyle="brack";
-  ctx.fill();
-  ctx.closePath();
-
-  ////x,y axis 그리기
-  // X 축 그리기
-  ctx.beginPath();
-  ctx.strokeStyle="black";
-  ctx.moveTo(0,origin_Y);
-  ctx.lineTo(canvas.width,origin_Y);
-  ctx.stroke();
-  ctx.closePath();
-  // Y 축 그리기
-  ctx.beginPath();
-  ctx.strokeStyle="black";
-  ctx.moveTo(origin_X,canvas.height);
-  ctx.lineTo(origin_X,0);
-  ctx.stroke();
-  ctx.closePath();
-
-  if(option_gridSpace === "VALUEDEPEND"){
-      ////눈금그리기
-    //x 축 위 세로 눈금
-    for(let i = 0; i<100; i++){
-      ctx.beginPath();
-      ctx.strokeStyle="black";
-      ctx.moveTo(origin_X+(i-30)*x_grid_short_bar_space,origin_Y-grid_short_bar_length);
-      ctx.lineTo(origin_X+(i-30)*x_grid_short_bar_space,origin_Y+grid_short_bar_length);
-      ctx.stroke();
-      ctx.closePath();
-    }
-    //y 축 위 가로 눈금
-    for(let i = 0; i<100; i++){
-      ctx.beginPath();
-      ctx.strokeStyle="black";
-      ctx.moveTo(origin_X-grid_short_bar_length,origin_Y-(i-30)*y_grid_short_bar_space);
-      ctx.lineTo(origin_X+grid_short_bar_length,origin_Y-(i-30)*y_grid_short_bar_space);
-      ctx.stroke();
-      ctx.closePath();
-    }
-
-    //x 축 위 세로 grid
-    for(let i = 0; i<100; i++){
-      ctx.beginPath();
-      ctx.strokeStyle="black";
-      ctx.moveTo(origin_X+(i-30)*x_grid_short_bar_space,canvas.height);
-      ctx.lineTo(origin_X+(i-30)*x_grid_short_bar_space,0);
-      ctx.stroke();
-      ctx.closePath();
-    }
-    //y 축 위 가로 grid
-    for(let i = 0; i<100; i++){
-      ctx.beginPath();
-      ctx.strokeStyle="#778855";
-      ctx.moveTo(0,origin_Y-(i-30)*y_grid_short_bar_space);
-      ctx.lineTo(canvas.width,origin_Y-(i-30)*y_grid_short_bar_space);
-      ctx.stroke();
-      ctx.closePath();
-    }
+function drawGrid(option_gridSpace){
+  if(option_gridSpace === "VALUE_DEPEND"){  
+    ////눈금그리기
+  //x 축 위 세로 눈금
+  for(let i = 0; i<100; i++){
+    ctx.beginPath();
+    ctx.strokeStyle="black";
+    ctx.moveTo(origin_X+(i-30)*x_grid_short_bar_space,origin_Y-grid_short_bar_length);
+    ctx.lineTo(origin_X+(i-30)*x_grid_short_bar_space,origin_Y+grid_short_bar_length);
+    ctx.stroke();
+    ctx.closePath();
   }
-  else(option_gridSpace === "SPACEDEPEND")
-  {
-    let X_START = value1;
-    let X_END = value2;
-    let X_STEP_COUNT = X_END;
-        
-    let Y_START = 0;
-    let Y_END = 10;
-    let Y_STEP_COUNT = 10;
-    let X_START_COORDINATES = origin_X;
-    let Y_START_COORDINATES = origin_Y;
+  //y 축 위 가로 눈금
+  for(let i = 0; i<100; i++){
+    ctx.beginPath();
+    ctx.strokeStyle="black";
+    ctx.moveTo(origin_X-grid_short_bar_length,origin_Y-(i-30)*y_grid_short_bar_space);
+    ctx.lineTo(origin_X+grid_short_bar_length,origin_Y-(i-30)*y_grid_short_bar_space);
+    ctx.stroke();
+    ctx.closePath();
+  }
 
-    let X_END_COORDINATES = canvas.width - 20;
-    let Y_END_COORDINATES = 20;
-
-    x_grid_short_bar_space = (X_END_COORDINATES - X_START_COORDINATES)/X_STEP_COUNT;
-    y_grid_short_bar_space = (Y_START_COORDINATES - Y_END_COORDINATES)/Y_STEP_COUNT;
-
-    //x 축 위 세로 눈금
-    for(let i = 0; i<X_STEP_COUNT+3; i++){
-      ctx.beginPath();
-      ctx.strokeStyle="black";
-      ctx.moveTo(origin_X+(i-3)*x_grid_short_bar_space,origin_Y-grid_short_bar_length);
-      ctx.lineTo(origin_X+(i-3)*x_grid_short_bar_space,origin_Y+grid_short_bar_length);
-      ctx.stroke();
-      ctx.closePath();
-    }
-    //y 축 위 가로 눈금
-    for(let i = 0; i<Y_STEP_COUNT+3; i++){
-      ctx.beginPath();
-      ctx.strokeStyle="red";
-      ctx.moveTo(origin_X-grid_short_bar_length,origin_Y-(i-3)*y_grid_short_bar_space);
-      ctx.lineTo(origin_X+grid_short_bar_length,origin_Y-(i-3)*y_grid_short_bar_space);
-      ctx.stroke();
-      ctx.closePath();
-    }
-
-    //x 축 위 세로 grid
-    for(let i = 0; i<X_STEP_COUNT+3; i++){
-      ctx.beginPath();
-      ctx.strokeStyle="green";
-      ctx.moveTo(origin_X+(i-3)*x_grid_short_bar_space,canvas.height);
-      ctx.lineTo(origin_X+(i-3)*x_grid_short_bar_space,0);
-      ctx.stroke();
-      ctx.closePath();
-    }
-    //y 축 위 가로 grid
-    for(let i = 0; i<Y_STEP_COUNT+3; i++){
-      ctx.beginPath();
-      ctx.strokeStyle="#778855";
-      ctx.moveTo(0,origin_Y-(i-3)*y_grid_short_bar_space);
-      ctx.lineTo(canvas.width,origin_Y-(i-3)*y_grid_short_bar_space);
-      ctx.stroke();
-      ctx.closePath();
-    }
+  //x 축 위 세로 grid
+  for(let i = 0; i<100; i++){
+    ctx.beginPath();
+    ctx.strokeStyle="black";
+    ctx.moveTo(origin_X+(i-30)*x_grid_short_bar_space,canvas.height);
+    ctx.lineTo(origin_X+(i-30)*x_grid_short_bar_space,0);
+    ctx.stroke();
+    ctx.closePath();
+  }
+  //y 축 위 가로 grid
+  for(let i = 0; i<100; i++){
+    ctx.beginPath();
+    ctx.strokeStyle="#778855";
+    ctx.moveTo(0,origin_Y-(i-30)*y_grid_short_bar_space);
+    ctx.lineTo(canvas.width,origin_Y-(i-30)*y_grid_short_bar_space);
+    ctx.stroke();
+    ctx.closePath();
   }
 }
+else(option_gridSpace === "SPACE_DEPEND")
+{
+  let X_START = value1;
+  let X_END = value2;
+  let X_STEP_COUNT = 30;
+      
+  let Y_START = 0;
+  let Y_END = 10;
+  let Y_STEP_COUNT = 10;
+  let X_START_COORDINATES = origin_X;
+  let Y_START_COORDINATES = origin_Y;
 
-  
+  let X_END_COORDINATES = canvas.width - 20;
+  let Y_END_COORDINATES = 20;
 
-// const graph1 = new graph(1,1);
-// graph.draw();
+  x_grid_short_bar_space = (X_END_COORDINATES - X_START_COORDINATES)/X_STEP_COUNT;
+  y_grid_short_bar_space = (Y_START_COORDINATES - Y_END_COORDINATES)/Y_STEP_COUNT;
 
+  //x 축 위 세로 눈금
+  for(let i = 0; i<X_STEP_COUNT+3; i++){
+    ctx.beginPath();
+    ctx.strokeStyle="black";
+    ctx.moveTo(origin_X+(i-3)*x_grid_short_bar_space,origin_Y-grid_short_bar_length);
+    ctx.lineTo(origin_X+(i-3)*x_grid_short_bar_space,origin_Y+grid_short_bar_length);
+    ctx.stroke();
+    ctx.closePath();
+  }
+  //y 축 위 가로 눈금
+  for(let i = 0; i<Y_STEP_COUNT+3; i++){
+    ctx.beginPath();
+    ctx.strokeStyle="red";
+    ctx.moveTo(origin_X-grid_short_bar_length,origin_Y-(i-3)*y_grid_short_bar_space);
+    ctx.lineTo(origin_X+grid_short_bar_length,origin_Y-(i-3)*y_grid_short_bar_space);
+    ctx.stroke();
+    ctx.closePath();
+  }
 
-let Xdata_min = 0;
-let Xdata_max = 100;
-let Xdata_step = 10;
-let Xdata_range = Xdata_max - Xdata_min;
-let Xdata_count = Math.floor(Xdata_range - Xdata_step);
-let Ydata_min = 0;
-let Ydata_max = 100;
-let Ydata_step = 20;
-let Ydata_range = Ydata_max - Ydata_min;
-let Ydata_count = Math.floor(Ydata_range - Ydata_step);
-
-/*
-//draw grid
-let Xgrid_start = 20;
-let Xgrid_number = 50;
-let Ygrid_start = 20;
-let Ygrid_number = 30;
-
-let Xgrid_end = canvas.width - 20;
-let Xgrid_width = Xgrid_end - Xgrid_start;
-let Xgrid_space = Xgrid_width / Xgrid_number;
-let Ygrid_end = canvas.height - 20;
-let Ygrid_height = Ygrid_end - Ygrid_start;
-let Ygrid_space = Ygrid_height / Ygrid_number;
-
-for (let i = 0; i < Xgrid_number+1; i++) {
-  ctx.beginPath();
-  ctx.moveTo(Xgrid_start+Xgrid_space*(i), canvas.height - 20)
-  ctx.lineTo(Xgrid_start+Xgrid_space*(i), 20);
-  ctx.stroke();
+  //x 축 위 세로 grid
+  for(let i = 0; i<X_STEP_COUNT+3; i++){
+    ctx.beginPath();
+    ctx.strokeStyle="green";
+    ctx.moveTo(origin_X+(i-3)*x_grid_short_bar_space,canvas.height);
+    ctx.lineTo(origin_X+(i-3)*x_grid_short_bar_space,0);
+    ctx.stroke();
+    ctx.closePath();
+  }
+  //y 축 위 가로 grid
+  for(let i = 0; i<Y_STEP_COUNT+3; i++){
+    ctx.beginPath();
+    ctx.strokeStyle="#778855";
+    ctx.moveTo(0,origin_Y-(i-3)*y_grid_short_bar_space);
+    ctx.lineTo(canvas.width,origin_Y-(i-3)*y_grid_short_bar_space);
+    ctx.stroke();
+    ctx.closePath();
+  }
+};
 }
-for (let j = 0; j < Ygrid_number+1; j++) {
-  ctx.beginPath();
-  ctx.moveTo(canvas.width - 20, Ygrid_start+Ygrid_space*(j))
-  ctx.lineTo(20, Ygrid_start+Ygrid_space*j);
-  ctx.stroke();
-}
-  */
 
 
-function drawNumberBox(x,y,value,color){
+function drawNumberBox(x,y,value){
   const value_string = (value).toString();
     let box_X = origin_X + x*x_grid_short_bar_space;
     let box_Y = origin_Y - y*y_grid_short_bar_space;
-    let box_X_width = x_grid_short_bar_space*0.8;
-    let box_Y_height = y_grid_short_bar_space*0.8;
+    let box_X_width = x_grid_short_bar_space*0.9;
+    let box_Y_height = y_grid_short_bar_space*0.9;
     let box_X_LeftTop = box_X-0.5*box_X_width;
     let box_Y_LeftTop = box_Y-0.5*box_Y_height;
     let box_Y_LeftBottom = box_Y+0.5*box_Y_height;
@@ -256,46 +195,80 @@ function drawNumberBox(x,y,value,color){
     ctx.strokeRect(box_X_LeftTop, box_Y_LeftTop, box_X_width, box_Y_height);
     ctx.fillStyle = "black";
     ctx.fillText(value_string,box_X,box_Y);
+    
 }
 
-function drawNumberBoxes(value1, value2){
-  for(let i=Number(value1); i<Number(value2);i++){
-    //console.log(printPrimeList(i));
-    let primeList = printPrimeList(i)
-    let length = primeList.length;
-    //console.log(primeList);
-    //console.log(length);
-    for(let j = 0; j<length; j++){
-      //console.log("J=",j);
-      //console.log("primeList[J]=",primeList[j]);
-  
-      let factor = primeList[j];
-      drawNumberBox(i,j+1,factor,"red");
-    }
+function drawNumberBoxesForValue(value1,x){
+  let primeList = printPrimeList(value1);
+  let length = primeList.length;
+
+  for(let i=0; i<length;i++){
+      drawNumberBox(x,i+1,primeList[i],"red");
+      }
   }
-};
+
+function drawNumberBoxesForValues(value1,value2){
+  for(let i = value1; i<value2; i++){
+    drawNumberBoxesForValue(i,i-value1+1);
+  }  
+}
+
+  
+//     //console.log(printPrimeList(i));
+
+//     //console.log(primeList);
+//     //console.log(length);
+//     for(let  j =0; j<length; j++){
+//       //console.log("J=",j);
+//       //console.log("primeList[J]=",primeList[j]);
+  
+//       let factor = primeList[j];
+//       drawNumberBox(i,j+1,factor,"red");
+//     }
+//   }
+// };
 
 
 
-drawGraph(value1,value2);
-drawNumberBoxes(value1,value2);
 
-document.getElementById('submit').onclick = function() {
+
+// document.getElementById('submit').onclick = function() {
+//   clearCanvas();
+//   let value1 = document.getElementById('text1').value;
+//   let value2 = document.getElementById('text2').value;
+//   // drawGraph(value1,value2);
+//   // drawNumberBoxes(value1,value2);
+// };
+
+// document.getElementById('text2').oninput = function() {
+  
+//   let value1 = document.getElementById('text1').value;
+//   let value2 = document.getElementById('text2').value;
+//   // drawGraph(value1,value2);
+//   // drawNumberBoxes(value1,value2);
+// };
+
+
+
+let frame = 0;
+function fr(){//프레임마다 반복할거
+  requestAnimationFrame(fr);
   clearCanvas();
-  let value1 = document.getElementById('text1').value;
-  let value2 = document.getElementById('text2').value;
-  drawGraph(value1,value2);
-  drawNumberBoxes(value1,value2);
-};
+  drawGraph();
+  drawNumberBoxesForValues(value1,value1+30);
+  if(frame%4===0){
+    //drawGrid("SPACE_DEPEND");
+    //drawGrid("VALUE_DEPEND");    
+    value1++;
+  }  
+  frame++;
+}
 
-document.getElementById('text2').oninput = function() {
-  clearCanvas();
-  let value1 = document.getElementById('text1').value;
-  let value2 = document.getElementById('text2').value;
-  drawGraph(value1,value2);
-  drawNumberBoxes(value1,value2);
-};
-
+let frr = requestAnimationFrame(fr);
+function stopp(){
+  cancelAnimationFrame(fr);
+} 
+canvas.addEventListener("click", stopp, false);
 
 
 // console.log( document.forms[0] );
