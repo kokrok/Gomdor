@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>곰도르</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="elevator.css" />
+    <script src="index.js"></script>
+    
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">곰도르의 홈페이지 해더 영역</a></h1>
+    </header>
+    <main>
+        <nav>
+            <ul>
+                <li><a href="index_menu1_잠든고양이.html">MENU1</a></li>
+                <li><a href="index_menu2_점프고양이.html">MENU2</a></li>
+                <li><a href="index_menu3_웃는고양이.html">MENU3</a></li>
+                <li><a href="index_menu4_예제.html">MENU4</a></li>
+                <li><a href="index_menu4_예제_중력장_V00_20240907.html">중력장</a></li>
+            </ul>
+        </nav>
+        <section>
+            <article>
+                <p><canvas id="canvas" height="600px" width="800"></canvas></p>           
+                <div>
+                    중력장 예제
+                </div>     
+                <div>
+                    <input type="range" id="countOfPlanets" name="countOfPlanets"
+                           min="0" max="90" value="75">
+                    <label for="Angle">행성갯수</label>
+                </div>
+                <div>
+                    <input type="range" id="range_initialSpeed" name="초기속도"
+                           min="0" max="10" value="2.5" step="0.5">
+                    <label for="초기속도">초기속도</label>
+                </div>
+                
+                <div>
+                    <input type="range" id="range_mass" name="질량(kg)"
+                           min="0" max="100" value="10" step="10">
+                    <label for="질량(kg)">질량(kg)</label>
+                </div>
+
+                <li><a href="index_menu4_예제.html">MENU4</a></li>
+                
+            </article>
+        </section>
+        <script>
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext('2d');
+            var countOfPlanets = document.getElementById('countOfPlanets');
+            console.log(countOfPlanets);
+
+            
+            var relativeCanvasSize = false;
+            if(relativeCanvasSize){
+                //canvas.width = window.innerWidth * 0.85;
+                //canvas.height = window.innerHeight * 0.6;
+            }
+
+            class PO{//PO: Physical Object
+                x = 0;
+                vx = 0;
+                ax = 0;
+                y = 0;
+                vy = 0;
+                ay = 0;
+                r = 10;
+                c = "blue";
+                m = 1;
+                constructor(x,y,vx,vy){
+                    this.x = x;
+                    this.y = y;
+                    this.vx = vx;
+                    this.vy = vy;
+                }
+                draw(){
+                    ctx.beginPath();
+                    ctx.fillStyle = this.c;
+                    ctx.arc(this.x, this.y, this.r, 0, 2*Math.PI);
+                    ctx.fill();
+                    ctx.stroke();
+                }
+                updatePosition(){
+                    this.x = this.x + this.vx;
+                    this.y = this.y + this.vy;
+                }
+                updateVelocity(){
+                    this.vx = this.vx + this.ax;
+                    this.vy = this.vy + this.ay;
+                }
+            }
+
+            class Vector{
+                sx = 0;
+                sy = 0;
+                dx = this.x - this.sx;
+                dy = this.y - this.sy;
+                magnitude = Math.sqrt(this. dx*this. dx+this. dy*this. dy);
+                constructor(x,y){
+                    this.x = x;
+                    this.y = y;
+                }
+                draw(){
+                    ctx.beginPath();
+                    ctx.strokeStyle = "black";
+                    ctx.moveTo(this.sx,this.sy);
+                    ctx.lineTo(this.x, this.y);
+                    ctx.stroke();
+                }
+                getMagnitude(){
+                    return this.magnitude;
+                }
+            }
+
+            class Star extends PO{
+                vx = 0;
+                vy = 0;
+                m = 10000;
+                c = "red"
+                constructor(x,y){
+                    super(x,y);
+                }
+            }
+
+            class Planet extends PO{
+                // vx = 0;
+                // vy = 0;
+                //c = "red"
+                m = 100;
+                constructor(x,y,vx,vy){
+                    super(x,y,vx,vy);
+                    // this.x = x;
+                    // this.y = y;
+                    // this.vx = vx;
+                    // this.vy = vy;
+                }
+            }
+
+            let p1 = new PO(300,300,10,10);
+            let sun = new Star(200,200);
+            //sun.vx = 0;
+            //sun.m = 10000;
+            let earth = new Planet(200,310,0.2,0);
+            earth.m = 1000;
+
+
+            let Planets = [];
+
+            //for(let i=0; i<countOfPlanets.value; i++){
+            for(let i=0; i<300; i++){
+                let p1 = new Planet(sun.x + 150*(0.5-Math.random()),sun.y + 150*(0.5-Math.random()),0.5-Math.random(),0.5-Math.random());
+                Planets.push(p1);
+            }
+
+            let timer = 0;
+                function animate() {
+                    if (timer % 1 == 0) {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        p1.draw();
+                        sun.draw();
+                        sun.updatePosition();
+                        sun.updateVelocity();
+                        //console.log(sun.vx,sun.vy);
+                        earth.draw();
+                        earth.updatePosition();
+                        earth.updateVelocity();
+                        applyGravityForce(earth,sun);
+                        applyGravityForce(sun,earth);
+                        //console.log(earth.ax,earth.ay);
+
+                        let vector_ES = new Vector(earth.x,earth.y);
+                        vector_ES.sx = sun.x;
+                        vector_ES.sy = sun.y;
+                        earth.c = "green";
+                        vector_ES.draw();
+
+                        let listOfOutPlanet = [];
+
+                        Planets.forEach((p,i)=>{
+                            //console.log(p);
+                            p.draw();
+                            p.updatePosition();
+                            p.updateVelocity();
+                            applyGravityForce(p,sun);
+
+                            if(p.x < 0||p.x>canvas.width||p.y<0||p.y>canvas.height){
+                                listOfOutPlanet.push(i);
+                            }                            
+                        })
+                        for(let i = 0;i<listOfOutPlanet.length;i++){
+                            Planets.splice(listOfOutPlanet[0],1);
+                        }
+                        console.log(Planets.length);
+                        /*
+                        for(let i = 0; i<Planets.length-1;i++){
+                            for(let j = i; j<Planets.length;j++){
+                                applyGravityForce(Planets[i],Planets[j])
+                            }
+                        }
+                        */
+                       /*
+                        for(let i = 0; i<Planets.length;i++){
+                            for(let j = 0; j<Planets.length;j++){
+                                if(i!=j){
+                                    applyGravityForce(Planets[i],Planets[j]);
+                                }                                
+                            }
+                        }
+                            */
+                        
+                        //console.log(earth.vx);
+                        //console.log(distance(earth,sun));
+                        //console.log(gravityForce(earth,sun));
+                    }
+                    timer++;
+                    requestAnimationFrame(animate);
+                }
+            animate();
+
+            function distance(A,B){
+                let dx = B.x - A.x;
+                let dy = B.y - A.y;
+                let distance = Math.sqrt(dx*dx+dy*dy);
+                return distance;
+            }
+
+            function vector(A,B){
+                let dx = B.x - A.x;
+                let dy = B.y - A.y;
+                let distance = Math.sqrt(dx*dx+dy*dy);
+                return distance;
+            }
+
+            function gravityForce(A,B){
+                let dx = B.x - A.x;
+                let dy = B.y - A.y;
+                let distance = Math.sqrt(dx*dx+dy*dy);
+                //let gC = 6.673 * 10e-11; //gravitationConstant, J*m/kg^2
+                let gC = 0.001; //gravitationConstant, J*m/kg^2
+                return gC*B.m*A.m/(distance*distance);
+            }
+
+            function applyGravityForce(A,B){//A from B
+                A.ax = (gravityForce(A,B)/A.m)*(B.x-A.x)/distance(A,B);
+                A.ay = (gravityForce(A,B)/A.m)*(B.y-A.y)/distance(A,B);
+            }
+        </script>
+    </main>
+    <footer><p>안녕하세요. 곰도르 푸터 영역입니다.</p></footer>
+</body>
+</html>
