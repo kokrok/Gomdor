@@ -9,6 +9,8 @@ function toCanvasY(y) {
   return canvas.height - y;
 }
 
+const g = 0.05;
+
 /*Make Object*/
 class Shell{
   constructor(){
@@ -18,7 +20,7 @@ class Shell{
     this.vx = 1;
     this.vy = -2;
     this.ax = 0;
-    this.ay = 0.01;
+    this.ay = g;
   }
 }
 let shell0 = new Shell();
