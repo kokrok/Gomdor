@@ -5,6 +5,10 @@ var ctx = canvas.getContext('2d');
 canvas.width = window. innerWidth * 0.4;
 canvas.height = window.innerHeight * 0.6;
 
+function toCanvasY(y) {
+  return canvas.height - y;
+}
+
 /*Make Object*/
 class Shell{
   constructor(){
