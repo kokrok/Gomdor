@@ -53,6 +53,7 @@ function applyPhysics(Shell){
 function initializeMainShell() {
   let angleDeg = parseFloat(document.getElementById('range_angle').value);
   let speed = parseFloat(document.getElementById('range_initialSpeed').value);
+let mass = parseFloat(document.getElementById('range_mass').value);
 
   let angleRad = angleDeg * Math.PI / 180;
 
@@ -61,6 +62,7 @@ function initializeMainShell() {
 
   shell0.vx = speed * Math.cos(angleRad);
   shell0.vy = speed * Math.sin(angleRad); // +y 방향이 위쪽이니까 부호 유지
+shell0.radius = 5 + (mass / 20); // 질량 0~100이면 반지름은 5~10
 }
 
 
