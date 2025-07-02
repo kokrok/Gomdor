@@ -31,14 +31,16 @@ let shells = Array(n);
 for(var i=0; i<n; i++){
   shells[i] = new Shell();
 }
-  
-function drawShell(Shell){;
-    ctx.beginPath();
-    ctx.arc(Shell.x,Shell.y,Shell.radius,0,Math.PI*2);
-    ctx.fillStyle = "#dd0000";
-    ctx.fill();
-    ctx.closePath();
-  }
+
+function drawShell(Shell) {
+  ctx.beginPath();
+  ctx.arc(Shell.x, toCanvasY(Shell.y), Shell.radius, 0, Math.PI * 2);
+  ctx.fillStyle = "#dd0000";
+  ctx.fill();
+  ctx.closePath();
+}
+
+
 /*draw animation*/
 
 function applyPhysics(Shell){
@@ -47,14 +49,22 @@ function applyPhysics(Shell){
   Shell.vx = Shell.vx + Shell.ax;
   Shell.vy = Shell.vy + Shell.ay;
 }
-function initializePosition(Shell){
-  Shell.x = shell0.x;
-  Shell.y = shell0.y;
-  Shell.vx = 2*Math.random()-1;
-  Shell.vy = 2*Math.random()-1;
-  //Shell.ax = 0;
-  //Shell.ay = 0;
-};
+
+function initializeMainShell() {
+  let angleDeg = parseFloat(document.getElementById('range_angle').value);
+  let speed = parseFloat(document.getElementById('range_initialSpeed').value);
+
+  let angleRad = angleDeg * Math.PI / 180;
+
+  shell0.x = canvas.width / 6;
+  shell0.y = canvas.height / 2;
+
+  shell0.vx = speed * Math.cos(angleRad);
+  shell0.vy = speed * Math.sin(angleRad); // +y 방향이 위쪽이니까 부호 유지
+}
+
+
+
 let timer = 0;
 
 function drawText(timer) {
