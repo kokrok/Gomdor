@@ -72,6 +72,25 @@ function drawText(timer) {
   ctx.fillText(timer, 10, 10);
 }
 
+
+
+function 프레임마다실행할거() {
+  requestAnimationFrame(프레임마다실행할거);
+  timer++;
+  if (timer > 1000) timer = 0;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawText(timer);
+
+  if (timer === 1) {
+    initializeMainShell();
+  }
+
+  drawShell(shell0);
+  applyPhysics(shell0);
+}
+
+/*
 function 프레임마다실행할거(){
   requestAnimationFrame(프레임마다실행할거);
   timer++;
@@ -111,4 +130,5 @@ function 프레임마다실행할거(){
     }        
   }
 }
+*/
 프레임마다실행할거();
