@@ -32,11 +32,11 @@ let shell1 = new Shell();
 let shell2 = new Shell();
 let shell3 = new Shell();
 */
-//var n = 10;
+/*var n = 10;
 let shells = Array(n);
 for(var i=0; i<n; i++){
   shells[i] = new Shell();
-}
+}*/
 
 function drawShell(Shell) {
   ctx.beginPath();
