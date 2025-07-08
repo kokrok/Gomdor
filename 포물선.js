@@ -9,7 +9,7 @@ function toCanvasY(y) {
   return canvas.height - y;
 }
 
-const g = 0.05;
+const g = -0.05;
 
 /*Make Object*/
 class Shell{
