@@ -10,6 +10,7 @@ function toCanvasY(y) {
 }
 
 const g = -0.05;
+const bounce = 0.80;
 
 /*Make Object*/
 class Shell{
@@ -48,14 +49,21 @@ function drawShell(Shell) {
 
 
 /*draw animation*/
-
 function applyPhysics(Shell){
-  Shell.x = Shell.x + Shell.vx;
-  Shell.y = Shell.y + Shell.vy;
-  Shell.vx = Shell.vx + Shell.ax;
-  Shell.vy = Shell.vy + Shell.ay;
-}
+  Shell.x += Shell.vx;
+  Shell.y += Shell.vy;
+  Shell.vx += Shell.ax;
+  Shell.vy += Shell.ay;
 
+  // 바닥에 닿았으면 튀기기
+  if (Shell.y < 0) {
+    Shell.y = 0; // 바닥에 붙이기
+    Shell.vy *= -bounce; // 위로 튀게 만들고 속도 줄이기
+  }
+if (Math.abs(Shell.vy) < 0.2) {
+  Shell.vy = 0;
+}//꿈틀이 방지
+}
 function initializeMainShell() {
   let angleDeg = parseFloat(document.getElementById('range_angle').value);
   let speed = parseFloat(document.getElementById('range_initialSpeed').value);
