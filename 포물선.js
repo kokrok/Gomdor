@@ -79,7 +79,8 @@ function initializeShells() {
   for (let i = 0; i < shells.length; i++) {
     let shell = shells[i];
     shell.x = canvas.width / 6;
-    shell.y = canvas.height / 2;
+    //shell.y = canvas.height / 2;
+she'll.y = 0;
 
     // 발사 각도 약간씩 퍼뜨리기
     let spread = (Math.random() - 0.5) * 0.3; // ±15도 정도
