@@ -21,7 +21,7 @@ class Shell{
     this.vx = 1;
     this.vy = -2;
     this.ax = 0;
-    this.ay = g;
+    this.ay = -g;
   }
 }
 
