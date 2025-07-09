@@ -2,7 +2,7 @@ var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
 // Make Canvas
-canvas.width = window. innerWidth * 0.4;
+canvas.width = window.innerWidth * 0.4;
 canvas.height = window.innerHeight * 0.6;
 
 function toCanvasY(y) {
