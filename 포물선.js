@@ -114,7 +114,7 @@ function 프레임마다실행할거() {
 
   if (timer === 1) {
     //initializeMainShell();
-    initializeMainShells();
+    initializeShells();
   }
 
 for (let i = 0; i < shells.length; i++) {
