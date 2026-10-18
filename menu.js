@@ -5,8 +5,9 @@ const MENU = [
     { label: "홈",     href: "index.html" },
     { label: "저자",   href: "author.html" },
     { label: "과학관", href: "index_menu4_예제.html", children: [
-        { label: "물리 · 수학 · 컴퓨터공학", href: "index_menu4_예제.html#science" },
-        { label: "웹개발 공부",              href: "index_menu4_예제.html#webdev" },
+        { label: "물리 · 수학",  href: "index_menu4_예제.html#science" },
+        { label: "컴퓨터공학",   href: "index_menu4_예제.html#cs" },
+        { label: "웹개발 공부",  href: "index_menu4_예제.html#webdev" },
     ]},
     { label: "글방",   href: "writing.html" },
 ];
