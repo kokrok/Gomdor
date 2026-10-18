@@ -3,7 +3,7 @@ html {
     scroll-behavior: smooth;        /* # 링크 이동을 부드럽게 */
 }
 article {
-    padding: 0 16px 24px;
+    padding: 0 0 8px;           /* 바깥 여백은 style.css의 본문 카드(section)가 준다 */
     line-height: 1.6;
     word-break: keep-all;
 }
