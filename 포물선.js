@@ -50,19 +50,23 @@ function drawShell(Shell) {
 
 /*draw animation*/
 function applyPhysics(Shell){
-  Shell.x += Shell.vx;
-  Shell.y += Shell.vy;
+  // 속도를 먼저, 위치를 나중에 갱신한다 (semi-implicit Euler).
+  // 순서가 반대면 바닥에서 튈 때마다 에너지가 조금씩 생겨 공이 영원히 통통 튄다.
   Shell.vx += Shell.ax;
   Shell.vy += Shell.ay;
+  Shell.x += Shell.vx;
+  Shell.y += Shell.vy;
 
   // 바닥에 닿았으면 튀기기
   if (Shell.y < 0) {
     Shell.y = 0; // 바닥에 붙이기
     Shell.vy *= -bounce; // 위로 튀게 만들고 속도 줄이기
+    // 꿈틀이 방지: 바닥에서 튈 때만 검사한다.
+    // 밖에 두면 최고점(vy≈0)에서도 걸려서 공이 공중에 멈춘다.
+    if (Math.abs(Shell.vy) < 0.2) {
+      Shell.vy = 0;
+    }
   }
-if (Math.abs(Shell.vy) < 0.2) {
-  Shell.vy = 0;
-}//꿈틀이 방지
 }
 function initializeMainShell() {
   let angleDeg = parseFloat(document.getElementById('range_angle').value);
