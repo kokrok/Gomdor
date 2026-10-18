@@ -18,5 +18,5 @@
 ## 프로젝트 규칙
 - 파일 이름 규칙은 `README.md`를 따른다. (하나의 단어는 `_`, 다른 단어끼리는 `-`, 영어 소문자, 공백과 한글은 쓰지 않음)
 - 정적 사이트다. Live Server로 실행한다.
-- 웹개발 노트는 `webdev-*.md`가 원본이고, `npm run build`(`build.js`)로 `.html`을 만든다. 생성된 `.html`은 직접 고치지 말고 `.md`를 고친 뒤 다시 변환한다.
+- 노트(`webdev-*.md`, `sim-*.md`)는 `.md`가 원본이고, `npm run build`(`build.js`)로 `.html`을 만든다. 생성된 `.html`은 직접 고치지 말고 `.md`를 고친 뒤 다시 변환한다.
 - `main`에 push하면 GitHub Pages(https://kokrok.github.io/Gomdor/)로 바로 공개된다. push 전에 사용자에게 확인한다.

@@ -13,7 +13,7 @@
 - VS Code의 **Live Server** 확장으로 `index.html`을 연다. (포트 5501, `.vscode/settings.json`)
 - 일부 예제(`소수박스` 등)는 ES 모듈(`import`)을 사용한다. 파일을 더블클릭해서 열면(`file://`) 동작하지 않으므로 반드시 Live Server 같은 로컬 서버로 연다.
 
-## 웹개발 노트 쓰기 (`webdev-*.md` → `.html`)
+## 노트 쓰기 (`webdev-*.md`, `sim-*.md` → `.html`)
 노트는 **`.md`가 원본**이고 `.html`은 `build.js`가 만든다. 생성된 `.html`은 직접 고치지 않는다.
 
 ```bash
@@ -23,23 +23,25 @@ npm run watch      # 감시 모드: 저장할 때마다 자동 변환 (끄려면
 ```
 
 - **추천 작업 방식**: 터미널에서 `npm run watch`를 켜 두고 Live Server로 페이지를 연다. `.md`를 저장하면 `.html`이 다시 만들어지고 브라우저도 자동으로 새로 고쳐진다.
-- 감시 대상: `webdev-*.md`(그 노트만), `note-template.html`(모든 노트), `webdev-*.demo.js`(그 노트만)
+- 감시 대상: `webdev-*`·`sim-*`의 `.md`(그 노트만)와 `.demo.js`(그 노트만), `note-template.html`(모든 노트)
 - `.md`를 지워도 `.html`은 지우지 않는다. 필요 없으면 직접 지운다.
 - 변환 결과가 이전과 같으면 파일을 다시 쓰지 않는다. (`그대로`로 표시)
 
 | 파일 | 역할 |
 |---|---|
-| `webdev-*.md` | 노트 원본 (내가 쓰는 파일) |
-| `webdev-*.html` | 변환 결과 (커밋해야 웹사이트에 나타남) |
-| `webdev-*.demo.js` | (선택) 그 노트의 체험 코너 JS. 있으면 자동으로 연결된다 |
+| `webdev-*.md`, `sim-*.md` | 노트 원본 (내가 쓰는 파일) |
+| `webdev-*.html`, `sim-*.html` | 변환 결과 (커밋해야 웹사이트에 나타남) |
+| `webdev-*.demo.js`, `sim-*.demo.js` | (선택) 그 노트의 체험 코너 JS. 있으면 자동으로 연결된다 |
 | `build.js` | 변환 스크립트 |
 | `note-template.html` | 노트 페이지 공통 틀 (헤더, 메뉴, 푸터) |
-| `webdev-note.css` | 노트 페이지 공통 스타일 |
+| `webdev-note.css` | 노트 페이지 공통 스타일 (시뮬레이션 노트도 함께 쓴다) |
 
 - `## 제목 {#css}`처럼 제목 뒤에 `{#id}`를 붙이면 그 id가 된다. 없으면 `## 제목`마다 `s1`, `s2`… 가 붙는다.
 - 체험 코너는 `.md` 안에 HTML로 직접 쓴다. HTML 블록 **안에는 빈 줄을 넣지 않는다.** (Markdown은 빈 줄에서 HTML 블록이 끝난다고 본다)
 - 맨 위에 `<!-- 자동 생성 파일` 주석이 **없는** `.html`(손으로 쓴 파일)은 `build.js`가 덮어쓰지 않고 건너뛴다.
-- 새 노트를 웹개발 공부 게시판에 올리려면 `index_menu4_예제.html`의 `#webdev` 목록에 링크를 추가한다.
+- 접두어마다 게시판이 정해져 있다: `webdev-` → 웹개발 공부(`#webdev`), `sim-` → 시뮬레이션 노트(`#sim`). 페이지 아래 "← 목록으로" 링크도 이에 따라 자동으로 정해진다.
+- 새 노트를 게시판에 올리려면 `index_menu4_예제.html`의 해당 목록(`#webdev`, `#sim`)에 링크를 추가한다.
+- 새 게시판(접두어)을 만들려면 `build.js`의 `BOARDS`에 한 줄 추가한다.
 
 ## 배포
 `main`에 push하면 **GitHub Pages**가 자동으로 공개한다: https://kokrok.github.io/Gomdor/

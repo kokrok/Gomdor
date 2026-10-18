@@ -1,4 +1,4 @@
-// 웹개발 노트 변환기: webdev-*.md → webdev-*.html
+// 노트 변환기: webdev-*.md, sim-*.md → 같은 이름의 .html
 // 실행: npm run build   (한 번 전체 변환)
 //       npm run watch   (감시 모드: 파일을 저장할 때마다 자동 변환, 끄려면 Ctrl + C)
 //
@@ -29,7 +29,16 @@ marked.use({
 // 통일하지 않으면 결과에 CRLF와 LF가 섞이고, 내용이 같아도 "바뀌었다"고 판단하게 된다.
 const read = f => fs.readFileSync(f, "utf8").replace(/\r\n/g, "\n");
 
-const isNote = f => f.startsWith("webdev-") && f.endsWith(".md");
+// 파일 이름 접두어 → 그 노트가 속한 게시판 (과학관 페이지 index_menu4_예제.html 안의 id와 이름)
+// 새 게시판을 만들면 여기에 한 줄 추가한다.
+const BOARDS = {
+    "webdev-": { id: "webdev", name: "웹개발 공부" },
+    "sim-":    { id: "sim",    name: "시뮬레이션 노트" },
+};
+const boardOf = f => BOARDS[Object.keys(BOARDS).find(prefix => f.startsWith(prefix))];
+
+const isNote = f => boardOf(f) && f.endsWith(".md");
+const isDemo = f => boardOf(f) && f.endsWith(".demo.js");
 const noteOfDemo = f => f.replace(/\.demo\.js$/, ".md");   // webdev-xxx.demo.js → webdev-xxx.md
 
 // 노트 하나를 변환한다
@@ -54,9 +63,14 @@ function buildOne(mdFile) {
     const demoFile = mdFile.replace(/\.md$/, ".demo.js");
     const scripts = fs.existsSync(demoFile) ? `<script src="${demoFile}" defer></script>` : "";
 
+    // 페이지 아래 "← ○○ 목록으로" 링크가 노트가 속한 게시판으로 가게 한다
+    const board = boardOf(mdFile);
+
     // replace에 함수를 넘기면 본문 안의 $ 기호가 특수문자로 해석되지 않는다
     const html = template
         .replace("{{title}}", () => title)
+        .replace("{{board_id}}", () => board.id)
+        .replace("{{board_name}}", () => board.name)
         .replace("{{scripts}}", () => scripts)
         .replace("{{content}}", () => content);
 
@@ -103,7 +117,7 @@ function watch() {
         } else if (filename === TEMPLATE_FILE) {
             // 공통 틀을 고침 → 모든 노트
             later(filename, () => { console.log(`틀 변경 → 모든 노트를 다시 변환`); buildAll(); });
-        } else if (filename.startsWith("webdev-") && filename.endsWith(".demo.js")) {
+        } else if (isDemo(filename)) {
             // 체험 JS가 생기거나 없어짐 → <script> 연결을 다시 정하려고 그 노트만
             // (기존 .demo.js 내용만 고친 경우에도 돌지만, 결과가 같으면 "그대로"로 끝난다)
             const mdFile = noteOfDemo(filename);
@@ -111,7 +125,8 @@ function watch() {
         }
     });
 
-    console.log("감시 중… webdev-*.md, note-template.html, webdev-*.demo.js 를 저장하면 자동 변환 (끄려면 Ctrl + C)");
+    const prefixes = Object.keys(BOARDS).map(p => p + "*").join(", ");
+    console.log(`감시 중… ${prefixes} 의 .md/.demo.js 와 note-template.html 을 저장하면 자동 변환 (끄려면 Ctrl + C)`);
 }
 
 buildAll();
