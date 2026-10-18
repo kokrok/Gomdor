@@ -6,6 +6,13 @@ Claude와 작업하면서 들은 설명을 날짜별로 남긴다. 최신 기록
 
 ## 2026-10-18
 
+### 클라우드 환경 설정 방법을 가이드에 추가 (`claude_code-guide.md`)
+- **무엇을**: 클라우드 방식 "처음 한 번만" 절에 환경 설정 화면 위치(제목 줄의 환경 메뉴 → Edit), 네트워크 접근(Limited여도 "Allow package managers" 체크), 설정 스크립트 예시(`cd Gomdor && npm install`)를 적었다.
+- **왜**: 클라우드 컴퓨터에는 `node_modules`가 없어 노트를 변환하려면 매번 설치가 필요하다. 설정 스크립트에 넣으면 세션을 시작할 때 자동으로 설치된다.
+- **다른 방법**
+  - SessionStart 훅(`.claude/settings.json`): 설정이 저장소에 남아 어느 환경에서든 같지만, 노트북에서도 실행되므로 클라우드에서만 돌게 조건을 붙여야 한다.
+  - 아무것도 안 함: Claude가 변환 전에 직접 `npm install`을 실행한다. 조금 느릴 뿐 동작한다.
+
 ### Claude Code 사용 안내 문서 (`claude_code-guide.md`)
 - **무엇을**: RC(Remote Control)와 클라우드(Claude Code on the web) 방식의 차이, 클라우드 사용 순서, RC 켜고 끄기, RC를 쓸 때 Windows 전원 설정을 한 문서로 정리했다. `CLAUDE.md`에서 이 문서를 가리킨다.
 - **왜 저장소에**: 모바일 클라우드 Claude Code는 GitHub에 push된 파일만 읽을 수 있다. 노트북의 기억이나 OneDrive에 두면 모바일에서 못 읽는다.
