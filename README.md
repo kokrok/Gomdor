@@ -8,10 +8,33 @@
 3. **블로그**: 개인 철학과 생각을 글로 남긴다. (예정)
 
 ## 실행 방법
-별도 설치 없이 브라우저에서 실행되는 정적 웹사이트다.
+브라우저에서 실행되는 정적 웹사이트다. 웹개발 노트만 Node.js로 변환한다.
 
 - VS Code의 **Live Server** 확장으로 `index.html`을 연다. (포트 5501, `.vscode/settings.json`)
 - 일부 예제(`소수박스` 등)는 ES 모듈(`import`)을 사용한다. 파일을 더블클릭해서 열면(`file://`) 동작하지 않으므로 반드시 Live Server 같은 로컬 서버로 연다.
+
+## 웹개발 노트 쓰기 (`webdev-*.md` → `.html`)
+노트는 **`.md`가 원본**이고 `.html`은 `build.js`가 만든다. 생성된 `.html`은 직접 고치지 않는다.
+
+```bash
+npm install        # 처음 한 번 (변환 라이브러리 marked 설치 → node_modules/)
+npm run build      # .md를 고칠 때마다 실행
+```
+
+| 파일 | 역할 |
+|---|---|
+| `webdev-*.md` | 노트 원본 (내가 쓰는 파일) |
+| `webdev-*.html` | 변환 결과 (커밋해야 웹사이트에 나타남) |
+| `build.js` | 변환 스크립트 |
+| `note-template.html` | 노트 페이지 공통 틀 (헤더, 메뉴, 푸터) |
+| `webdev-note.css` | 노트 페이지 공통 스타일 |
+
+- 맨 위에 `<!-- 자동 생성 파일` 주석이 **없는** `.html`(손으로 쓴 파일)은 `build.js`가 덮어쓰지 않고 건너뛴다.
+- 새 노트를 웹개발 공부 게시판에 올리려면 `index_menu4_예제.html`의 `#webdev` 목록에 링크를 추가한다.
+
+## 배포
+`main`에 push하면 **GitHub Pages**가 자동으로 공개한다: https://kokrok.github.io/Gomdor/
+- 저장소의 모든 파일(`.md` 포함)이 그대로 공개된다. 공개하면 안 되는 내용은 넣지 않는다.
 
 ## 파일 이름 규칙
 | 규칙 | 기호 | 예시 |

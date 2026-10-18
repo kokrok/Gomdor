@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- 자동 생성 파일: 이 파일 대신 같은 이름의 .md를 고치세요. -->
+<!-- 자동 생성 파일: 이 파일 대신 같은 이름의 .md를 고치고 npm run build 하세요. -->
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -211,10 +211,20 @@ node build.js        # 변환 실행
 <hr>
 <h2 id="s8">8. 이 사이트의 현재 상태</h2>
 <ul>
-<li><strong>이 문서와 &quot;Git 기초&quot; 노트의 웹페이지는 5장의 방법(Node.js + <code>marked</code>)으로 자동 변환해서 만들었다.</strong> 다만 아직 변환 스크립트가 프로젝트에 들어 있지 않은 일회성 변환이다.</li>
-<li>먼저 만든 노트 2개(<code>#</code> 프래그먼트, innerHTML vs createElement)는 체험 코너 때문에 <code>.html</code>을 손으로 작성했다.</li>
-<li>다음 단계 후보: <code>build.js</code>를 만들어 노트 <code>.html</code>을 자동 생성으로 바꾸기. (큰 구조 변경이라 따로 진행)</li>
+<li><strong>5장의 방법 A를 도입했다.</strong> 프로젝트에 <code>build.js</code>, <code>note-template.html</code>, <code>package.json</code>이 있고, <code>npm run build</code>로 변환한다.</li>
+<li>이 문서와 &quot;Git 기초&quot; 노트의 웹페이지는 이렇게 자동 생성된다.</li>
+<li>먼저 만든 노트 2개(<code>#</code> 프래그먼트, innerHTML vs createElement)는 체험 코너 때문에 <code>.html</code>을 손으로 작성했다.
+<code>build.js</code>는 맨 위에 <code>&lt;!-- 자동 생성 파일</code> 주석이 없는 <code>.html</code>을 <strong>덮어쓰지 않고 건너뛴다.</strong> (손으로 쓴 내용을 지키는 안전장치)</li>
+<li>다음 단계: 이 두 노트도 6장의 방법으로 <code>.md</code>가 원본이 되도록 옮긴다.</li>
 </ul>
+<h3>실제로 해 보기</h3>
+<pre><code class="language-bash">npm install        # 처음 한 번
+npm run build      # 실행 결과 예:
+# 변환    webdev-git_basics.md → webdev-git_basics.html
+# 건너뜀  webdev-url_fragment.md  (webdev-url_fragment.html은 손으로 쓴 파일)
+</code></pre>
+<p><code>package.json</code>의 <code>&quot;scripts&quot;: { &quot;build&quot;: &quot;node build.js&quot; }</code>가 <code>npm run build</code>를 <code>node build.js</code>로 연결해 준다.
+Python 프로젝트의 <code>Makefile</code>이나 <code>python -m build</code>처럼, 자주 쓰는 명령에 짧은 이름을 붙여 두는 관례다.</p>
 
                 <p class="back"><a href="#">↑ 맨 위로</a> · <a href="index_menu4_예제.html#webdev">← 웹개발 공부 목록으로</a></p>
             </article>
