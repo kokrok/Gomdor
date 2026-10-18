@@ -9,8 +9,13 @@ function toCanvasY(y) {
   return canvas.height - y;
 }
 
-const g = -0.05;
+// 단위: 길이는 px, 시간은 초(s). (예전 값 × 60 = 60fps 기준 1프레임을 1/60초로 환산)
+const g = -180;           // px/s²  (예전 -0.05 px/프레임²)
 const bounce = 0.80;
+const REST_SPEED = 12;    // px/s. 바닥에서 튈 때 이보다 느리면 멈춘다 (예전 0.2 px/프레임)
+const SPEED_SCALE = 60;   // 슬라이더 값 1 = 60 px/s
+const MAX_DT = 0.05;      // s. 탭을 오래 떠났다 돌아와도 한 번에 이 이상 진행하지 않는다
+const CYCLE = 16;         // s. 이 시간마다 다시 발사한다 (예전 1000프레임 ≈ 16.7초)
 
 /*Make Object*/
 class Shell{
@@ -49,13 +54,14 @@ function drawShell(Shell) {
 
 
 /*draw animation*/
-function applyPhysics(Shell){
+function applyPhysics(Shell, dt){
   // 속도를 먼저, 위치를 나중에 갱신한다 (semi-implicit Euler).
   // 순서가 반대면 바닥에서 튈 때마다 에너지가 조금씩 생겨 공이 영원히 통통 튄다.
-  Shell.vx += Shell.ax;
-  Shell.vy += Shell.ay;
-  Shell.x += Shell.vx;
-  Shell.y += Shell.vy;
+  // dt를 곱하므로 모니터 주사율(60Hz, 120Hz…)과 상관없이 같은 속도로 움직인다.
+  Shell.vx += Shell.ax * dt;
+  Shell.vy += Shell.ay * dt;
+  Shell.x += Shell.vx * dt;
+  Shell.y += Shell.vy * dt;
 
   // 바닥에 닿았으면 튀기기
   if (Shell.y < 0) {
@@ -63,14 +69,14 @@ function applyPhysics(Shell){
     Shell.vy *= -bounce; // 위로 튀게 만들고 속도 줄이기
     // 꿈틀이 방지: 바닥에서 튈 때만 검사한다.
     // 밖에 두면 최고점(vy≈0)에서도 걸려서 공이 공중에 멈춘다.
-    if (Math.abs(Shell.vy) < 0.2) {
+    if (Math.abs(Shell.vy) < REST_SPEED) {
       Shell.vy = 0;
     }
   }
 }
 function initializeShells() {
   let angleDeg = parseFloat(document.getElementById('range_angle').value);
-  let speed = parseFloat(document.getElementById('range_initialSpeed').value);
+  let speed = parseFloat(document.getElementById('range_initialSpeed').value) * SPEED_SCALE;
   let mass = parseFloat(document.getElementById('range_mass').value);
   let angleRad = angleDeg * Math.PI / 180;
 
@@ -94,29 +100,39 @@ shell.y = 0;
 
 
 
-let timer = 0;
+let elapsed = 0;       // 이번 발사 후 지난 시간 (s)
+let lastTime = null;   // 직전 프레임의 시각 (ms)
 
-function drawText(timer) {
+function drawText(text) {
   ctx.font = '10px serif';
-  ctx.fillText(timer, 10, 10);
+  ctx.fillText(text, 10, 10);
 }
 
 
 
-function 프레임마다실행할거() {
+// requestAnimationFrame은 콜백에 "지금 시각(ms)"을 넘겨준다.
+// 직전 프레임 시각과의 차이가 실제로 흐른 시간 dt다.
+function 프레임마다실행할거(now) {
   requestAnimationFrame(프레임마다실행할거);
-  timer++;
-  if (timer > 1000) timer = 0;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawText(timer);
+  if (lastTime === null) {  // 첫 프레임: 기준 시각만 잡고 발사
+    lastTime = now;
+    initializeShells();
+  }
+  let dt = Math.min((now - lastTime) / 1000, MAX_DT);  // ms → s
+  lastTime = now;
 
-  if (timer === 1) {
+  elapsed += dt;
+  if (elapsed > CYCLE) {
+    elapsed = 0;
     initializeShells();
   }
 
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawText(elapsed.toFixed(1) + ' s');
+
 for (let i = 0; i < shells.length; i++) {
-  applyPhysics(shells[i]);
+  applyPhysics(shells[i], dt);
   drawShell(shells[i]);
 }
 }
@@ -162,4 +178,4 @@ function 프레임마다실행할거(){
   }
 }
 */
-프레임마다실행할거();
+requestAnimationFrame(프레임마다실행할거);  // 직접 부르면 now가 undefined라서 rAF로 시작한다
