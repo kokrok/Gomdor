@@ -21,9 +21,20 @@
 ### 처음 한 번만: 준비
 1. **Code 화면 열기**: 휴대폰 Claude 앱 메뉴의 "Code", 또는 브라우저에서 claude.ai/code.
 2. **GitHub 연결**: 저장소 접근 권한은 **`kokrok/Gomdor`만** 선택한다. 필요한 저장소만 열어 주는 게 안전하다.
-3. **환경(Environment) 설정**
-   - 네트워크 접근: `npm install`이 패키지를 받아야 하므로 허용한다.
-   - 설정 스크립트(setup script): 가능하면 `npm install`을 넣는다. 매번 자동으로 설치된다.
+3. **환경(Environment) 설정**: 세션 화면 위 제목 줄의 클라우드 환경 메뉴 → **Edit**. 바꾼 설정은 **새로 시작하는 세션부터** 적용된다.
+   - **네트워크 접근(Network access)**: `npm install`이 npm 저장소에서 패키지를 받아야 한다. 범위를 좁히려면 **Limited**를 고르되 **"Allow package managers"는 체크한 채로** 둔다. ([공식 설명](https://code.claude.com/docs/en/cloud-environments#network-access))
+   - **설정 스크립트(Setup script)**: 아래 한 줄을 넣으면 세션을 시작할 때마다 자동으로 설치된다. 저장소는 `Gomdor` 폴더에 복제되므로 먼저 그 폴더로 들어간다.
+     ```bash
+     cd Gomdor && npm install
+     ```
+     스크립트가 실패해도 세션은 열리지만 `npm run build`가 안 된다. 이때 Claude가 어떤 명령이 실패했는지 알려 준다.
+
+#### 설치 자동화의 다른 방법
+| 방법 | 장점 | 단점 |
+|---|---|---|
+| **환경의 Setup script** (지금 선택) | 휴대폰에서 칸 하나만 채우면 끝난다. 저장소를 고칠 필요가 없다. | 설정이 저장소 밖에 있다. 환경을 새로 만들면 다시 적어야 한다. |
+| **SessionStart 훅** (`.claude/settings.json`) | 설정이 저장소에 함께 남는다. 어느 환경에서든 똑같다. (C의 Makefile을 저장소에 넣는 것과 같다) | 파일이 늘고, 노트북에서도 실행되므로 클라우드에서만 돌게 조건을 붙여야 한다. |
+| **아무것도 안 함** | 설정할 것이 없다. | Claude가 변환 전에 `npm install`을 직접 실행한다(`CLAUDE.md` 규칙). 몇 초 더 걸릴 뿐이다. |
 
 ### 매번: 작업 흐름
 1. 저장소 `kokrok/Gomdor`를 고르고 할 일을 입력한다.
