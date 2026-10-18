@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<!-- 자동 생성 파일: 이 파일 대신 같은 이름의 .md를 고치고 npm run build 하세요. -->
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>곰도르 - aria-current — "지금 여기"를 알려 주는 속성</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="webdev-note.css" />
+    <script src="menu.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">곰도르의 홈페이지 해더 영역</a></h1>
+    </header>
+    <main>
+        <nav id="site-menu"></nav>
+        <section>
+            <article>
+<h1><code>aria-current</code> — &quot;지금 여기&quot;를 알려 주는 속성</h1>
+<pre><code class="language-html">&lt;a href=&quot;index.html&quot; aria-current=&quot;page&quot;&gt;홈&lt;/a&gt;
+</code></pre>
+<p>여러 개 중에서 <strong>현재 위치에 해당하는 하나</strong>를 표시하는 HTML 속성이다.
+메뉴에서 &quot;지금 보고 있는 페이지&quot;, 단계 표시에서 &quot;지금 단계&quot; 같은 것을 나타낸다.</p>
+<hr>
+<h2 id="s1">1. ARIA가 뭔가</h2>
+<p><strong>ARIA</strong> (Accessible Rich Internet Applications)는 W3C 웹 표준으로,
+<strong>화면 낭독기(스크린 리더)</strong> 같은 보조 기술에 &quot;이 요소가 무엇이고 어떤 상태인지&quot; 알려 주는 속성 모음이다.
+이름이 모두 <code>aria-</code>로 시작한다. (<code>aria-label</code>, <code>aria-hidden</code>, <code>aria-expanded</code>, <code>aria-current</code> …)</p>
+<ul>
+<li>눈이 보이는 사람은 <strong>색, 굵기, 위치</strong>로 &quot;지금 이 메뉴구나&quot;를 안다.</li>
+<li>화면 낭독기 사용자는 그걸 볼 수 없다. 그래서 <strong>의미를 코드로</strong> 적어 줘야 한다.</li>
+<li><code>aria-current=&quot;page&quot;</code>가 있으면 화면 낭독기는 링크를 이렇게 읽는다.<blockquote>
+<p>&quot;홈, 링크, <strong>현재 페이지</strong>&quot;</p>
+</blockquote>
+</li>
+</ul>
+<h3>비유</h3>
+<ul>
+<li><strong>C/C++</strong>: 화면에 보이는 모양은 출력 결과, ARIA는 그 출력에 붙은 <strong>타입 정보</strong>다.
+모양만 보고는 모르는 &quot;이건 현재 선택된 항목이다&quot;라는 의미를 기계가 읽을 수 있게 붙여 둔다.</li>
+<li><strong>Python</strong>: 리스트에서 현재 위치를 따로 <code>current_index = 2</code>로 들고 있는 것과 같다.
+색칠은 사람용 표현이고, <code>aria-current</code>는 기계가 읽는 <code>current_index</code>다.</li>
+</ul>
+<hr>
+<h2 id="s2">2. 값의 종류</h2>
+<table>
+<thead>
+<tr>
+<th>값</th>
+<th>뜻</th>
+<th>예</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>page</code></td>
+<td>현재 <strong>페이지</strong></td>
+<td>사이트 메뉴, 페이지 번호 (1 2 <strong>3</strong> 4)</td>
+</tr>
+<tr>
+<td><code>step</code></td>
+<td>현재 <strong>단계</strong></td>
+<td>회원가입 1단계 → <strong>2단계</strong> → 3단계</td>
+</tr>
+<tr>
+<td><code>location</code></td>
+<td>현재 <strong>위치</strong></td>
+<td>지도, 흐름도에서 &quot;현재 위치&quot;</td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td>현재 <strong>날짜</strong></td>
+<td>달력에서 오늘</td>
+</tr>
+<tr>
+<td><code>time</code></td>
+<td>현재 <strong>시간</strong></td>
+<td>시간표에서 지금 시간대</td>
+</tr>
+<tr>
+<td><code>true</code></td>
+<td>현재 항목 (종류를 특정하기 어려울 때)</td>
+<td>일반적인 목록</td>
+</tr>
+<tr>
+<td><code>false</code></td>
+<td>현재 아님 (속성을 안 붙인 것과 같음)</td>
+<td></td>
+</tr>
+</tbody></table>
+<ul>
+<li>한 묶음 안에서 <strong>딱 하나</strong>에만 붙인다.</li>
+<li>아닌 항목에는 <code>aria-current=&quot;false&quot;</code>를 쓰기보다 <strong>속성을 아예 빼는 게</strong> 보통이다.</li>
+</ul>
+<hr>
+<h2 id="s3">3. 왜 <code>class=&quot;active&quot;</code>가 아니라 <code>aria-current</code>인가</h2>
+<p>현재 메뉴 표시에는 오랫동안 <code>class=&quot;active&quot;</code>를 써 왔다.</p>
+<pre><code class="language-html">&lt;a href=&quot;index.html&quot; class=&quot;active&quot;&gt;홈&lt;/a&gt;           &lt;!-- 옛 관례 --&gt;
+&lt;a href=&quot;index.html&quot; aria-current=&quot;page&quot;&gt;홈&lt;/a&gt;      &lt;!-- 현재 권장 --&gt;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>class=&quot;active&quot;</code></th>
+<th><code>aria-current=&quot;page&quot;</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>사람이 보는 표시</td>
+<td>CSS로 가능</td>
+<td>CSS로 가능</td>
+</tr>
+<tr>
+<td>화면 낭독기가 읽음</td>
+<td><strong>X</strong> (class는 이름일 뿐 의미가 없음)</td>
+<td><strong>O</strong> (&quot;현재 페이지&quot;)</td>
+</tr>
+<tr>
+<td>이름</td>
+<td>사람마다 제각각 (<code>active</code>, <code>on</code>, <code>current</code>, <code>selected</code>)</td>
+<td>표준으로 정해져 있음</td>
+</tr>
+<tr>
+<td>테스트 코드에서 찾기</td>
+<td>프로젝트 관례를 알아야 함</td>
+<td>표준이라 도구가 바로 찾음</td>
+</tr>
+</tbody></table>
+<p><strong>의미와 모양을 하나로</strong> 관리할 수 있어서 요즘은 <code>aria-current</code>를 쓰고, CSS도 이 속성으로 건다.</p>
+<hr>
+<h2 id="s4">4. CSS로 강조하기</h2>
+<p>속성 선택자 <code>[속성=&quot;값&quot;]</code>으로 바로 스타일을 줄 수 있다.</p>
+<pre><code class="language-css">nav a[aria-current=&quot;page&quot;] {
+    font-weight: bold;
+    color: #000;
+    text-decoration: none;
+}
+</code></pre>
+<p><code>class</code>를 따로 붙였다 뗐다 할 필요가 없다. 속성 하나가 <strong>의미(접근성)와 모양(CSS)</strong> 을 모두 담당한다.</p>
+<hr>
+<h2 id="s5">5. JavaScript로 붙이기</h2>
+<pre><code class="language-js">// 현재 페이지와 같은 링크에 표시
+if (item.href === current) {
+    a.setAttribute(&quot;aria-current&quot;, &quot;page&quot;);
+}
+
+// 표시 지우기
+a.removeAttribute(&quot;aria-current&quot;);
+
+// 현재 표시된 요소 찾기
+document.querySelector(&#39;[aria-current=&quot;page&quot;]&#39;);
+</code></pre>
+<p>단계 표시처럼 <strong>값이 바뀌는 경우</strong>에는 이전 항목에서 지우고 새 항목에 붙인다.</p>
+<pre><code class="language-js">function goToStep(n) {
+    steps.forEach((li, i) =&gt; {
+        if (i === n) li.setAttribute(&quot;aria-current&quot;, &quot;step&quot;);
+        else         li.removeAttribute(&quot;aria-current&quot;);
+    });
+}
+</code></pre>
+<hr>
+<h2 id="s6">6. 비슷한 속성과 구별하기</h2>
+<table>
+<thead>
+<tr>
+<th>속성</th>
+<th>뜻</th>
+<th>쓰는 곳</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>aria-current</code></td>
+<td>여러 개 중 <strong>현재 위치</strong></td>
+<td>메뉴, 페이지 번호, 단계</td>
+</tr>
+<tr>
+<td><code>aria-selected</code></td>
+<td>사용자가 <strong>고른 것</strong></td>
+<td>탭, 목록 상자 (<code>role=&quot;tab&quot;</code>, <code>role=&quot;option&quot;</code>)</td>
+</tr>
+<tr>
+<td><code>aria-checked</code></td>
+<td><strong>체크 상태</strong></td>
+<td>체크박스 모양을 직접 만들 때</td>
+</tr>
+<tr>
+<td><code>aria-pressed</code></td>
+<td>토글 버튼이 <strong>눌린 상태</strong></td>
+<td>켜기/끄기 버튼</td>
+</tr>
+<tr>
+<td><code>aria-expanded</code></td>
+<td>접었다 펴는 부분이 <strong>열린 상태</strong></td>
+<td>드롭다운 메뉴, 아코디언</td>
+</tr>
+</tbody></table>
+<p>헷갈리면 이렇게 기억한다. <strong>&quot;지금 어디 있나&quot; → <code>current</code>, &quot;무엇을 골랐나&quot; → <code>selected</code>.</strong></p>
+<hr>
+<h2 id="s7">7. 주의할 점</h2>
+<ul>
+<li><strong>ARIA는 의미만 알려 준다. 동작은 바꾸지 않는다.</strong> <code>aria-current</code>를 붙여도 링크는 그대로 링크고, 클릭도 그대로 된다.</li>
+<li><strong>첫 번째 규칙: 가능하면 ARIA 없이 해결한다.</strong> <code>&lt;button&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;input type=&quot;checkbox&quot;&gt;</code>처럼 의미가 있는 HTML 태그를 먼저 쓰고,
+HTML만으로 표현할 수 없는 의미에만 ARIA를 쓴다. &quot;현재 페이지&quot;는 HTML 태그로 표현할 방법이 없어서 <code>aria-current</code>를 쓰는 것이다.</li>
+<li>한 묶음 안에 <strong>두 개 이상</strong> 붙이지 않는다.</li>
+</ul>
+<hr>
+<h2 id="s8">8. 이 사이트에서 쓰는 곳</h2>
+<p><a href="menu.js"><code>menu.js</code></a>의 <code>buildMenuList</code> 함수:</p>
+<pre><code class="language-js">if (item.href === current) {
+    a.setAttribute(&quot;aria-current&quot;, &quot;page&quot;);  // 현재 페이지 표시 (CSS로 강조 가능)
+}
+</code></pre>
+<ul>
+<li>지금 열려 있는 페이지 파일 이름과 메뉴의 <code>href</code>가 같으면 표시한다.</li>
+<li>아직 CSS 강조는 넣지 않았다. 위 4장의 CSS를 <code>style.css</code>에 추가하면 현재 메뉴가 굵게 보인다.</li>
+<li>한계: 과학관의 예제 페이지(<code>index_menu4_예제_포물선.html</code> 등)에 있을 때는 &quot;과학관&quot; 메뉴에 표시되지 않는다.
+파일 이름이 정확히 같은 경우만 비교하기 때문이다. 폴더 구조를 <code>museum/...</code>처럼 정리하면 &quot;이 폴더 안이면 과학관&quot;으로 바꿀 수 있다.</li>
+</ul>
+
+                <p class="back"><a href="#">↑ 맨 위로</a> · <a href="index_menu4_예제.html#webdev">← 웹개발 공부 목록으로</a></p>
+            </article>
+        </section>
+    </main>
+    <footer><p>안녕하세요. 곰도르 푸터 영역입니다.</p></footer>
+</body>
+</html>
