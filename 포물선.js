@@ -12,6 +12,7 @@ function toCanvasY(y) {
 // 단위: 길이는 px, 시간은 초(s). (예전 값 × 60 = 60fps 기준 1프레임을 1/60초로 환산)
 const g = -180;           // px/s²  (예전 -0.05 px/프레임²)
 const bounce = 0.80;
+const FRICTION = 0.3;     // 바닥의 운동 마찰계수 μ
 const REST_SPEED = 12;    // px/s. 바닥에서 튈 때 이보다 느리면 멈춘다 (예전 0.2 px/프레임)
 const SPEED_SCALE = 60;   // 슬라이더 값 1 = 60 px/s
 const MAX_DT = 0.05;      // s. 탭을 오래 떠났다 돌아와도 한 번에 이 이상 진행하지 않는다
@@ -73,6 +74,23 @@ function applyPhysics(Shell, dt){
     if (Math.abs(Shell.vy) < REST_SPEED) {
       Shell.vy = 0;
     }
+    // 바닥 마찰 (운동 마찰): 바닥에 닿아 있는 동안 vx를 μ|g|·dt만큼 줄인다.
+    // 줄일 양이 vx보다 크면 0에서 멈춘다 (지나쳐서 반대로 움직이지 않게).
+    let dv = FRICTION * Math.abs(g) * dt;
+    if (Math.abs(Shell.vx) <= dv) {
+      Shell.vx = 0;
+    } else {
+      Shell.vx -= Math.sign(Shell.vx) * dv;
+    }
+  }
+
+  // 좌우 벽에 닿으면 튀기기 (바닥과 같은 반발계수)
+  if (Shell.x < Shell.radius) {
+    Shell.x = Shell.radius;
+    Shell.vx *= -bounce;
+  } else if (Shell.x > canvas.width - Shell.radius) {
+    Shell.x = canvas.width - Shell.radius;
+    Shell.vx *= -bounce;
   }
 }
 function initializeShells() {
