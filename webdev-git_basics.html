@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<!-- 자동 생성 파일: 이 파일 대신 같은 이름의 .md를 고치세요. -->
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>곰도르 - Git 기초 — commit과 push는 다르다</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="webdev-note.css" />
+    <script src="menu.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">곰도르의 홈페이지 해더 영역</a></h1>
+    </header>
+    <main>
+        <nav id="site-menu"></nav>
+        <section>
+            <article>
+<h1>Git 기초 — commit과 push는 다르다</h1>
+<blockquote>
+<p><strong>커밋만으로는 GitHub에 올라가지 않는다.</strong>
+커밋은 <em>내 PC 안에</em> 기록을 남기는 것이고, GitHub에 올리는 건 <strong>push</strong>라는 별도 단계다.</p>
+</blockquote>
+<hr>
+<h2 id="s1">1. Git의 네 장소</h2>
+<pre><code>① 작업 폴더
+     │  git add
+     ▼
+② 스테이징
+     │  git commit
+     ▼
+③ 내 PC 저장소      ← 여기까지는 인터넷 없이 내 PC 안에서
+     │  git push
+     ▼
+④ GitHub
+
+git pull: ④ GitHub → ③ 내 PC 저장소 → ① 작업 폴더 (받아와서 파일까지 바꿈)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>장소</th>
+<th>뜻</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>① 작업 폴더</td>
+<td>파일을 고치는 곳 (VS Code에서 보이는 폴더)</td>
+</tr>
+<tr>
+<td>② 스테이징</td>
+<td>이번 커밋에 넣을 변경을 골라 두는 대기실</td>
+</tr>
+<tr>
+<td>③ 내 PC 저장소</td>
+<td>커밋 기록 보관소 (<code>.git</code> 폴더)</td>
+</tr>
+<tr>
+<td>④ GitHub</td>
+<td>인터넷에 있는 복사본 (원격 저장소, <code>origin</code>)</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>명령</th>
+<th>하는 일</th>
+<th>인터넷 필요?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>고치기</td>
+<td>(에디터에서 저장)</td>
+<td>파일 내용이 바뀜. Git은 아직 기록하지 않음</td>
+<td>X</td>
+</tr>
+<tr>
+<td><code>add</code></td>
+<td><code>git add 파일</code></td>
+<td>&quot;이번 커밋에 이 파일을 넣겠다&quot;고 고르기</td>
+<td>X</td>
+</tr>
+<tr>
+<td><code>commit</code></td>
+<td><code>git commit -m &quot;설명&quot;</code></td>
+<td>고른 변경을 <strong>하나의 기록(스냅숏)</strong> 으로 <strong>내 PC에</strong> 저장</td>
+<td>X</td>
+</tr>
+<tr>
+<td><code>push</code></td>
+<td><code>git push</code></td>
+<td>내 PC의 커밋들을 <strong>GitHub에 올리기</strong></td>
+<td><strong>O</strong></td>
+</tr>
+<tr>
+<td><code>pull</code></td>
+<td><code>git pull</code></td>
+<td>GitHub에 있는 새 커밋을 <strong>내 PC로 받아오기</strong></td>
+<td><strong>O</strong></td>
+</tr>
+</tbody></table>
+<p><code>.git</code> 폴더가 ③ 내 PC 저장소다. 커밋 기록이 전부 이 안에 들어 있다.</p>
+<h3>비유</h3>
+<ul>
+<li><strong>게임 세이브</strong>: commit은 <em>내 PC에 세이브 파일을 만드는 것</em>, push는 <em>그 세이브를 클라우드에 업로드하는 것</em>. 세이브만 해 두면 다른 기기(모바일)에서는 볼 수 없다.</li>
+<li><strong>C 컴파일</strong>: 코드를 고치는 건 <code>.c</code> 파일 수정, commit은 그 상태를 버전으로 확정, push는 확정된 버전을 서버에 배포하는 것과 비슷하다.</li>
+</ul>
+<hr>
+<h2 id="s2">2. 왜 commit과 push를 나눠 놨을까</h2>
+<ol>
+<li><strong>인터넷 없이도 작업할 수 있다.</strong> 기차 안에서도 커밋을 여러 번 해 두고, 나중에 한 번에 push하면 된다.</li>
+<li><strong>올리기 전에 정리할 수 있다.</strong> 작은 커밋을 여러 개 쌓아 두고, 확인한 다음 올린다. 한번 올린 커밋은 다른 사람(다른 기기)이 받아 갔을 수 있어서 고치기가 까다롭다.</li>
+<li><strong>빠르고 안전하다.</strong> 커밋은 내 PC에서만 일어나서 순식간에 끝나고, 실수해도 GitHub에는 영향이 없다.</li>
+</ol>
+<blockquote>
+<p>Google Drive, OneDrive와 다른 점: 그쪽은 저장하는 즉시 자동으로 올라가지만,
+Git은 <strong>&quot;언제 올릴지&quot;를 내가 정한다.</strong></p>
+</blockquote>
+<hr>
+<h2 id="s3">3. 브랜치(branch) — 커밋 기록의 갈래</h2>
+<p>실험하는 동안 <code>main</code>을 건드리지 않으려고 따로 길을 만든 것이다.</p>
+<pre><code>main         ●──●──●
+                     \
+menu-unify            ●──●──●──●──●──●   ← 새 기능을 작업한 커밋들
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>명령</th>
+<th>하는 일</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>git switch -c 이름</code></td>
+<td>새 브랜치를 만들고 그리로 이동</td>
+</tr>
+<tr>
+<td><code>git switch main</code></td>
+<td><code>main</code> 브랜치로 이동</td>
+</tr>
+<tr>
+<td><code>git merge 이름</code></td>
+<td>다른 브랜치의 커밋을 지금 브랜치에 <strong>합치기</strong> (내 PC 안에서만)</td>
+</tr>
+<tr>
+<td><code>git branch</code></td>
+<td>브랜치 목록 보기</td>
+</tr>
+<tr>
+<td><code>git branch -d 이름</code></td>
+<td>다 쓴 브랜치 지우기 (합쳐진 경우만 지워짐)</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>merge도 내 PC 안에서만 일어난다.</strong> 합친 결과를 GitHub에 올리려면 역시 push가 필요하다.</li>
+<li>모바일 Claude가 만든 <code>claude/...</code> 브랜치도 같은 원리다. 모바일에서 브랜치를 만들어 작업하고 push까지 해 둬서 GitHub에 있었고, PC에서 그걸 받아 <code>main</code>에 합쳤다.</li>
+</ul>
+<h3>비유</h3>
+<ul>
+<li><strong>Python 가상환경</strong>처럼, 본 환경(<code>main</code>)을 건드리지 않고 따로 실험하는 공간이다. 실험이 성공하면 합치고, 실패하면 버린다.</li>
+</ul>
+<hr>
+<h2 id="s4">4. 자주 쓰는 확인 명령</h2>
+<table>
+<thead>
+<tr>
+<th>명령</th>
+<th>알려 주는 것</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>git status</code></td>
+<td>지금 고친 파일, 커밋 안 한 변경, 현재 브랜치</td>
+</tr>
+<tr>
+<td><code>git log --oneline</code></td>
+<td>커밋 기록 한 줄씩</td>
+</tr>
+<tr>
+<td><code>git diff</code></td>
+<td>아직 커밋 안 한 변경 내용</td>
+</tr>
+<tr>
+<td><code>git status -sb</code></td>
+<td><code>[ahead 3]</code> = 아직 push 안 한 커밋 3개, <code>[behind 2]</code> = 아직 pull 안 한 커밋 2개</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="s5">5. 하루 작업 흐름</h2>
+<pre><code>git pull                         # ① 시작 전: 다른 기기에서 한 작업 받아오기
+(파일 수정)
+git add 파일들                    # ② 커밋할 파일 고르기
+git commit -m &quot;무엇을 왜 바꿨는지&quot;  # ③ 내 PC에 기록
+(②~③ 반복)
+git push                         # ④ 끝날 때: GitHub에 올리기
+</code></pre>
+<p>PC와 모바일을 오가며 작업한다면 <strong>① 시작 전 pull, ④ 끝날 때 push</strong>만 지켜도 충돌이 거의 없다.</p>
+<hr>
+<h2 id="s6">6. GitHub Desktop 버튼과의 대응</h2>
+<table>
+<thead>
+<tr>
+<th>GitHub Desktop</th>
+<th>Git 명령</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>왼쪽 아래 <strong>&quot;Commit to main&quot;</strong></td>
+<td><code>git add</code> + <code>git commit</code></td>
+</tr>
+<tr>
+<td>위쪽 <strong>&quot;Push origin ↑3&quot;</strong></td>
+<td><code>git push</code> (↑3 = 아직 안 올린 커밋 3개)</td>
+</tr>
+<tr>
+<td>위쪽 <strong>&quot;Fetch origin&quot;</strong></td>
+<td><code>git fetch</code> (GitHub에 새 커밋이 있는지 확인만)</td>
+</tr>
+<tr>
+<td>위쪽 <strong>&quot;Pull origin ↓2&quot;</strong></td>
+<td><code>git pull</code> (↓2 = 받아올 커밋 2개)</td>
+</tr>
+<tr>
+<td>위쪽 <strong>&quot;Current branch&quot;</strong></td>
+<td><code>git switch</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="s7">7. 이 사이트(Gomdor)에서 겪은 일</h2>
+<ul>
+<li><strong>OneDrive와 Git의 충돌</strong>: 프로젝트가 OneDrive 폴더 안에 있어서, OneDrive가 <code>.git</code> 안의 파일을 <code>main - 복사본</code>으로 복제해 <code>git fetch</code>가 고장 났다. 병합 도중 파일이 잠겨 빈 파일이 생긴 적도 있다.
+→ Git 저장소는 <strong>OneDrive 밖</strong>에 두는 것이 좋다. 백업은 GitHub이 대신한다.</li>
+<li><strong>23개 커밋 뒤처짐</strong>: 다른 기기에서 push한 작업을 PC에서 pull하지 않아서 생겼다. → 작업 시작 전 <code>git pull</code>.</li>
+</ul>
+
+                <p class="back"><a href="#">↑ 맨 위로</a> · <a href="index_menu4_예제.html#webdev">← 웹개발 공부 목록으로</a></p>
+            </article>
+        </section>
+    </main>
+    <footer><p>안녕하세요. 곰도르 푸터 영역입니다.</p></footer>
+</body>
+</html>
