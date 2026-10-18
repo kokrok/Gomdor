@@ -189,3 +189,26 @@ npm run build      # 실행 결과 예:
 
 `package.json`의 `"scripts": { "build": "node build.js" }`가 `npm run build`를 `node build.js`로 연결해 준다.
 Python 프로젝트의 `Makefile`이나 `python -m build`처럼, 자주 쓰는 명령에 짧은 이름을 붙여 두는 관례다.
+
+### 감시 모드 (`npm run watch`) {#watch}
+
+매번 `npm run build`를 치는 대신, 감시 모드를 켜 두면 **파일을 저장할 때마다 자동으로 변환**한다.
+
+```
+.md 저장 ─▶ 감시 모드가 .html 다시 만듦 ─▶ Live Server가 .html 변경 감지 ─▶ 브라우저 자동 새로 고침
+```
+
+| 저장한 파일 | 다시 변환하는 것 |
+|---|---|
+| `webdev-xxx.md` (고치거나 새로 만듦) | 그 노트만 |
+| `note-template.html` | 모든 노트 |
+| `webdev-xxx.demo.js` | 그 노트만 (`<script>` 연결 확인) |
+
+원리는 Node.js의 `fs.watch()`다. 운영체제에 "이 폴더의 파일이 바뀌면 알려 줘"라고 등록해 두고, 알림이 올 때마다 변환 함수를 부른다.
+C의 `select()` 이벤트 루프, Python의 `watchdog` 라이브러리와 같은 구조다.
+
+구현에서 신경 쓴 점:
+- **디바운스**: Windows는 저장 한 번에 알림을 2~3번 보낸다. 0.2초 안에 같은 파일의 알림이 또 오면 앞의 것을 취소하고 마지막 한 번만 변환한다.
+- **결과가 같으면 쓰지 않기**: 내용이 그대로면 `.html`을 다시 쓰지 않는다. Live Server가 쓸데없이 새로 고치지 않고, Git에도 변경이 생기지 않는다.
+- **오류가 나도 멈추지 않기**: 저장 도중에 읽거나 파일을 지운 경우에도 감시는 계속 돈다.
+- **`.md`를 지워도 `.html`은 남긴다**: 실수로 지웠을 때 웹페이지까지 사라지지 않게.

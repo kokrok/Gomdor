@@ -3,7 +3,8 @@
   "private": true,
   "description": "곰도르 개인 홈페이지 (웹 과학관 + 글방)",
   "scripts": {
-    "build": "node build.js"
+    "build": "node build.js",
+    "watch": "node build.js --watch"
   },
   "devDependencies": {
     "marked": "12.0.2"

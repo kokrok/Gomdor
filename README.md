@@ -18,8 +18,14 @@
 
 ```bash
 npm install        # 처음 한 번 (변환 라이브러리 marked 설치 → node_modules/)
-npm run build      # .md를 고칠 때마다 실행
+npm run build      # 한 번 전체 변환
+npm run watch      # 감시 모드: 저장할 때마다 자동 변환 (끄려면 Ctrl + C)
 ```
+
+- **추천 작업 방식**: 터미널에서 `npm run watch`를 켜 두고 Live Server로 페이지를 연다. `.md`를 저장하면 `.html`이 다시 만들어지고 브라우저도 자동으로 새로 고쳐진다.
+- 감시 대상: `webdev-*.md`(그 노트만), `note-template.html`(모든 노트), `webdev-*.demo.js`(그 노트만)
+- `.md`를 지워도 `.html`은 지우지 않는다. 필요 없으면 직접 지운다.
+- 변환 결과가 이전과 같으면 파일을 다시 쓰지 않는다. (`그대로`로 표시)
 
 | 파일 | 역할 |
 |---|---|

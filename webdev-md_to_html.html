@@ -235,6 +235,39 @@ npm run build      # 실행 결과 예:
 </code></pre>
 <p><code>package.json</code>의 <code>&quot;scripts&quot;: { &quot;build&quot;: &quot;node build.js&quot; }</code>가 <code>npm run build</code>를 <code>node build.js</code>로 연결해 준다.
 Python 프로젝트의 <code>Makefile</code>이나 <code>python -m build</code>처럼, 자주 쓰는 명령에 짧은 이름을 붙여 두는 관례다.</p>
+<h3 id="watch">감시 모드 (<code>npm run watch</code>)</h3>
+<p>매번 <code>npm run build</code>를 치는 대신, 감시 모드를 켜 두면 <strong>파일을 저장할 때마다 자동으로 변환</strong>한다.</p>
+<pre><code>.md 저장 ─▶ 감시 모드가 .html 다시 만듦 ─▶ Live Server가 .html 변경 감지 ─▶ 브라우저 자동 새로 고침
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>저장한 파일</th>
+<th>다시 변환하는 것</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>webdev-xxx.md</code> (고치거나 새로 만듦)</td>
+<td>그 노트만</td>
+</tr>
+<tr>
+<td><code>note-template.html</code></td>
+<td>모든 노트</td>
+</tr>
+<tr>
+<td><code>webdev-xxx.demo.js</code></td>
+<td>그 노트만 (<code>&lt;script&gt;</code> 연결 확인)</td>
+</tr>
+</tbody></table>
+<p>원리는 Node.js의 <code>fs.watch()</code>다. 운영체제에 &quot;이 폴더의 파일이 바뀌면 알려 줘&quot;라고 등록해 두고, 알림이 올 때마다 변환 함수를 부른다.
+C의 <code>select()</code> 이벤트 루프, Python의 <code>watchdog</code> 라이브러리와 같은 구조다.</p>
+<p>구현에서 신경 쓴 점:</p>
+<ul>
+<li><strong>디바운스</strong>: Windows는 저장 한 번에 알림을 2~3번 보낸다. 0.2초 안에 같은 파일의 알림이 또 오면 앞의 것을 취소하고 마지막 한 번만 변환한다.</li>
+<li><strong>결과가 같으면 쓰지 않기</strong>: 내용이 그대로면 <code>.html</code>을 다시 쓰지 않는다. Live Server가 쓸데없이 새로 고치지 않고, Git에도 변경이 생기지 않는다.</li>
+<li><strong>오류가 나도 멈추지 않기</strong>: 저장 도중에 읽거나 파일을 지운 경우에도 감시는 계속 돈다.</li>
+<li><strong><code>.md</code>를 지워도 <code>.html</code>은 남긴다</strong>: 실수로 지웠을 때 웹페이지까지 사라지지 않게.</li>
+</ul>
 
                 <p class="back"><a href="#">↑ 맨 위로</a> · <a href="index_menu4_예제.html#webdev">← 웹개발 공부 목록으로</a></p>
             </article>
