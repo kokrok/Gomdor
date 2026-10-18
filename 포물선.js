@@ -16,7 +16,7 @@ const FRICTION = 0.3;     // 바닥의 운동 마찰계수 μ
 const REST_SPEED = 12;    // px/s. 바닥에서 튈 때 이보다 느리면 멈춘다 (예전 0.2 px/프레임)
 const SPEED_SCALE = 60;   // 슬라이더 값 1 = 60 px/s
 const MAX_DT = 0.05;      // s. 탭을 오래 떠났다 돌아와도 한 번에 이 이상 진행하지 않는다
-const CYCLE = 16;         // s. 이 시간마다 다시 발사한다 (예전 1000프레임 ≈ 16.7초)
+let cycle = 16;           // s. 이 시간마다 다시 발사한다. 입력창(#input_cycle)으로 바꾼다
 
 /*Make Object*/
 class Shell{
@@ -122,6 +122,17 @@ function initializeShells() {
 let elapsed = 0;       // 이번 발사 후 지난 시간 (s)
 let lastTime = null;   // 직전 프레임의 시각 (ms)
 
+// 발사 주기 입력창. 값이 바뀌면 다음 프레임부터 새 주기를 쓴다.
+// 이미 새 주기보다 오래 지났으면 다음 프레임에 바로 다시 발사된다.
+const cycleInput = document.getElementById('input_cycle');
+cycleInput.addEventListener('input', () => {
+  let value = parseFloat(cycleInput.value);
+  if (value >= 1) {  // 빈칸이나 1초 미만은 무시하고 이전 주기를 유지한다
+    cycle = value;
+  }
+});
+cycle = parseFloat(cycleInput.value);
+
 function drawText(text) {
   ctx.font = '10px serif';
   ctx.fillText(text, 10, 10);
@@ -142,13 +153,13 @@ function 프레임마다실행할거(now) {
   lastTime = now;
 
   elapsed += dt;
-  if (elapsed > CYCLE) {
+  if (elapsed > cycle) {
     elapsed = 0;
     initializeShells();
   }
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawText(elapsed.toFixed(1) + ' s');
+  drawText(elapsed.toFixed(1) + '초/' + cycle + '초');
 
 for (let i = 0; i < shells.length; i++) {
   applyPhysics(shells[i], dt);
