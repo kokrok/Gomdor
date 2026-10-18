@@ -21,7 +21,7 @@ class Shell{
     this.vx = 1;
     this.vy = -2;
     this.ax = 0;
-    this.ay = -g;
+    this.ay = g; // g가 음수라서 아래쪽 가속도
   }
 }
 
@@ -68,20 +68,6 @@ function applyPhysics(Shell){
     }
   }
 }
-function initializeMainShell() {
-  let angleDeg = parseFloat(document.getElementById('range_angle').value);
-  let speed = parseFloat(document.getElementById('range_initialSpeed').value);
-let mass = parseFloat(document.getElementById('range_mass').value);
-
-  let angleRad = angleDeg * Math.PI / 180;
-
-  shell0.x = canvas.width / 6;
-  shell0.y = canvas.height / 2;
-
-  shell0.vx = speed * Math.cos(angleRad);
-  shell0.vy = speed * Math.sin(angleRad); // +y 방향이 위쪽이니까 부호 유지
-shell0.radius = 5 + (mass / 20); // 질량 0~100이면 반지름은 5~10
-}
 function initializeShells() {
   let angleDeg = parseFloat(document.getElementById('range_angle').value);
   let speed = parseFloat(document.getElementById('range_initialSpeed').value);
@@ -126,7 +112,6 @@ function 프레임마다실행할거() {
   drawText(timer);
 
   if (timer === 1) {
-    //initializeMainShell();
     initializeShells();
   }
 
