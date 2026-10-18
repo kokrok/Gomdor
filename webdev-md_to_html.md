@@ -166,17 +166,25 @@ node build.js        # 변환 실행
 ## 8. 이 사이트의 현재 상태
 
 - **5장의 방법 A를 도입했다.** 프로젝트에 `build.js`, `note-template.html`, `package.json`이 있고, `npm run build`로 변환한다.
-- 이 문서와 "Git 기초" 노트의 웹페이지는 이렇게 자동 생성된다.
-- 먼저 만든 노트 2개(`#` 프래그먼트, innerHTML vs createElement)는 체험 코너 때문에 `.html`을 손으로 작성했다.
-  `build.js`는 맨 위에 `<!-- 자동 생성 파일` 주석이 없는 `.html`을 **덮어쓰지 않고 건너뛴다.** (손으로 쓴 내용을 지키는 안전장치)
-- 다음 단계: 이 두 노트도 6장의 방법으로 `.md`가 원본이 되도록 옮긴다.
+- **웹개발 노트 5개가 모두 `.md` 원본에서 자동 생성된다.**
+- 체험 코너가 있는 노트 2개(`#` 프래그먼트, innerHTML vs createElement)는 처음엔 `.html`을 손으로 썼다가, 6장의 방법으로 옮겼다.
+  - 체험 코너 HTML → `.md` 안에 그대로
+  - 체험 코너 JS → `webdev-url_fragment.demo.js`, `webdev-innerhtml-create_element.demo.js`
+- 체험 코너가 제목을 `#css`처럼 이름으로 가리켜서, 제목 id를 직접 정하는 문법을 `build.js`에 추가했다.
+  ```markdown
+  ## 5. CSS에서 다루기 {#css}     → <h2 id="css">
+  ## 6. 실무에서 쓰이는 곳          → <h2 id="s6">  (자동 번호)
+  ```
+- 안전장치: `build.js`는 맨 위에 `<!-- 자동 생성 파일` 주석이 없는 `.html`(손으로 쓴 파일)을 **덮어쓰지 않고 건너뛴다.**
+  옮기는 동안 손으로 쓴 두 페이지가 이 안전장치 덕분에 지켜졌다.
 
 ### 실제로 해 보기
 ```bash
 npm install        # 처음 한 번
 npm run build      # 실행 결과 예:
 # 변환    webdev-git_basics.md → webdev-git_basics.html
-# 건너뜀  webdev-url_fragment.md  (webdev-url_fragment.html은 손으로 쓴 파일)
+# 변환    webdev-url_fragment.md → webdev-url_fragment.html
+# 건너뜀  webdev-xxx.md  (webdev-xxx.html은 손으로 쓴 파일)   ← 손으로 쓴 .html이 있을 때
 ```
 
 `package.json`의 `"scripts": { "build": "node build.js" }`가 `npm run build`를 `node build.js`로 연결해 준다.

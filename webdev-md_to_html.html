@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
     <link rel="stylesheet" type="text/css" href="webdev-note.css" />
     <script src="menu.js" defer></script>
+    
 </head>
 <body>
     <header>
@@ -212,16 +213,25 @@ node build.js        # 변환 실행
 <h2 id="s8">8. 이 사이트의 현재 상태</h2>
 <ul>
 <li><strong>5장의 방법 A를 도입했다.</strong> 프로젝트에 <code>build.js</code>, <code>note-template.html</code>, <code>package.json</code>이 있고, <code>npm run build</code>로 변환한다.</li>
-<li>이 문서와 &quot;Git 기초&quot; 노트의 웹페이지는 이렇게 자동 생성된다.</li>
-<li>먼저 만든 노트 2개(<code>#</code> 프래그먼트, innerHTML vs createElement)는 체험 코너 때문에 <code>.html</code>을 손으로 작성했다.
-<code>build.js</code>는 맨 위에 <code>&lt;!-- 자동 생성 파일</code> 주석이 없는 <code>.html</code>을 <strong>덮어쓰지 않고 건너뛴다.</strong> (손으로 쓴 내용을 지키는 안전장치)</li>
-<li>다음 단계: 이 두 노트도 6장의 방법으로 <code>.md</code>가 원본이 되도록 옮긴다.</li>
+<li><strong>웹개발 노트 5개가 모두 <code>.md</code> 원본에서 자동 생성된다.</strong></li>
+<li>체험 코너가 있는 노트 2개(<code>#</code> 프래그먼트, innerHTML vs createElement)는 처음엔 <code>.html</code>을 손으로 썼다가, 6장의 방법으로 옮겼다.<ul>
+<li>체험 코너 HTML → <code>.md</code> 안에 그대로</li>
+<li>체험 코너 JS → <code>webdev-url_fragment.demo.js</code>, <code>webdev-innerhtml-create_element.demo.js</code></li>
+</ul>
+</li>
+<li>체험 코너가 제목을 <code>#css</code>처럼 이름으로 가리켜서, 제목 id를 직접 정하는 문법을 <code>build.js</code>에 추가했다.<pre><code class="language-markdown">## 5. CSS에서 다루기 {#css}     → &lt;h2 id=&quot;css&quot;&gt;
+## 6. 실무에서 쓰이는 곳          → &lt;h2 id=&quot;s6&quot;&gt;  (자동 번호)
+</code></pre>
+</li>
+<li>안전장치: <code>build.js</code>는 맨 위에 <code>&lt;!-- 자동 생성 파일</code> 주석이 없는 <code>.html</code>(손으로 쓴 파일)을 <strong>덮어쓰지 않고 건너뛴다.</strong>
+옮기는 동안 손으로 쓴 두 페이지가 이 안전장치 덕분에 지켜졌다.</li>
 </ul>
 <h3>실제로 해 보기</h3>
 <pre><code class="language-bash">npm install        # 처음 한 번
 npm run build      # 실행 결과 예:
 # 변환    webdev-git_basics.md → webdev-git_basics.html
-# 건너뜀  webdev-url_fragment.md  (webdev-url_fragment.html은 손으로 쓴 파일)
+# 변환    webdev-url_fragment.md → webdev-url_fragment.html
+# 건너뜀  webdev-xxx.md  (webdev-xxx.html은 손으로 쓴 파일)   ← 손으로 쓴 .html이 있을 때
 </code></pre>
 <p><code>package.json</code>의 <code>&quot;scripts&quot;: { &quot;build&quot;: &quot;node build.js&quot; }</code>가 <code>npm run build</code>를 <code>node build.js</code>로 연결해 준다.
 Python 프로젝트의 <code>Makefile</code>이나 <code>python -m build</code>처럼, 자주 쓰는 명령에 짧은 이름을 붙여 두는 관례다.</p>

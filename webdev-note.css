@@ -78,6 +78,29 @@ blockquote {
     min-height: 1.4em;
     white-space: pre-wrap;
 }
+.demo input[type=text] {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: Consolas, monospace;
+}
+/* 체험 코너 안에서 두 결과를 나란히 비교 (좁은 화면에서는 위아래로) */
+.compare {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.compare > div {
+    flex: 1 1 240px;
+}
+.warn {
+    color: #c00;
+    font-weight: bold;
+}
+/* :target — 지금 URL의 # 이 가리키는 제목을 노랗게 */
+article :target {
+    background: #fff3b0;
+    transition: background 0.3s;
+}
 .back {
     margin-top: 2em;
 }

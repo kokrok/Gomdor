@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- 자동 생성 파일: 이 파일 대신 같은 이름의 .md를 고치고 npm run build 하세요. -->
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -7,12 +8,7 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
     <link rel="stylesheet" type="text/css" href="webdev-note.css" />
     <script src="menu.js" defer></script>
-    <style>
-        .demo input[type=text] { width: 100%; box-sizing: border-box; font-family: Consolas, monospace; }
-        .compare { display: flex; gap: 12px; flex-wrap: wrap; }
-        .compare > div { flex: 1 1 240px; }
-        .warn { color: #c00; font-weight: bold; }
-    </style>
+    <script src="webdev-innerhtml-create_element.demo.js" defer></script>
 </head>
 <body>
     <header>
@@ -22,275 +18,291 @@
         <nav id="site-menu"></nav>
         <section>
             <article>
-                <h1><code>innerHTML</code> vs <code>createElement</code></h1>
-                <p>
-                    화면에 HTML 요소를 JavaScript로 추가하는 대표적인 두 가지 방법이다.
-                    결과는 같아 보여도 <b>동작 원리</b>가 다르고, 그 차이에서 <b>보안·성능·버그</b> 차이가 생긴다.
-                </p>
-
-                <div class="toc">
-                    <b>목차</b>
-                    <ol>
-                        <li><a href="#summary">한 줄 요약</a></li>
-                        <li><a href="#analogy">비유로 이해하기</a></li>
-                        <li><a href="#xss">핵심 차이 ① 보안 (XSS)</a> 🔬</li>
-                        <li><a href="#plus_equal">핵심 차이 ② += 함정</a> 🔬</li>
-                        <li><a href="#performance">핵심 차이 ③ 성능</a></li>
-                        <li><a href="#readability">가독성</a></li>
-                        <li><a href="#alternatives">중간 선택지들</a></li>
-                        <li><a href="#react">React와의 관계</a></li>
-                        <li><a href="#when">언제 무엇을 쓰나</a></li>
-                        <li><a href="#this_site">이 사이트에서 쓰는 곳</a></li>
-                    </ol>
-                </div>
-
-                <h2 id="summary">1. 한 줄 요약</h2>
-                <table>
-                    <tr><th></th><th><code>innerHTML</code></th><th><code>createElement</code></th></tr>
-                    <tr><td>방식</td><td>HTML <b>문자열</b>을 주면 브라우저가 <b>해석(파싱)</b>해서 요소로 만든다</td><td>요소 <b>객체</b>를 직접 하나씩 만들어 붙인다</td></tr>
-                    <tr><td>비유</td><td>소스 코드 문자열을 <code>eval()</code></td><td>객체를 생성자로 직접 생성</td></tr>
-                </table>
-<pre><code>// innerHTML: 문자열 → 브라우저가 해석
-nav.innerHTML = '&lt;ul&gt;&lt;li&gt;&lt;a href="index.html"&gt;홈&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;';
+<h1><code>innerHTML</code> vs <code>createElement</code></h1>
+<p>화면에 HTML 요소를 JavaScript로 추가하는 대표적인 두 가지 방법이다.
+결과는 같아 보여도 <strong>동작 원리</strong>가 다르고, 그 차이에서 <strong>보안·성능·버그</strong> 차이가 생긴다.</p>
+<p><strong>목차</strong> (🔬 = 직접 해 보는 체험 코너)</p>
+<ol>
+<li><a href="#summary">한 줄 요약</a></li>
+<li><a href="#analogy">비유로 이해하기</a></li>
+<li><a href="#xss">핵심 차이 ① 보안 (XSS)</a> 🔬</li>
+<li><a href="#plus_equal">핵심 차이 ② += 함정</a> 🔬</li>
+<li><a href="#performance">핵심 차이 ③ 성능</a></li>
+<li><a href="#readability">가독성</a></li>
+<li><a href="#alternatives">중간 선택지들</a></li>
+<li><a href="#react">React와의 관계</a></li>
+<li><a href="#when">언제 무엇을 쓰나</a></li>
+<li><a href="#this_site">이 사이트에서 쓰는 곳</a></li>
+</ol>
+<hr>
+<h2 id="summary">1. 한 줄 요약</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>innerHTML</code></th>
+<th><code>createElement</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>방식</td>
+<td>HTML <strong>문자열</strong>을 주면 브라우저가 <strong>해석(파싱)</strong> 해서 요소로 만든다</td>
+<td>요소 <strong>객체</strong>를 직접 하나씩 만들어 붙인다</td>
+</tr>
+<tr>
+<td>비유</td>
+<td>소스 코드 문자열을 <code>eval()</code></td>
+<td>객체를 생성자로 직접 생성</td>
+</tr>
+</tbody></table>
+<pre><code class="language-js">// innerHTML: 문자열 → 브라우저가 해석
+nav.innerHTML = &#39;&lt;ul&gt;&lt;li&gt;&lt;a href=&quot;index.html&quot;&gt;홈&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&#39;;
 
 // createElement: 객체를 직접 조립
-const ul = document.createElement("ul");
-const li = document.createElement("li");
-const a  = document.createElement("a");
-a.href = "index.html";
-a.textContent = "홈";
+const ul = document.createElement(&quot;ul&quot;);
+const li = document.createElement(&quot;li&quot;);
+const a  = document.createElement(&quot;a&quot;);
+a.href = &quot;index.html&quot;;
+a.textContent = &quot;홈&quot;;
 li.append(a);
 ul.append(li);
-nav.append(ul);</code></pre>
-
-                <h2 id="analogy">2. 비유로 이해하기</h2>
-                <h3>Python</h3>
-<pre><code># innerHTML 방식 — 문자열을 코드로 해석
-eval("Shell(radius=10)")
+nav.append(ul);
+</code></pre>
+<hr>
+<h2 id="analogy">2. 비유로 이해하기</h2>
+<h3>Python</h3>
+<pre><code class="language-python"># innerHTML 방식 — 문자열을 코드로 해석
+eval(&quot;Shell(radius=10)&quot;)
 
 # createElement 방식 — 객체를 직접 생성
-Shell(radius=10)</code></pre>
-                <p><code>eval</code>은 짧고 편하지만, 문자열에 <b>외부 입력이 섞이면</b> 의도하지 않은 코드가 실행될 수 있다.</p>
-                <h3>SQL (가장 정확한 비유)</h3>
-<pre><code># 위험: 문자열 이어 붙이기 → SQL 인젝션
-cursor.execute("SELECT * FROM user WHERE name = '" + name + "'")
+Shell(radius=10)
+</code></pre>
+<p><code>eval</code>은 짧고 편하지만, 문자열에 <strong>외부 입력이 섞이면</strong> 의도하지 않은 코드가 실행될 수 있다.</p>
+<h3>SQL (가장 정확한 비유)</h3>
+<pre><code class="language-python"># 위험: 문자열 이어 붙이기 → SQL 인젝션
+cursor.execute(&quot;SELECT * FROM user WHERE name = &#39;&quot; + name + &quot;&#39;&quot;)
 
 # 안전: 값은 값으로만 전달
-cursor.execute("SELECT * FROM user WHERE name = ?", (name,))</code></pre>
-                <p>
-                    <code>innerHTML</code>에 사용자 입력을 이어 붙이는 것은 SQL 문자열을 이어 붙이는 것과 <b>같은 종류의 실수</b>다.
-                    웹에서는 이것을 <b>XSS (Cross-Site Scripting)</b>라고 부른다.
-                </p>
-
-                <h2 id="xss">3. 핵심 차이 ① — 보안 (XSS)</h2>
-                <p>사용자가 이름 칸에 이런 걸 입력했다고 하자.</p>
-<pre><code>&lt;img src=x onerror="alert('해킹!')"&gt;</code></pre>
-<pre><code>// 위험: 입력이 HTML로 해석된다 → 존재하지 않는 이미지 → onerror 실행
-box.innerHTML = "안녕하세요, " + name + "님";
+cursor.execute(&quot;SELECT * FROM user WHERE name = ?&quot;, (name,))
+</code></pre>
+<p><code>innerHTML</code>에 사용자 입력을 이어 붙이는 것은 SQL 문자열을 이어 붙이는 것과 <strong>같은 종류의 실수</strong>다.
+웹에서는 이것을 <strong>XSS (Cross-Site Scripting)</strong> 라고 부른다.</p>
+<hr>
+<h2 id="xss">3. 핵심 차이 ① — 보안 (XSS)</h2>
+<p>사용자가 이름 칸에 이런 걸 입력했다고 하자.</p>
+<pre><code>&lt;img src=x onerror=&quot;alert(&#39;해킹!&#39;)&quot;&gt;
+</code></pre>
+<pre><code class="language-js">// 위험: 입력이 HTML로 해석된다 → 존재하지 않는 이미지 → onerror 실행
+box.innerHTML = &quot;안녕하세요, &quot; + name + &quot;님&quot;;
 
 // 안전: 입력은 그냥 글자로 들어간다 → 화면에 &lt;img ...&gt; 글자가 그대로 보임
-box.textContent = "안녕하세요, " + name + "님";
+box.textContent = &quot;안녕하세요, &quot; + name + &quot;님&quot;;
 
 // 안전: createElement + textContent
-const p = document.createElement("p");
-p.textContent = "안녕하세요, " + name + "님";
-box.append(p);</code></pre>
+const p = document.createElement(&quot;p&quot;);
+p.textContent = &quot;안녕하세요, &quot; + name + &quot;님&quot;;
+box.append(p);
+</code></pre>
+<div class="demo">
+<p class="demo-title">🔬 체험: 같은 입력을 두 방식으로 넣어 보기</p>
+<p>이름: <input type="text" id="xss-input" value="곰도르"></p>
+<button type="button" data-sample="곰도르">평범한 이름</button>
+<button type="button" data-sample="&lt;b&gt;굵은&lt;/b&gt; 곰도르">HTML 태그</button>
+<button type="button" data-sample="&lt;img src=x onerror=&quot;this.parentNode.insertAdjacentText('beforeend', ' ⚠ 입력한 코드가 실행됨!')&quot;&gt;">공격 코드 (안전한 버전)</button>
+<div class="compare">
+<div>
+<p><code>innerHTML</code> 결과</p>
+<div class="demo-output" id="xss-inner"></div>
+</div>
+<div>
+<p><code>createElement</code> + <code>textContent</code> 결과</p>
+<div class="demo-output" id="xss-safe"></div>
+</div>
+</div>
+<p>"공격 코드"를 누르면 왼쪽에만 <span class="warn">⚠ 입력한 코드가 실행됨!</span>이 나타난다. 진짜 공격이라면 이 자리에서 쿠키를 훔치거나 가짜 로그인 창을 띄운다.</p>
+</div>
 
-                <div class="demo">
-                    <p class="demo-title">🔬 체험: 같은 입력을 두 방식으로 넣어 보기</p>
-                    <p>
-                        이름:
-                        <input type="text" id="xss-input" value="곰도르">
-                    </p>
-                    <button type="button" data-sample="곰도르">평범한 이름</button>
-                    <button type="button" data-sample="&lt;b&gt;굵은&lt;/b&gt; 곰도르">HTML 태그</button>
-                    <button type="button" data-sample="&lt;img src=x onerror=&quot;this.parentNode.insertAdjacentText('beforeend', ' ⚠ 입력한 코드가 실행됨!')&quot;&gt;">공격 코드 (안전한 버전)</button>
-                    <div class="compare">
-                        <div>
-                            <p><code>innerHTML</code> 결과</p>
-                            <div class="demo-output" id="xss-inner"></div>
-                        </div>
-                        <div>
-                            <p><code>createElement</code> + <code>textContent</code> 결과</p>
-                            <div class="demo-output" id="xss-safe"></div>
-                        </div>
-                    </div>
-                    <p>"공격 코드"를 누르면 왼쪽에만 <span class="warn">⚠ 입력한 코드가 실행됨!</span>이 나타난다. 진짜 공격이라면 이 자리에서 쿠키를 훔치거나 가짜 로그인 창을 띄운다.</p>
-                </div>
+<ul>
+<li><code>innerHTML</code>로 넣은 <code>&lt;script&gt;</code> 태그는 실행되지 않는다. 하지만 <code>onerror</code>, <code>onclick</code> 같은 <strong>속성은 실행된다.</strong> 그래서 &quot;script만 막으면 된다&quot;는 생각은 틀렸다.</li>
+<li>원칙: <strong>사용자 입력, URL 값, 서버에서 받은 글</strong>은 <code>textContent</code>로 넣는다.</li>
+</ul>
+<hr>
+<h2 id="plus_equal">4. 핵심 차이 ② — <code>+=</code> 함정 (이벤트와 상태가 사라짐)</h2>
+<pre><code class="language-js">list.innerHTML += &quot;&lt;li&gt;새 항목&lt;/li&gt;&quot;;
+</code></pre>
+<p>이 한 줄은 &quot;끝에 하나 추가&quot;처럼 보이지만 실제로는:</p>
+<ol>
+<li>기존 내용을 <strong>문자열로 꺼내고</strong> (<code>list.innerHTML</code>)</li>
+<li>문자열 끝에 <code>&lt;li&gt;새 항목&lt;/li&gt;</code>를 붙이고</li>
+<li>기존 요소를 <strong>모두 지운 뒤</strong> 문자열 전체를 <strong>다시 해석</strong>해서 새로 만든다.</li>
+</ol>
+<p>그 결과:</p>
+<ul>
+<li>기존 요소에 붙여 둔 <strong><code>addEventListener</code>가 사라진다.</strong> (새로 만들어진 요소는 남남이다)</li>
+<li>입력칸에 쓰던 글자, 체크박스 상태, 포커스가 <strong>초기화</strong>된다.</li>
+<li>항목이 많을수록 매번 전체를 다시 만들어 <strong>느려진다.</strong> (n개 추가 = O(n²))</li>
+</ul>
+<pre><code class="language-js">// 기존 요소는 그대로 두고 끝에만 추가
+const li = document.createElement(&quot;li&quot;);
+li.textContent = &quot;새 항목&quot;;
+list.append(li);
+</code></pre>
+<div class="demo">
+<p class="demo-title">🔬 체험: 버튼이 고장 나는 순간</p>
+<p>아래 목록에는 클릭하면 숫자가 올라가는 버튼과 입력칸이 들어 있다. 버튼을 몇 번 누르고 입력칸에 글자를 쓴 다음, 항목을 추가해 보자.</p>
+<div class="compare">
+<div>
+<button type="button" id="add-inner">innerHTML += 로 추가</button>
+<ul class="demo-output" id="list-inner"></ul>
+</div>
+<div>
+<button type="button" id="add-safe">createElement + append 로 추가</button>
+<ul class="demo-output" id="list-safe"></ul>
+</div>
+</div>
+<p>왼쪽은 추가하는 순간 입력칸 글자가 사라지고 버튼을 눌러도 숫자가 오르지 않는다. 오른쪽은 그대로다.</p>
+<button type="button" id="reset-lists">처음 상태로</button>
+</div>
 
-                <ul>
-                    <li><code>innerHTML</code>로 넣은 <code>&lt;script&gt;</code> 태그는 실행되지 않는다. 하지만 <code>onerror</code>, <code>onclick</code> 같은 <b>속성은 실행된다.</b> 그래서 "script만 막으면 된다"는 생각은 틀렸다.</li>
-                    <li>원칙: <b>사용자 입력, URL 값, 서버에서 받은 글</b>은 <code>textContent</code>로 넣는다.</li>
-                </ul>
-
-                <h2 id="plus_equal">4. 핵심 차이 ② — <code>+=</code> 함정 (이벤트와 상태가 사라짐)</h2>
-<pre><code>list.innerHTML += "&lt;li&gt;새 항목&lt;/li&gt;";</code></pre>
-                <p>이 한 줄은 "끝에 하나 추가"처럼 보이지만 실제로는:</p>
-                <ol>
-                    <li>기존 내용을 <b>문자열로 꺼내고</b> (<code>list.innerHTML</code>)</li>
-                    <li>문자열 끝에 <code>&lt;li&gt;새 항목&lt;/li&gt;</code>를 붙이고</li>
-                    <li>기존 요소를 <b>모두 지운 뒤</b> 문자열 전체를 <b>다시 해석</b>해서 새로 만든다.</li>
-                </ol>
-                <p>그 결과:</p>
-                <ul>
-                    <li>기존 요소에 붙여 둔 <b><code>addEventListener</code>가 사라진다.</b> (새로 만들어진 요소는 남남이다)</li>
-                    <li>입력칸에 쓰던 글자, 체크박스 상태, 포커스가 <b>초기화</b>된다.</li>
-                    <li>항목이 많을수록 매번 전체를 다시 만들어 <b>느려진다.</b> (n개 추가 = O(n²))</li>
-                </ul>
-<pre><code>// 기존 요소는 그대로 두고 끝에만 추가
-const li = document.createElement("li");
-li.textContent = "새 항목";
-list.append(li);</code></pre>
-
-                <div class="demo">
-                    <p class="demo-title">🔬 체험: 버튼이 고장 나는 순간</p>
-                    <p>아래 목록에는 클릭하면 숫자가 올라가는 버튼과 입력칸이 들어 있다. 버튼을 몇 번 누르고 입력칸에 글자를 쓴 다음, 항목을 추가해 보자.</p>
-                    <div class="compare">
-                        <div>
-                            <button type="button" id="add-inner">innerHTML += 로 추가</button>
-                            <ul class="demo-output" id="list-inner"></ul>
-                        </div>
-                        <div>
-                            <button type="button" id="add-safe">createElement + append 로 추가</button>
-                            <ul class="demo-output" id="list-safe"></ul>
-                        </div>
-                    </div>
-                    <p>왼쪽은 추가하는 순간 입력칸 글자가 사라지고 버튼을 눌러도 숫자가 오르지 않는다. 오른쪽은 그대로다.</p>
-                    <button type="button" id="reset-lists">처음 상태로</button>
-                </div>
-
-                <h2 id="performance">5. 핵심 차이 ③ — 성능</h2>
-                <table>
-                    <tr><th>상황</th><th>더 빠른 쪽</th></tr>
-                    <tr><td>큰 HTML 덩어리를 <b>한 번에</b> 넣기</td><td><code>innerHTML</code> (브라우저 파서가 매우 빠름)</td></tr>
-                    <tr><td>기존 내용에 <b>조금씩 추가/수정</b></td><td><code>createElement</code> + <code>append</code> (기존 요소를 건드리지 않음)</td></tr>
-                    <tr><td>요소 수백 개를 반복문으로 만들기</td><td><code>createElement</code> 후 <b>한 번에</b> <code>append</code> (또는 <code>DocumentFragment</code>)</td></tr>
-                </table>
-                <p>보통 규모의 페이지에서는 체감 차이가 거의 없다. 성능보다 <b>보안과 버그</b>가 선택 기준이다.</p>
-
-                <h2 id="readability">6. 가독성</h2>
-                <table>
-                    <tr><th></th><th>장점</th><th>단점</th></tr>
-                    <tr><td><code>innerHTML</code></td><td>HTML 모양 그대로 보여서 <b>읽기 쉽다</b></td><td>따옴표가 섞이면 헷갈린다 (<code>'&lt;a href="..."&gt;'</code>)</td></tr>
-                    <tr><td><code>createElement</code></td><td>각 단계가 명확, 값을 안전하게 넣는다</td><td>코드가 <b>길어진다</b></td></tr>
-                </table>
-                <p>길이 문제는 함수로 감싸서 해결한다. (이 사이트 <code>menu.js</code>의 <code>buildMenuList</code>가 그 예)</p>
-<pre><code>function el(tag, props = {}, ...children) {
+<hr>
+<h2 id="performance">5. 핵심 차이 ③ — 성능</h2>
+<table>
+<thead>
+<tr>
+<th>상황</th>
+<th>더 빠른 쪽</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>큰 HTML 덩어리를 <strong>한 번에</strong> 넣기</td>
+<td><code>innerHTML</code> (브라우저 파서가 매우 빠름)</td>
+</tr>
+<tr>
+<td>기존 내용에 <strong>조금씩 추가/수정</strong></td>
+<td><code>createElement</code> + <code>append</code> (기존 요소를 건드리지 않음)</td>
+</tr>
+<tr>
+<td>요소 수백 개를 반복문으로 만들기</td>
+<td><code>createElement</code> 후 <strong>한 번에</strong> <code>append</code> (또는 <code>DocumentFragment</code>)</td>
+</tr>
+</tbody></table>
+<p>보통 규모의 페이지에서는 체감 차이가 거의 없다. 성능보다 <strong>보안과 버그</strong>가 선택 기준이다.</p>
+<hr>
+<h2 id="readability">6. 가독성</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>장점</th>
+<th>단점</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>innerHTML</code></td>
+<td>HTML 모양 그대로 보여서 <strong>읽기 쉽다</strong></td>
+<td>따옴표가 섞이면 헷갈린다 (<code>&#39;&lt;a href=&quot;...&quot;&gt;&#39;</code>)</td>
+</tr>
+<tr>
+<td><code>createElement</code></td>
+<td>각 단계가 명확, 값을 안전하게 넣는다</td>
+<td>코드가 <strong>길어진다</strong></td>
+</tr>
+</tbody></table>
+<p>길이 문제는 함수로 감싸서 해결한다. (이 사이트 <code>menu.js</code>의 <code>buildMenuList</code>가 그 예)</p>
+<pre><code class="language-js">function el(tag, props = {}, ...children) {
     const e = document.createElement(tag);
     Object.assign(e, props);
     e.append(...children);
     return e;
 }
-nav.append(el("ul", {}, el("li", {}, el("a", { href: "index.html", textContent: "홈" }))));</code></pre>
-
-                <h2 id="alternatives">7. 중간 선택지들</h2>
-                <table>
-                    <tr><th>방법</th><th>설명</th></tr>
-                    <tr><td><code>textContent</code></td><td>글자만 넣을 때. 가장 안전하고 빠르다</td></tr>
-                    <tr><td><code>insertAdjacentHTML("beforeend", html)</code></td><td>기존 요소를 지우지 않고 HTML 문자열을 <b>끝에 추가</b>. <code>+=</code> 함정은 없지만 XSS 위험은 같다</td></tr>
-                    <tr><td><code>&lt;template&gt;</code> + <code>cloneNode</code></td><td>HTML에 틀을 써 두고 복사해서 값만 채운다. HTML 모양도 보이고 안전하다</td></tr>
-                    <tr><td><code>DocumentFragment</code></td><td>요소 여러 개를 메모리에서 조립한 뒤 <b>한 번에</b> 붙인다</td></tr>
-                </table>
-
-                <h2 id="react">8. React와의 관계</h2>
-                <p>React의 JSX:</p>
-<pre><code>&lt;a href="index.html"&gt;홈&lt;/a&gt;</code></pre>
-                <p>는 빌드할 때 이렇게 바뀐다.</p>
-<pre><code>React.createElement("a", { href: "index.html" }, "홈")</code></pre>
-                <p>
-                    HTML처럼 <b>보이지만</b> 실제로는 <code>createElement</code> 방식이다. 그래서 React는 기본적으로 XSS에 안전하고,
-                    일부러 HTML 문자열을 넣으려면 <code>dangerouslySetInnerHTML</code>이라는 <b>"위험하다"는 이름의 속성</b>을 써야 한다.
-                </p>
-
-                <h2 id="when">9. 언제 무엇을 쓰나</h2>
-                <table>
-                    <tr><th>상황</th><th>선택</th></tr>
-                    <tr><td>글자만 바꾼다</td><td><code>textContent</code></td></tr>
-                    <tr><td>내가 직접 쓴 고정 HTML을 통째로 넣는다</td><td><code>innerHTML</code> 괜찮음</td></tr>
-                    <tr><td>사용자 입력, URL, 서버 데이터가 들어간다</td><td><code>createElement</code> + <code>textContent</code></td></tr>
-                    <tr><td>기존 목록에 항목을 추가한다</td><td><code>createElement</code> + <code>append</code> (<code>innerHTML +=</code> 금지)</td></tr>
-                    <tr><td>이벤트를 붙여야 한다</td><td><code>createElement</code> (만든 객체에 바로 <code>addEventListener</code>)</td></tr>
-                </table>
-
-                <h2 id="this_site">10. 이 사이트에서 쓰는 곳</h2>
-                <ul>
-                    <li>
-                        <code>index.js</code>: 고양이 이미지 교체에 <code>innerHTML</code> 사용
-<pre><code>selectedID.innerHTML = "&lt;img src='jump_cat.jpg' alt='이미지 불러오기 실패'&gt;";</code></pre>
-                        내가 쓴 고정 문자열이라 <b>문제없다.</b> (다만 <code>&lt;img&gt;</code> 하나만 바꾸는 거라면 <code>img.src = "jump_cat.jpg"</code>가 더 간단하다)
-                    </li>
-                    <li>
-                        <code>menu.js</code>: 메뉴 생성에 <code>createElement</code> 사용.
-                        메뉴 이름(<code>label</code>)을 <code>textContent</code>로 넣으므로, 나중에 메뉴 데이터를 외부(JSON, 서버)에서 받아 와도 안전하다.
-                    </li>
-                </ul>
+nav.append(el(&quot;ul&quot;, {}, el(&quot;li&quot;, {}, el(&quot;a&quot;, { href: &quot;index.html&quot;, textContent: &quot;홈&quot; }))));
+</code></pre>
+<hr>
+<h2 id="alternatives">7. 중간 선택지들</h2>
+<table>
+<thead>
+<tr>
+<th>방법</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>textContent</code></td>
+<td>글자만 넣을 때. 가장 안전하고 빠르다</td>
+</tr>
+<tr>
+<td><code>insertAdjacentHTML(&quot;beforeend&quot;, html)</code></td>
+<td>기존 요소를 지우지 않고 HTML 문자열을 <strong>끝에 추가</strong>. <code>+=</code> 함정은 없지만 XSS 위험은 같다</td>
+</tr>
+<tr>
+<td><code>&lt;template&gt;</code> + <code>cloneNode</code></td>
+<td>HTML에 틀을 써 두고 복사해서 값만 채운다. HTML 모양도 보이고 안전하다</td>
+</tr>
+<tr>
+<td><code>DocumentFragment</code></td>
+<td>요소 여러 개를 메모리에서 조립한 뒤 <strong>한 번에</strong> 붙인다</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="react">8. React와의 관계</h2>
+<p>React의 JSX:</p>
+<pre><code class="language-jsx">&lt;a href=&quot;index.html&quot;&gt;홈&lt;/a&gt;
+</code></pre>
+<p>는 빌드할 때 이렇게 바뀐다.</p>
+<pre><code class="language-js">React.createElement(&quot;a&quot;, { href: &quot;index.html&quot; }, &quot;홈&quot;)
+</code></pre>
+<p>HTML처럼 <strong>보이지만</strong> 실제로는 <code>createElement</code> 방식이다. 그래서 React는 기본적으로 XSS에 안전하고,
+일부러 HTML 문자열을 넣으려면 <code>dangerouslySetInnerHTML</code>이라는 <strong>&quot;위험하다&quot;는 이름의 속성</strong>을 써야 한다.</p>
+<hr>
+<h2 id="when">9. 언제 무엇을 쓰나</h2>
+<table>
+<thead>
+<tr>
+<th>상황</th>
+<th>선택</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>글자만 바꾼다</td>
+<td><code>textContent</code></td>
+</tr>
+<tr>
+<td>내가 직접 쓴 고정 HTML을 통째로 넣는다</td>
+<td><code>innerHTML</code> 괜찮음</td>
+</tr>
+<tr>
+<td>사용자 입력, URL, 서버 데이터가 들어간다</td>
+<td><code>createElement</code> + <code>textContent</code></td>
+</tr>
+<tr>
+<td>기존 목록에 항목을 추가한다</td>
+<td><code>createElement</code> + <code>append</code> (<code>innerHTML +=</code> 금지)</td>
+</tr>
+<tr>
+<td>이벤트를 붙여야 한다</td>
+<td><code>createElement</code> (만든 객체에 바로 <code>addEventListener</code>)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="this_site">10. 이 사이트에서 쓰는 곳</h2>
+<ul>
+<li><p><a href="index.js"><code>index.js</code></a>: 고양이 이미지 교체에 <code>innerHTML</code> 사용</p>
+<pre><code class="language-js">selectedID.innerHTML = &quot;&lt;img src=&#39;jump_cat.jpg&#39; alt=&#39;이미지 불러오기 실패&#39;&gt;&quot;;
+</code></pre>
+<p>내가 쓴 고정 문자열이라 <strong>문제없다.</strong> (다만 <code>&lt;img&gt;</code> 하나만 바꾸는 거라면 <code>img.src = &quot;jump_cat.jpg&quot;</code>가 더 간단하다)</p>
+</li>
+<li><p><a href="menu.js"><code>menu.js</code></a>: 메뉴 생성에 <code>createElement</code> 사용
+메뉴 이름(<code>label</code>)을 <code>textContent</code>로 넣으므로, 나중에 메뉴 데이터를 외부(JSON, 서버)에서 받아 와도 안전하다.</p>
+</li>
+<li><p><a href="webdev-innerhtml-create_element.demo.js"><code>webdev-innerhtml-create_element.demo.js</code></a>: 이 노트의 체험 코너.
+① XSS 체험은 <strong>일부러</strong> <code>innerHTML</code>을 써서 위험을 보여 주고, ② <code>+=</code> 함정 체험은 두 방식을 나란히 비교한다.</p>
+</li>
+</ul>
 
                 <p class="back"><a href="#">↑ 맨 위로</a> · <a href="index_menu4_예제.html#webdev">← 웹개발 공부 목록으로</a></p>
             </article>
         </section>
     </main>
     <footer><p>안녕하세요. 곰도르 푸터 영역입니다.</p></footer>
-
-    <script>
-        // ---- 체험 ①: XSS ----
-        const xssInput = document.getElementById("xss-input");
-        const xssInner = document.getElementById("xss-inner");
-        const xssSafe  = document.getElementById("xss-safe");
-
-        function renderXss() {
-            const name = xssInput.value;
-            xssInner.innerHTML = "안녕하세요, " + name + "님";   // 일부러 위험한 방식
-
-            const p = document.createElement("span");
-            p.textContent = "안녕하세요, " + name + "님";        // 안전한 방식
-            xssSafe.replaceChildren(p);
-        }
-        xssInput.addEventListener("input", renderXss);
-        for (const btn of document.querySelectorAll("[data-sample]")) {
-            btn.addEventListener("click", () => {
-                xssInput.value = btn.dataset.sample;
-                renderXss();
-            });
-        }
-        renderXss();
-
-        // ---- 체험 ②: += 함정 ----
-        const listInner = document.getElementById("list-inner");
-        const listSafe  = document.getElementById("list-safe");
-
-        // 클릭 카운터 버튼 + 입력칸이 들어 있는 항목 하나를 만든다
-        function makeCounterItem() {
-            const li = document.createElement("li");
-            const btn = document.createElement("button");
-            btn.type = "button";
-            let count = 0;
-            btn.textContent = "눌러 보세요: 0";
-            btn.addEventListener("click", () => { btn.textContent = "눌러 보세요: " + (++count); });
-            const input = document.createElement("input");
-            input.placeholder = "여기에 글자 쓰기";
-            li.append(btn, " ", input);
-            return li;
-        }
-
-        function resetLists() {
-            listInner.replaceChildren(makeCounterItem());
-            listSafe.replaceChildren(makeCounterItem());
-        }
-
-        let innerCount = 0, safeCount = 0;
-        document.getElementById("add-inner").addEventListener("click", () => {
-            listInner.innerHTML += "<li>새 항목 " + (++innerCount) + "</li>";
-        });
-        document.getElementById("add-safe").addEventListener("click", () => {
-            const li = document.createElement("li");
-            li.textContent = "새 항목 " + (++safeCount);
-            listSafe.append(li);
-        });
-        document.getElementById("reset-lists").addEventListener("click", () => {
-            innerCount = safeCount = 0;
-            resetLists();
-        });
-        resetLists();
-    </script>
 </body>
 </html>

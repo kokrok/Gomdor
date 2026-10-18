@@ -1,19 +1,14 @@
 <!DOCTYPE html>
+<!-- 자동 생성 파일: 이 파일 대신 같은 이름의 .md를 고치고 npm run build 하세요. -->
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>곰도르 - URL의 # (프래그먼트)</title>
+    <title>곰도르 - URL의 # — 프래그먼트(fragment)</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
     <link rel="stylesheet" type="text/css" href="webdev-note.css" />
     <script src="menu.js" defer></script>
-    <style>
-        /* :target — 지금 # 이 가리키는 요소만 노랗게 (5장 체험) */
-        :target {
-            background: #fff3b0;
-            transition: background 0.3s;
-        }
-    </style>
+    <script src="webdev-url_fragment.demo.js" defer></script>
 </head>
 <body>
     <header>
@@ -23,112 +18,133 @@
         <nav id="site-menu"></nav>
         <section>
             <article>
-                <h1>URL의 <code>#</code> — 프래그먼트(fragment)</h1>
-                <p>
-                    <code>index_menu4_예제.html#science</code> 에서 <code>#science</code> 부분을
-                    <b>프래그먼트(fragment)</b> 또는 <b>해시(hash)</b>라고 부른다.
-                    뜻은 "이 문서 안의 <code>science</code>라는 위치"다.
-                </p>
+<h1>URL의 <code>#</code> — 프래그먼트(fragment)</h1>
+<p><code>index_menu4_예제.html#science</code> 에서 <code>#science</code> 부분을 <strong>프래그먼트(fragment)</strong> 또는 <strong>해시(hash)</strong> 라고 부른다.
+뜻은 &quot;이 문서 안의 <code>science</code>라는 위치&quot;다.</p>
+<div class="demo">
+<p class="demo-title">🔬 실시간 관찰: 지금 이 페이지의 프래그먼트</p>
+<div class="demo-output" id="hash-now"></div>
+<p>아래 목차를 누르거나 뒤로 가기 버튼을 눌러 보면, 위 값과 주소창이 함께 바뀐다. 페이지는 새로 고쳐지지 않는다.</p>
+</div>
 
-                <div class="demo">
-                    <p class="demo-title">🔬 실시간 관찰: 지금 이 페이지의 프래그먼트</p>
-                    <div class="demo-output" id="hash-now"></div>
-                    <p>아래 목차를 누르거나 뒤로 가기 버튼을 눌러 보면, 위 값과 주소창이 함께 바뀐다. 페이지는 새로 고쳐지지 않는다.</p>
-                </div>
-
-                <div class="toc">
-                    <b>목차</b> (모두 <code>#</code> 링크)
-                    <ol>
-                        <li><a href="#structure">URL의 구조</a></li>
-                        <li><a href="#find">브라우저는 어떻게 위치를 찾나</a></li>
-                        <li><a href="#no_reload">프래그먼트만 바뀌면 일어나는 일</a></li>
-                        <li><a href="#js">JavaScript에서 다루기</a></li>
-                        <li><a href="#css">CSS에서 다루기</a></li>
-                        <li><a href="#usage">실무에서 쓰이는 곳</a></li>
-                        <li><a href="#query_vs_fragment">query(?)와 fragment(#) 비교</a></li>
-                        <li><a href="#caution">주의할 점</a></li>
-                        <li><a href="#this_site">이 사이트에서 쓰는 곳</a></li>
-                    </ol>
-                </div>
-
-                <h2 id="structure">1. URL의 구조</h2>
-<pre>https://gomdor.com:5501/museum/index.html?g=9.8&amp;e=0.8#science
+<p><strong>목차</strong> (모두 <code>#</code> 링크)</p>
+<ol>
+<li><a href="#structure">URL의 구조</a></li>
+<li><a href="#find">브라우저는 어떻게 위치를 찾나</a></li>
+<li><a href="#no_reload">프래그먼트만 바뀌면 일어나는 일</a></li>
+<li><a href="#js">JavaScript에서 다루기</a></li>
+<li><a href="#css">CSS에서 다루기</a></li>
+<li><a href="#usage">실무에서 쓰이는 곳</a></li>
+<li><a href="#query_vs_fragment">query(?)와 fragment(#) 비교</a></li>
+<li><a href="#caution">주의할 점</a></li>
+<li><a href="#this_site">이 사이트에서 쓰는 곳</a></li>
+</ol>
+<hr>
+<h2 id="structure">1. URL의 구조</h2>
+<pre><code>https://gomdor.com:5501/museum/index.html?g=9.8&amp;e=0.8#science
 └─┬─┘   └────┬────┘└─┬─┘└────────┬───────┘└────┬────┘└───┬───┘
 scheme      host    port        path          query    fragment
-(프로토콜)  (서버)  (포트)    (파일 위치)    (조건/옵션)  (문서 안 위치)</pre>
-                <table>
-                    <tr><th>부분</th><th>역할</th><th>서버로 전송되나?</th></tr>
-                    <tr><td>path <code>/museum/index.html</code></td><td><b>어떤 문서</b>를 달라</td><td>O</td></tr>
-                    <tr><td>query <code>?g=9.8</code></td><td>그 문서를 <b>어떤 조건으로</b> 달라</td><td>O</td></tr>
-                    <tr><td>fragment <code>#science</code></td><td>받은 문서의 <b>어디를</b> 보여 줘라</td><td><b>X (브라우저만 씀)</b></td></tr>
-                </table>
-                <blockquote>
-                    가장 중요한 성질: <b><code>#</code> 뒤는 서버로 가지 않는다.</b><br>
-                    브라우저가 문서를 다 받은 뒤, 자기 혼자 그 위치로 스크롤한다.
-                </blockquote>
-                <h3>비유</h3>
-                <ul>
-                    <li><b>책</b>: path = "물리학 교과서", fragment = "3장 포물선 운동" 책갈피. 서점(서버)은 책만 건네주고, 3장을 펴는 건 독자(브라우저)다.</li>
-                    <li><b>Python</b>: <code>page = server.get("index.html")</code>은 서버 요청이고, <code>page["science"]</code>는 이미 받은 데이터 안에서 찾는 것이다.</li>
-                    <li><b>C</b>: 파일을 통째로 읽어 온 다음, 그 안에서 특정 위치로 <code>fseek</code> 하는 것과 비슷하다.</li>
-                </ul>
-
-                <h2 id="find">2. 브라우저는 어떻게 위치를 찾나</h2>
-                <p><code>#science</code>를 받으면 브라우저는 문서에서 <b><code>id="science"</code>인 요소</b>를 찾아 그 위치로 스크롤한다.</p>
-<pre><code>&lt;!-- 목적지: id를 붙여 둔다 --&gt;
-&lt;h2 id="science"&gt;물리 · 수학&lt;/h2&gt;
+(프로토콜)  (서버)  (포트)    (파일 위치)    (조건/옵션)  (문서 안 위치)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>부분</th>
+<th>역할</th>
+<th>서버로 전송되나?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>path <code>/museum/index.html</code></td>
+<td><strong>어떤 문서</strong>를 달라</td>
+<td>O</td>
+</tr>
+<tr>
+<td>query <code>?g=9.8</code></td>
+<td>그 문서를 <strong>어떤 조건으로</strong> 달라</td>
+<td>O</td>
+</tr>
+<tr>
+<td>fragment <code>#science</code></td>
+<td>받은 문서의 <strong>어디를</strong> 보여 줘라</td>
+<td><strong>X (브라우저만 씀)</strong></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>가장 중요한 성질: <strong><code>#</code> 뒤는 서버로 가지 않는다.</strong>
+브라우저가 문서를 다 받은 뒤, 자기 혼자 그 위치로 스크롤한다.</p>
+</blockquote>
+<h3>비유</h3>
+<ul>
+<li><strong>책</strong>: path = &quot;물리학 교과서&quot;, fragment = &quot;3장 포물선 운동&quot; 책갈피.
+서점(서버)은 책만 건네주고, 3장을 펴는 건 독자(브라우저)다.</li>
+<li><strong>Python</strong>: <code>page = server.get(&quot;index.html&quot;)</code> 은 서버 요청이고,
+<code>page[&quot;science&quot;]</code> 는 이미 받은 데이터 안에서 찾는 것이다.</li>
+<li><strong>C</strong>: 파일을 통째로 읽어 온 다음, 그 안에서 특정 위치로 <code>fseek</code> 하는 것과 비슷하다.</li>
+</ul>
+<hr>
+<h2 id="find">2. 브라우저는 어떻게 위치를 찾나</h2>
+<p><code>#science</code> 를 받으면 브라우저는 문서에서 <strong><code>id=&quot;science&quot;</code>인 요소</strong>를 찾아 그 위치로 스크롤한다.</p>
+<pre><code class="language-html">&lt;!-- 목적지: id를 붙여 둔다 --&gt;
+&lt;h2 id=&quot;science&quot;&gt;물리 · 수학&lt;/h2&gt;
 
 &lt;!-- 출발지: 링크 --&gt;
-&lt;a href="#science"&gt;물리 · 수학으로 이동&lt;/a&gt;                 &lt;!-- 같은 페이지 안 --&gt;
-&lt;a href="index_menu4_예제.html#science"&gt;물리 · 수학&lt;/a&gt;     &lt;!-- 다른 페이지의 특정 위치 --&gt;</code></pre>
-                <ul>
-                    <li><code>id</code>는 <b>문서 안에서 하나뿐</b>이어야 한다. (같은 <code>id</code>가 둘이면 첫 번째로 간다.)</li>
-                    <li>맞는 <code>id</code>가 없으면 그냥 페이지 맨 위가 보인다. 에러는 나지 않는다.</li>
-                    <li><code>#</code>만 있거나 <code>#top</code>이면 페이지 맨 위로 간다.</li>
-                    <li>옛날 방식으로 <code>&lt;a name="science"&gt;</code>도 동작하지만, 지금은 <code>id</code>를 쓴다.</li>
-                </ul>
-                <div class="demo">
-                    <p class="demo-title">🔬 체험: 다른 페이지의 특정 위치로 가기</p>
-                    <a href="index_menu4_예제.html#webdev">과학관의 "웹개발 공부" 구역으로 →</a> (돌아올 땐 뒤로 가기)
-                    <br>
-                    <a href="#no_such_id">없는 id(#no_such_id)로 가기</a> — 아무 일도 안 일어나고 에러도 없다
-                </div>
+&lt;a href=&quot;#science&quot;&gt;물리 · 수학으로 이동&lt;/a&gt;                 &lt;!-- 같은 페이지 안 --&gt;
+&lt;a href=&quot;index_menu4_예제.html#science&quot;&gt;물리 · 수학&lt;/a&gt;     &lt;!-- 다른 페이지의 특정 위치 --&gt;
+</code></pre>
+<ul>
+<li><code>id</code>는 <strong>문서 안에서 하나뿐</strong>이어야 한다. (같은 <code>id</code>가 둘이면 첫 번째로 간다.)</li>
+<li>맞는 <code>id</code>가 없으면 그냥 페이지 맨 위가 보인다. 에러는 나지 않는다.</li>
+<li><code>#</code> 만 있거나 <code>#top</code> 이면 페이지 맨 위로 간다.</li>
+<li>옛날 방식으로 <code>&lt;a name=&quot;science&quot;&gt;</code> 도 동작하지만, 지금은 <code>id</code>를 쓴다.</li>
+</ul>
+<div class="demo">
+<p class="demo-title">🔬 체험: 다른 페이지의 특정 위치로 가기</p>
+<a href="index_menu4_예제.html#webdev">과학관의 "웹개발 공부" 구역으로 →</a> (돌아올 땐 뒤로 가기)
+<br>
+<a href="#no_such_id">없는 id(#no_such_id)로 가기</a> — 아무 일도 안 일어나고 에러도 없다
+</div>
 
-                <h2 id="no_reload">3. 프래그먼트만 바뀌면 일어나는 일</h2>
-                <p>같은 페이지에서 <code>#</code> 뒤만 바뀌면:</p>
-                <ol>
-                    <li>페이지를 <b>다시 불러오지 않는다.</b> (서버 요청 없음, 즉시 이동)</li>
-                    <li>브라우저 <b>방문 기록에 남는다.</b> → 뒤로 가기 버튼을 누르면 이전 위치로 돌아간다.</li>
-                    <li>주소창의 URL이 바뀐다. → 그 주소를 복사해서 보내면 <b>받은 사람도 같은 위치</b>를 본다.</li>
-                </ol>
-                <div class="demo">
-                    <p class="demo-title">🔬 체험: 정말 새로 고쳐지지 않을까?</p>
-                    이 페이지를 연 뒤 지난 시간: <span class="demo-output" id="uptime">0</span>초
-                    <p>목차 링크를 아무리 눌러도 시간이 0으로 돌아가지 않는다. 새로 고침(F5)을 하면 0부터 다시 센다.</p>
-                </div>
+<hr>
+<h2 id="no_reload">3. 프래그먼트만 바뀌면 일어나는 일</h2>
+<p>같은 페이지에서 <code>#</code> 뒤만 바뀌면:</p>
+<ol>
+<li>페이지를 <strong>다시 불러오지 않는다.</strong> (서버 요청 없음, 즉시 이동)</li>
+<li>브라우저 <strong>방문 기록에 남는다.</strong> → 뒤로 가기 버튼을 누르면 이전 위치로 돌아간다.</li>
+<li>주소창의 URL이 바뀐다. → 그 주소를 복사해서 보내면 <strong>받은 사람도 같은 위치</strong>를 본다.</li>
+</ol>
+<div class="demo">
+<p class="demo-title">🔬 체험: 정말 새로 고쳐지지 않을까?</p>
+이 페이지를 연 뒤 지난 시간: <span class="demo-output" id="uptime">0</span>초
+<p>목차 링크를 아무리 눌러도 시간이 0으로 돌아가지 않는다. 새로 고침(F5)을 하면 0부터 다시 센다.</p>
+</div>
 
-                <h2 id="js">4. JavaScript에서 다루기</h2>
-<pre><code>location.hash;                   // "#science" (현재 프래그먼트, # 포함)
-location.hash = "webdev";        // #webdev 로 이동 (방문 기록에 추가됨)
+<hr>
+<h2 id="js">4. JavaScript에서 다루기</h2>
+<pre><code class="language-js">location.hash;                   // &quot;#science&quot; (현재 프래그먼트, # 포함)
+location.hash = &quot;webdev&quot;;        // #webdev 로 이동 (방문 기록에 추가됨)
 
 // 프래그먼트가 바뀔 때마다 실행
-window.addEventListener("hashchange", () =&gt; {
-    console.log("지금 위치:", location.hash);
-});</code></pre>
-                <ul>
-                    <li>한글 <code>id</code>는 URL에서 <code>%EB%AC%BC...</code>처럼 인코딩된다. 비교하기 전에 <code>decodeURIComponent(location.hash)</code>로 되돌린다.</li>
-                </ul>
-                <div class="demo">
-                    <p class="demo-title">🔬 체험: JS로 <code>location.hash</code> 바꾸기</p>
-                    <button type="button" data-hash="structure">location.hash = "structure"</button>
-                    <button type="button" data-hash="css">location.hash = "css"</button>
-                    <button type="button" data-hash="">location.hash = ""</button>
-                    <p>hashchange 이벤트 기록:</p>
-                    <div class="demo-output" id="hash-log"></div>
-                </div>
+window.addEventListener(&quot;hashchange&quot;, () =&gt; {
+    console.log(&quot;지금 위치:&quot;, location.hash);
+});
+</code></pre>
+<ul>
+<li>한글 <code>id</code>는 URL에서 <code>%EB%AC%BC...</code> 처럼 인코딩된다.
+비교하기 전에 <code>decodeURIComponent(location.hash)</code> 로 되돌린다.</li>
+</ul>
+<div class="demo">
+<p class="demo-title">🔬 체험: JS로 <code>location.hash</code> 바꾸기</p>
+<button type="button" data-hash="structure">location.hash = "structure"</button>
+<button type="button" data-hash="css">location.hash = "css"</button>
+<button type="button" data-hash="">location.hash = ""</button>
+<p>hashchange 이벤트 기록:</p>
+<div class="demo-output" id="hash-log"></div>
+</div>
 
-                <h2 id="css">5. CSS에서 다루기</h2>
-<pre><code>/* 지금 프래그먼트가 가리키는 요소에만 적용 */
+<hr>
+<h2 id="css">5. CSS에서 다루기</h2>
+<pre><code class="language-css">/* 지금 프래그먼트가 가리키는 요소에만 적용 */
 :target {
     background: #fff3b0;
 }
@@ -141,83 +157,100 @@ html {
 /* 위에 고정된 헤더가 있을 때, 목적지가 헤더에 가려지지 않게 여백 */
 h2 {
     scroll-margin-top: 80px;
-}</code></pre>
-                <p>이 페이지에는 세 가지가 모두 적용돼 있다. 목차를 눌렀을 때 <b>제목이 노랗게 칠해지는 것</b>이 <code>:target</code>이다.</p>
+}
+</code></pre>
+<p>이 페이지에는 세 가지가 모두 적용돼 있다. 목차를 눌렀을 때 <strong>제목이 노랗게 칠해지는 것</strong>이 <code>:target</code>이다.</p>
+<hr>
+<h2 id="usage">6. 실무에서 쓰이는 곳</h2>
+<table>
+<thead>
+<tr>
+<th>용도</th>
+<th>예</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>목차 / 같은 페이지 안 이동</td>
+<td>위키백과 목차, 이 사이트의 과학관 하위 메뉴</td>
+</tr>
+<tr>
+<td>특정 위치 공유 (딥 링크)</td>
+<td><code>README.md#실행-방법</code>, GitHub 코드의 <code>#L42</code> (42번째 줄)</td>
+</tr>
+<tr>
+<td>탭 / 상태 기억</td>
+<td><code>settings.html#account</code> 로 &quot;계정&quot; 탭을 연 채로 시작</td>
+</tr>
+<tr>
+<td>해시 라우팅 (옛날 SPA)</td>
+<td><code>app.html#/about</code>, <code>#/blog/3</code> — 서버 없이 한 페이지로 여러 화면 흉내. React Router의 <code>HashRouter</code>가 이 방식</td>
+</tr>
+<tr>
+<td>텍스트 조각 (최신 브라우저)</td>
+<td><code>page.html#:~:text=포물선</code> — 해당 글자를 찾아 강조</td>
+</tr>
+</tbody></table>
+<div class="demo">
+<p class="demo-title">🔬 체험: 텍스트 조각</p>
+<a href="#:~:text=fseek">#:~:text=fseek</a> — 1장 비유의 "fseek" 글자를 찾아 강조한다 (Chrome, Edge)
+</div>
 
-                <h2 id="usage">6. 실무에서 쓰이는 곳</h2>
-                <table>
-                    <tr><th>용도</th><th>예</th></tr>
-                    <tr><td>목차 / 같은 페이지 안 이동</td><td>위키백과 목차, 이 사이트의 과학관 하위 메뉴</td></tr>
-                    <tr><td>특정 위치 공유 (딥 링크)</td><td><code>README.md#실행-방법</code>, GitHub 코드의 <code>#L42</code> (42번째 줄)</td></tr>
-                    <tr><td>탭 / 상태 기억</td><td><code>settings.html#account</code>로 "계정" 탭을 연 채로 시작</td></tr>
-                    <tr><td>해시 라우팅 (옛날 SPA)</td><td><code>app.html#/about</code>, <code>#/blog/3</code> — 서버 없이 한 페이지로 여러 화면 흉내. React Router의 <code>HashRouter</code>가 이 방식</td></tr>
-                    <tr><td>텍스트 조각 (최신 브라우저)</td><td><code>page.html#:~:text=포물선</code> — 해당 글자를 찾아 강조</td></tr>
-                </table>
-                <div class="demo">
-                    <p class="demo-title">🔬 체험: 텍스트 조각</p>
-                    <a href="#:~:text=fseek">#:~:text=fseek</a> — 1장 비유의 "fseek" 글자를 찾아 강조한다 (Chrome, Edge)
-                </div>
-
-                <h2 id="query_vs_fragment">7. query(<code>?</code>)와 fragment(<code>#</code>) 비교</h2>
-                <p>물리 예제에서 "조건을 URL로 공유"할 때 둘 다 쓸 수 있다.</p>
-                <table>
-                    <tr><th></th><th><code>?g=9.8</code> (query)</th><th><code>#g=9.8</code> (fragment)</th></tr>
-                    <tr><td>서버로 전송</td><td>O</td><td>X</td></tr>
-                    <tr><td>값이 바뀌면</td><td>페이지를 <b>다시 불러옴</b></td><td>다시 불러오지 않음</td></tr>
-                    <tr><td>JS로 읽기</td><td><code>new URLSearchParams(location.search)</code></td><td><code>location.hash</code></td></tr>
-                    <tr><td>적합한 용도</td><td>서버가 알아야 하는 조건 (검색어, 페이지 번호)</td><td>브라우저 안에서만 쓰는 상태 (위치, 탭, 시뮬레이션 설정)</td></tr>
-                </table>
-                <p>
-                    이 사이트는 정적 사이트(서버가 파일만 건네줌)라 어느 쪽이든 된다.
-                    값을 바꿀 때 페이지가 새로 고쳐지지 않길 원하면 <code>#</code>, 일반적인 관례를 따르려면 <code>?</code>가 낫다.
-                </p>
-
-                <h2 id="caution">8. 주의할 점</h2>
-                <ul>
-                    <li><b><code>id</code> 중복 금지.</b> 여러 HTML에 메뉴를 복사해 두던 것처럼, 같은 블록을 복사하다 보면 <code>id</code>가 겹치기 쉽다.</li>
-                    <li><b><code>id</code> 이름에 공백 금지.</b> 공백이 있으면 <code>#</code> 링크로 찾을 수 없다. 이 사이트 파일 이름 규칙처럼 영어 소문자와 <code>_</code>, <code>-</code>를 쓰면 안전하다.</li>
-                    <li><b>서버에서 쓸 수 없다.</b> 서버 코드(Node.js, Express)는 <code>#</code> 뒤를 받지 못한다. 서버가 알아야 하는 값은 query나 path에 넣는다.</li>
-                </ul>
-
-                <h2 id="this_site">9. 이 사이트에서 쓰는 곳</h2>
-                <p><code>menu.js</code>의 과학관 하위 메뉴:</p>
-<pre><code>{ label: "물리 · 수학", href: "index_menu4_예제.html#science" },
-{ label: "컴퓨터공학",  href: "index_menu4_예제.html#cs" },
-{ label: "웹개발 공부", href: "index_menu4_예제.html#webdev" },</code></pre>
-                <p>과학관 페이지의 <code>&lt;h2 id="science"&gt;</code>, <code>&lt;h2 id="cs"&gt;</code>, <code>&lt;h2 id="webdev"&gt;</code>로 이동한다.</p>
+<hr>
+<h2 id="query_vs_fragment">7. query(<code>?</code>)와 fragment(<code>#</code>) 비교</h2>
+<p>물리 예제에서 &quot;조건을 URL로 공유&quot;할 때 둘 다 쓸 수 있다.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>?g=9.8</code> (query)</th>
+<th><code>#g=9.8</code> (fragment)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>서버로 전송</td>
+<td>O</td>
+<td>X</td>
+</tr>
+<tr>
+<td>값이 바뀌면</td>
+<td>페이지를 <strong>다시 불러옴</strong></td>
+<td>다시 불러오지 않음</td>
+</tr>
+<tr>
+<td>JS로 읽기</td>
+<td><code>new URLSearchParams(location.search)</code></td>
+<td><code>location.hash</code></td>
+</tr>
+<tr>
+<td>적합한 용도</td>
+<td>서버가 알아야 하는 조건 (검색어, 페이지 번호)</td>
+<td>브라우저 안에서만 쓰는 상태 (위치, 탭, 시뮬레이션 설정)</td>
+</tr>
+</tbody></table>
+<p>이 사이트는 정적 사이트(서버가 파일만 건네줌)라 어느 쪽이든 된다.
+값을 바꿀 때 페이지가 새로 고쳐지지 않길 원하면 <code>#</code>, 일반적인 관례를 따르려면 <code>?</code> 가 낫다.</p>
+<hr>
+<h2 id="caution">8. 주의할 점</h2>
+<ul>
+<li><strong><code>id</code> 중복 금지.</strong> 여러 HTML에 메뉴를 복사해 두던 것처럼, 같은 블록을 복사하다 보면 <code>id</code>가 겹치기 쉽다.</li>
+<li><strong><code>id</code> 이름에 공백 금지.</strong> 공백이 있으면 <code>#</code> 링크로 찾을 수 없다. 이 사이트 파일 이름 규칙처럼 영어 소문자와 <code>_</code>, <code>-</code>를 쓰면 안전하다.</li>
+<li><strong>서버에서 쓸 수 없다.</strong> 서버 코드(Node.js, Express)는 <code>#</code> 뒤를 받지 못한다. 서버가 알아야 하는 값은 query나 path에 넣는다.</li>
+</ul>
+<hr>
+<h2 id="this_site">9. 이 사이트에서 쓰는 곳</h2>
+<p><a href="menu.js"><code>menu.js</code></a>의 과학관 하위 메뉴:</p>
+<pre><code class="language-js">{ label: &quot;물리 · 수학&quot;, href: &quot;index_menu4_예제.html#science&quot; },
+{ label: &quot;컴퓨터공학&quot;,  href: &quot;index_menu4_예제.html#cs&quot; },
+{ label: &quot;웹개발 공부&quot;, href: &quot;index_menu4_예제.html#webdev&quot; },
+</code></pre>
+<p>과학관 페이지의 <code>&lt;h2 id=&quot;science&quot;&gt;</code>, <code>&lt;h2 id=&quot;cs&quot;&gt;</code>, <code>&lt;h2 id=&quot;webdev&quot;&gt;</code> 로 이동한다.</p>
+<p>이 노트 자체도 <code>#</code>을 쓴다. <code>.md</code>에서 <code>## 5. CSS에서 다루기 {#css}</code>처럼 제목 뒤에 <code>{#css}</code>를 붙이면,
+<code>build.js</code>가 변환할 때 <code>&lt;h2 id=&quot;css&quot;&gt;</code>로 만들어 준다. 그래서 위 목차의 <code>#css</code> 링크가 동작한다.</p>
 
                 <p class="back"><a href="#">↑ 맨 위로</a> · <a href="index_menu4_예제.html#webdev">← 웹개발 공부 목록으로</a></p>
             </article>
         </section>
     </main>
     <footer><p>안녕하세요. 곰도르 푸터 영역입니다.</p></footer>
-
-    <script>
-        // 체험 코너 동작 (이 페이지에서만 쓰는 코드라 파일로 빼지 않고 여기 둔다)
-        const hashNow = document.getElementById("hash-now");
-        const hashLog = document.getElementById("hash-log");
-
-        function showHash() {
-            hashNow.textContent = "location.hash = " + JSON.stringify(decodeURIComponent(location.hash));
-        }
-        showHash();
-
-        window.addEventListener("hashchange", (e) => {
-            showHash();
-            const time = new Date().toLocaleTimeString();
-            hashLog.textContent = `[${time}] ${decodeURIComponent(location.hash) || "(빈 값)"}\n` + hashLog.textContent;
-        });
-
-        for (const btn of document.querySelectorAll("[data-hash]")) {
-            btn.addEventListener("click", () => {
-                location.hash = btn.dataset.hash;
-            });
-        }
-
-        // 페이지가 새로 고쳐지지 않는다는 증거: 이 숫자는 다시 불러올 때만 0이 된다
-        const uptime = document.getElementById("uptime");
-        let seconds = 0;
-        setInterval(() => { uptime.textContent = ++seconds; }, 1000);
-    </script>
 </body>
 </html>

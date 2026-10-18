@@ -3,9 +3,22 @@
 화면에 HTML 요소를 JavaScript로 추가하는 대표적인 두 가지 방법이다.
 결과는 같아 보여도 **동작 원리**가 다르고, 그 차이에서 **보안·성능·버그** 차이가 생긴다.
 
+**목차** (🔬 = 직접 해 보는 체험 코너)
+
+1. [한 줄 요약](#summary)
+2. [비유로 이해하기](#analogy)
+3. [핵심 차이 ① 보안 (XSS)](#xss) 🔬
+4. [핵심 차이 ② += 함정](#plus_equal) 🔬
+5. [핵심 차이 ③ 성능](#performance)
+6. [가독성](#readability)
+7. [중간 선택지들](#alternatives)
+8. [React와의 관계](#react)
+9. [언제 무엇을 쓰나](#when)
+10. [이 사이트에서 쓰는 곳](#this_site)
+
 ---
 
-## 1. 한 줄 요약
+## 1. 한 줄 요약 {#summary}
 
 | | `innerHTML` | `createElement` |
 |---|---|---|
@@ -29,7 +42,7 @@ nav.append(ul);
 
 ---
 
-## 2. 비유로 이해하기
+## 2. 비유로 이해하기 {#analogy}
 
 ### Python
 ```python
@@ -54,7 +67,7 @@ cursor.execute("SELECT * FROM user WHERE name = ?", (name,))
 
 ---
 
-## 3. 핵심 차이 ① — 보안 (XSS)
+## 3. 핵심 차이 ① — 보안 (XSS) {#xss}
 
 사용자가 이름 칸에 이런 걸 입력했다고 하자.
 
@@ -75,12 +88,31 @@ p.textContent = "안녕하세요, " + name + "님";
 box.append(p);
 ```
 
+<div class="demo">
+<p class="demo-title">🔬 체험: 같은 입력을 두 방식으로 넣어 보기</p>
+<p>이름: <input type="text" id="xss-input" value="곰도르"></p>
+<button type="button" data-sample="곰도르">평범한 이름</button>
+<button type="button" data-sample="&lt;b&gt;굵은&lt;/b&gt; 곰도르">HTML 태그</button>
+<button type="button" data-sample="&lt;img src=x onerror=&quot;this.parentNode.insertAdjacentText('beforeend', ' ⚠ 입력한 코드가 실행됨!')&quot;&gt;">공격 코드 (안전한 버전)</button>
+<div class="compare">
+<div>
+<p><code>innerHTML</code> 결과</p>
+<div class="demo-output" id="xss-inner"></div>
+</div>
+<div>
+<p><code>createElement</code> + <code>textContent</code> 결과</p>
+<div class="demo-output" id="xss-safe"></div>
+</div>
+</div>
+<p>"공격 코드"를 누르면 왼쪽에만 <span class="warn">⚠ 입력한 코드가 실행됨!</span>이 나타난다. 진짜 공격이라면 이 자리에서 쿠키를 훔치거나 가짜 로그인 창을 띄운다.</p>
+</div>
+
 - `innerHTML`로 넣은 `<script>` 태그는 실행되지 않는다. 하지만 `onerror`, `onclick` 같은 **속성은 실행된다.** 그래서 "script만 막으면 된다"는 생각은 틀렸다.
 - 원칙: **사용자 입력, URL 값, 서버에서 받은 글**은 `textContent`로 넣는다.
 
 ---
 
-## 4. 핵심 차이 ② — `+=` 함정 (이벤트와 상태가 사라짐)
+## 4. 핵심 차이 ② — `+=` 함정 (이벤트와 상태가 사라짐) {#plus_equal}
 
 ```js
 list.innerHTML += "<li>새 항목</li>";
@@ -104,9 +136,26 @@ li.textContent = "새 항목";
 list.append(li);
 ```
 
+<div class="demo">
+<p class="demo-title">🔬 체험: 버튼이 고장 나는 순간</p>
+<p>아래 목록에는 클릭하면 숫자가 올라가는 버튼과 입력칸이 들어 있다. 버튼을 몇 번 누르고 입력칸에 글자를 쓴 다음, 항목을 추가해 보자.</p>
+<div class="compare">
+<div>
+<button type="button" id="add-inner">innerHTML += 로 추가</button>
+<ul class="demo-output" id="list-inner"></ul>
+</div>
+<div>
+<button type="button" id="add-safe">createElement + append 로 추가</button>
+<ul class="demo-output" id="list-safe"></ul>
+</div>
+</div>
+<p>왼쪽은 추가하는 순간 입력칸 글자가 사라지고 버튼을 눌러도 숫자가 오르지 않는다. 오른쪽은 그대로다.</p>
+<button type="button" id="reset-lists">처음 상태로</button>
+</div>
+
 ---
 
-## 5. 핵심 차이 ③ — 성능
+## 5. 핵심 차이 ③ — 성능 {#performance}
 
 | 상황 | 더 빠른 쪽 |
 |---|---|
@@ -118,7 +167,7 @@ list.append(li);
 
 ---
 
-## 6. 가독성
+## 6. 가독성 {#readability}
 
 | | 장점 | 단점 |
 |---|---|---|
@@ -139,7 +188,7 @@ nav.append(el("ul", {}, el("li", {}, el("a", { href: "index.html", textContent: 
 
 ---
 
-## 7. 중간 선택지들
+## 7. 중간 선택지들 {#alternatives}
 
 | 방법 | 설명 |
 |---|---|
@@ -150,7 +199,7 @@ nav.append(el("ul", {}, el("li", {}, el("a", { href: "index.html", textContent: 
 
 ---
 
-## 8. React와의 관계
+## 8. React와의 관계 {#react}
 
 React의 JSX:
 ```jsx
@@ -165,7 +214,7 @@ HTML처럼 **보이지만** 실제로는 `createElement` 방식이다. 그래서
 
 ---
 
-## 9. 언제 무엇을 쓰나
+## 9. 언제 무엇을 쓰나 {#when}
 
 | 상황 | 선택 |
 |---|---|
@@ -177,7 +226,7 @@ HTML처럼 **보이지만** 실제로는 `createElement` 방식이다. 그래서
 
 ---
 
-## 10. 이 사이트에서 쓰는 곳
+## 10. 이 사이트에서 쓰는 곳 {#this_site}
 
 - [`index.js`](index.js): 고양이 이미지 교체에 `innerHTML` 사용
   ```js
@@ -187,3 +236,6 @@ HTML처럼 **보이지만** 실제로는 `createElement` 방식이다. 그래서
 
 - [`menu.js`](menu.js): 메뉴 생성에 `createElement` 사용
   메뉴 이름(`label`)을 `textContent`로 넣으므로, 나중에 메뉴 데이터를 외부(JSON, 서버)에서 받아 와도 안전하다.
+
+- [`webdev-innerhtml-create_element.demo.js`](webdev-innerhtml-create_element.demo.js): 이 노트의 체험 코너.
+  ① XSS 체험은 **일부러** `innerHTML`을 써서 위험을 보여 주고, ② `+=` 함정 체험은 두 방식을 나란히 비교한다.

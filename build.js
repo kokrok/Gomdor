@@ -10,11 +10,15 @@ const GENERATED_MARK = "<!-- 자동 생성 파일";  // note-template.html 맨 �
 
 const template = fs.readFileSync(TEMPLATE_FILE, "utf8");
 
-// ## 제목마다 id="s1", "s2"... 를 붙여서 #s3 같은 링크로 바로 갈 수 있게 한다
+// ## 제목마다 id를 붙여서 #s3 같은 링크로 바로 갈 수 있게 한다
+//   ## 제목 {#css}  → id="css"   (직접 정한 id)
+//   ## 제목         → id="s3"    (순서대로 자동 번호)
 let sectionCount = 0;
 marked.use({
     renderer: {
         heading(text, level) {
+            const custom = text.match(/^(.*?)\s*\{#([\w-]+)\}$/);
+            if (custom) return `<h${level} id="${custom[2]}">${custom[1]}</h${level}>\n`;
             if (level === 2) return `<h2 id="s${++sectionCount}">${text}</h2>\n`;
             return `<h${level}>${text}</h${level}>\n`;
         },
@@ -38,9 +42,14 @@ for (const mdFile of mdFiles) {
     sectionCount = 0;
     const content = marked.parse(md);
 
+    // 체험 코너 JS: webdev-xxx.demo.js 가 있으면 그 노트 페이지에만 연결한다
+    const demoFile = mdFile.replace(/\.md$/, ".demo.js");
+    const scripts = fs.existsSync(demoFile) ? `<script src="${demoFile}" defer></script>` : "";
+
     // replace에 함수를 넘기면 본문 안의 $ 기호가 특수문자로 해석되지 않는다
     const html = template
         .replace("{{title}}", () => title)
+        .replace("{{scripts}}", () => scripts)
         .replace("{{content}}", () => content);
 
     fs.writeFileSync(htmlFile, html);
