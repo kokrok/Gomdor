@@ -24,6 +24,11 @@ marked.use({
     },
 });
 
+// 파일을 읽으면서 줄바꿈을 LF(\n)로 통일한다.
+// Windows에서 Git은 파일을 CRLF(\r\n)로 내려받지만 marked는 LF로 결과를 만든다.
+// 통일하지 않으면 결과에 CRLF와 LF가 섞이고, 내용이 같아도 "바뀌었다"고 판단하게 된다.
+const read = f => fs.readFileSync(f, "utf8").replace(/\r\n/g, "\n");
+
 const isNote = f => f.startsWith("webdev-") && f.endsWith(".md");
 const noteOfDemo = f => f.replace(/\.demo\.js$/, ".md");   // webdev-xxx.demo.js → webdev-xxx.md
 
@@ -32,14 +37,14 @@ function buildOne(mdFile) {
     const htmlFile = mdFile.replace(/\.md$/, ".html");
 
     // 안전장치: 손으로 쓴 .html(자동 생성 표시가 없는 파일)은 덮어쓰지 않는다
-    if (fs.existsSync(htmlFile) && !fs.readFileSync(htmlFile, "utf8").includes(GENERATED_MARK)) {
+    if (fs.existsSync(htmlFile) && !read(htmlFile).includes(GENERATED_MARK)) {
         console.log(`건너뜀  ${mdFile}  (${htmlFile}은 손으로 쓴 파일)`);
         return;
     }
 
     // 틀은 매번 새로 읽는다 (감시 모드에서 틀을 고쳐도 바로 반영되도록)
-    const template = fs.readFileSync(TEMPLATE_FILE, "utf8");
-    const md = fs.readFileSync(mdFile, "utf8");
+    const template = read(TEMPLATE_FILE);
+    const md = read(mdFile);
     const title = (md.match(/^# (.+)$/m)?.[1] ?? mdFile).replace(/`/g, "");  // 첫 번째 # 제목
 
     sectionCount = 0;
@@ -56,7 +61,8 @@ function buildOne(mdFile) {
         .replace("{{content}}", () => content);
 
     // 결과가 같으면 쓰지 않는다 (Live Server가 쓸데없이 새로 고치지 않도록)
-    if (fs.existsSync(htmlFile) && fs.readFileSync(htmlFile, "utf8") === html) {
+    // 기존 파일도 read()로 읽으므로 줄바꿈 차이(CRLF/LF)는 "같다"로 본다
+    if (fs.existsSync(htmlFile) && read(htmlFile) === html) {
         console.log(`그대로  ${mdFile}  (바뀐 내용 없음)`);
         return;
     }
