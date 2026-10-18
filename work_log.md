@@ -6,6 +6,11 @@ Claude와 작업하면서 들은 설명을 날짜별로 남긴다. 최신 기록
 
 ## 2026-10-18
 
+### Claude Code 사용 안내 문서 (`claude_code-guide.md`)
+- **무엇을**: RC(Remote Control)와 클라우드(Claude Code on the web) 방식의 차이, 클라우드 사용 순서, RC 켜고 끄기, RC를 쓸 때 Windows 전원 설정을 한 문서로 정리했다. `CLAUDE.md`에서 이 문서를 가리킨다.
+- **왜 저장소에**: 모바일 클라우드 Claude Code는 GitHub에 push된 파일만 읽을 수 있다. 노트북의 기억이나 OneDrive에 두면 모바일에서 못 읽는다.
+- **핵심**: RC는 휴대폰을 노트북의 리모컨으로 쓰는 것이라 노트북이 깨어 있어야 한다(모니터는 꺼져도 됨, 절전은 안 됨). 클라우드는 노트북이 꺼져 있어도 되지만 노트북의 파일, 기억, Live Server가 없다.
+
 ### CLAUDE.md에 모바일 작업 규칙 추가
 - **무엇을**: "모바일 작업" 절을 만들었다. 시작할 때 `work_log.md`를 읽는다, `claude/주제` 브랜치에서 작업하고 PR로 확인받는다, 문제가 생기면 `git revert`로 되돌린다, 클라우드에서는 `npm install`을 먼저 한다.
 - **왜**: 모바일 Claude Code는 노트북의 기억과 Live Server를 쓸 수 없다. `main`에 바로 push하면 확인 없이 공개된다. 브랜치 + PR이면 휴대폰에서 변경 내용을 보고 합칠지 정할 수 있다.
