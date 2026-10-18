@@ -23,6 +23,7 @@
 2. **GitHub 연결**: 저장소 접근 권한은 **`kokrok/Gomdor`만** 선택한다. 필요한 저장소만 열어 주는 게 안전하다.
 3. **환경(Environment) 설정**: 세션 화면 위 제목 줄의 클라우드 환경 메뉴 → **Edit**. 바꾼 설정은 **새로 시작하는 세션부터** 적용된다.
    - **네트워크 접근(Network access)**: `npm install`이 npm 저장소에서 패키지를 받아야 한다. 범위를 좁히려면 **Limited**를 고르되 **"Allow package managers"는 체크한 채로** 둔다. ([공식 설명](https://code.claude.com/docs/en/cloud-environments#network-access))
+     - Claude가 공개된 사이트를 직접 열어 보게 하려면 **Allowed domains**에 `kokrok.github.io`를 넣는다. 허용하지 않으면 접속이 막혀(403) 배포 기록으로만 확인할 수 있다. 허용하면 화면이 바뀌는 작업 뒤에 실제 사이트를 헤드리스 브라우저로 찍어 확인할 수도 있다.
    - **설정 스크립트(Setup script)**: 아래 한 줄을 넣으면 세션을 시작할 때마다 자동으로 설치된다. 저장소는 `Gomdor` 폴더에 복제되므로 먼저 그 폴더로 들어간다.
      ```bash
      cd Gomdor && npm install
@@ -43,6 +44,8 @@
 3. `claude/주제` 브랜치에 push하고 PR을 만든다.
 4. **GitHub 앱**에서 PR의 바뀐 내용(초록 = 추가, 빨강 = 삭제)을 보고, 괜찮으면 **Merge**를 누른다. 1~2분 뒤 사이트에 반영된다.
 5. 휴대폰으로 사이트(https://kokrok.github.io/Gomdor/)를 확인한다. 문제가 있으면 "방금 것 되돌려줘" → `git revert`.
+   - 반영 여부는 저장소의 **Actions** 탭에서도 볼 수 있다. Merge 커밋의 `pages build and deployment`가 성공(초록 체크)이면 배포가 끝난 것이다. "사이트에 반영됐는지 확인해줘"라고 하면 Claude가 이 기록을 확인한다.
+   - 예전 내용이 보이면 새로고침한다. 브라우저가 저장해 둔 옛 페이지를 보여 주는 경우가 있다.
 
 ### 노트북에서 이어서 하기
 작업은 GitHub 브랜치에 남는다. GitHub Desktop에서 **Fetch** 후 그 브랜치를 받으면 된다.
