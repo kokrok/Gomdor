@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<!-- 자동 생성 파일: 이 파일 대신 같은 이름의 .md를 고치세요. -->
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>곰도르 - Markdown(.md)을 HTML로 자동 변환하기</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="webdev-note.css" />
+    <script src="menu.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">곰도르의 홈페이지 해더 영역</a></h1>
+    </header>
+    <main>
+        <nav id="site-menu"></nav>
+        <section>
+            <article>
+<h1>Markdown(.md)을 HTML로 자동 변환하기</h1>
+<blockquote>
+<p>지금 이 사이트의 웹개발 노트는 <strong>같은 내용이 <code>.md</code>와 <code>.html</code> 두 군데</strong>에 있다.
+한쪽을 고치면 다른 쪽도 손으로 고쳐야 한다. 이 문제를 <strong>자동 변환</strong>으로 해결하는 방법을 정리한다.</p>
+</blockquote>
+<hr>
+<h2 id="s1">1. 문제: 같은 내용을 두 번 관리</h2>
+<pre><code>webdev-url_fragment.md     ← 내가 쓰는 원본
+webdev-url_fragment.html   ← 웹사이트용 (손으로 옮겨 적음)
+</code></pre>
+<ul>
+<li>오타 하나를 고쳐도 두 파일을 다 고쳐야 한다.</li>
+<li>언젠가 둘의 내용이 <strong>어긋난다.</strong> (메뉴를 15개 HTML에 복사해 두던 것과 똑같은 문제)</li>
+<li>HTML은 <code>&lt;</code>를 <code>&amp;lt;</code>로 써야 하는 등 <strong>손으로 쓰기 번거롭다.</strong></li>
+</ul>
+<h3>해결 원칙: 원본은 하나, 나머지는 생성</h3>
+<p><strong><code>.md</code>만 내가 쓰고, <code>.html</code>은 프로그램이 만든다.</strong></p>
+<hr>
+<h2 id="s2">2. Markdown이란</h2>
+<p><strong>사람이 읽기 쉬운 문법</strong>으로 쓰는 문서 형식이다. 기호 몇 개로 제목, 목록, 표, 코드를 표현한다.</p>
+<table>
+<thead>
+<tr>
+<th>Markdown</th>
+<th>변환된 HTML</th>
+<th>화면</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code># 제목</code></td>
+<td><code>&lt;h1&gt;제목&lt;/h1&gt;</code></td>
+<td>큰 제목</td>
+</tr>
+<tr>
+<td><code>**굵게**</code></td>
+<td><code>&lt;b&gt;굵게&lt;/b&gt;</code></td>
+<td><strong>굵게</strong></td>
+</tr>
+<tr>
+<td><code>- 항목</code></td>
+<td><code>&lt;ul&gt;&lt;li&gt;항목&lt;/li&gt;&lt;/ul&gt;</code></td>
+<td>• 항목</td>
+</tr>
+<tr>
+<td><code>`code`</code></td>
+<td><code>&lt;code&gt;code&lt;/code&gt;</code></td>
+<td><code>code</code></td>
+</tr>
+<tr>
+<td><code>[링크](a.html)</code></td>
+<td><code>&lt;a href=&quot;a.html&quot;&gt;링크&lt;/a&gt;</code></td>
+<td>링크</td>
+</tr>
+</tbody></table>
+<p>GitHub, 노션, 블로그, README가 모두 Markdown을 쓴다.</p>
+<hr>
+<h2 id="s3">3. 변환의 원리 — 컴파일과 같다</h2>
+<pre><code>  [원본]                 [변환 프로그램]              [결과물]
+  .md 파일   ──────▶   ① Markdown 해석      ──────▶  .html 파일
+  (내가 씀)            ② 공통 틀에 끼워 넣기          (브라우저가 읽음)
+                       ③ 파일로 저장
+</code></pre>
+<h3>비유</h3>
+<ul>
+<li><strong>C 컴파일</strong>: <code>.c</code>(사람이 쓰는 원본) → 컴파일러 → 실행 파일(기계가 쓰는 결과물).
+실행 파일을 직접 고치지 않듯이, <strong><code>.html</code>도 직접 고치지 않는다.</strong> 원본 <code>.md</code>를 고치고 다시 변환한다.</li>
+<li><strong>Python</strong>: <code>pip install markdown</code> 후 <code>markdown.markdown(text)</code> 한 줄이면 변환된다. JS에서도 같은 역할의 라이브러리(<code>marked</code>)가 있다.</li>
+</ul>
+<h3>② 공통 틀(템플릿)이 필요한 이유</h3>
+<p>Markdown 변환기는 <strong>본문만</strong> 만든다. 헤더, 메뉴, 푸터, CSS 연결은 없다.
+그래서 모든 페이지가 공유하는 <strong>틀(템플릿)</strong> 에 본문을 끼워 넣는다.</p>
+<pre><code class="language-html">&lt;!-- template.html --&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;곰도르 - {{title}}&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;style.css&quot; /&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;webdev-note.css&quot; /&gt;
+    &lt;script src=&quot;menu.js&quot; defer&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;...&lt;/header&gt;
+    &lt;main&gt;
+        &lt;nav id=&quot;site-menu&quot;&gt;&lt;/nav&gt;
+        &lt;section&gt;&lt;article&gt;
+            {{content}}          ← 여기에 변환된 본문이 들어간다
+        &lt;/article&gt;&lt;/section&gt;
+    &lt;/main&gt;
+    &lt;footer&gt;...&lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>C의 <code>printf(&quot;곰도르 - %s&quot;, title)</code>처럼, 틀의 빈칸(<code>{{title}}</code>, <code>{{content}}</code>)을 채우는 것이다.</p>
+<hr>
+<h2 id="s4">4. 방법 비교</h2>
+<table>
+<thead>
+<tr>
+<th>방법</th>
+<th>원리</th>
+<th>장점</th>
+<th>단점</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>A. Node.js 변환 스크립트 직접 짜기</strong></td>
+<td><code>build.js</code>가 <code>.md</code>를 읽어 <code>.html</code>을 쓴다</td>
+<td>원리를 완전히 이해한다. 코드 30줄 정도. 결과물이 순수 HTML</td>
+<td>변환을 실행하는 단계(<code>node build.js</code>)가 생긴다</td>
+</tr>
+<tr>
+<td>B. 브라우저에서 변환</td>
+<td>페이지가 열릴 때 JS가 <code>.md</code>를 <code>fetch</code>해서 그 자리에서 변환</td>
+<td>빌드 단계가 없다</td>
+<td>JS가 꺼지면 안 보인다. 검색엔진에 불리. 열 때마다 변환</td>
+</tr>
+<tr>
+<td>C. 정적 사이트 생성기</td>
+<td>Eleventy, Astro, Hugo 같은 도구</td>
+<td>목록 페이지, 날짜, 태그까지 자동. 실무에서 많이 씀</td>
+<td>도구마다 규칙을 새로 배워야 한다</td>
+</tr>
+<tr>
+<td>D. GitHub Pages (Jekyll)</td>
+<td>GitHub에 <code>.md</code>를 올리면 GitHub이 자동 변환해 웹사이트로 공개</td>
+<td>설정이 거의 없다</td>
+<td>변환 과정이 안 보여서 배우는 게 적다. 커스터마이즈가 까다롭다</td>
+</tr>
+</tbody></table>
+<p><strong>이 사이트에 추천: A → (나중에) C</strong></p>
+<ol>
+<li>먼저 <strong>A</strong>로 직접 짜 본다. Node.js 공부(파일 읽기·쓰기, npm 패키지)도 같이 된다.</li>
+<li>글방 글이 많아져 목록·날짜·태그가 필요해지면 <strong>C</strong>(Eleventy 추천, 개념이 A와 거의 같음)로 옮긴다.
+이미 A를 짜 봤다면 &quot;이 도구가 내가 짠 걸 대신 해 주는구나&quot; 하고 바로 이해된다.</li>
+</ol>
+<hr>
+<h2 id="s5">5. 방법 A 미리 보기 — <code>build.js</code></h2>
+<pre><code class="language-js">// build.js — 실행: node build.js
+const fs = require(&quot;fs&quot;);                 // 파일 읽기/쓰기 (Python의 open)
+const { marked } = require(&quot;marked&quot;);     // Markdown → HTML 변환 라이브러리
+
+const template = fs.readFileSync(&quot;template.html&quot;, &quot;utf8&quot;);
+
+// webdev-로 시작하는 .md 파일을 모두 찾는다
+const mdFiles = fs.readdirSync(&quot;.&quot;).filter(f =&gt; f.startsWith(&quot;webdev-&quot;) &amp;&amp; f.endsWith(&quot;.md&quot;));
+
+for (const mdFile of mdFiles) {
+    const md = fs.readFileSync(mdFile, &quot;utf8&quot;);
+    const title = md.match(/^# (.+)$/m)?.[1] ?? mdFile;    // 첫 번째 # 제목을 페이지 제목으로
+    const content = marked.parse(md);                      // ① Markdown 해석
+
+    const html = template                                  // ② 틀에 끼워 넣기
+        .replace(&quot;{{title}}&quot;, title)
+        .replace(&quot;{{content}}&quot;, content);
+
+    const htmlFile = mdFile.replace(/\.md$/, &quot;.html&quot;);
+    fs.writeFileSync(htmlFile, html);                      // ③ 파일로 저장
+    console.log(`${mdFile} → ${htmlFile}`);
+}
+</code></pre>
+<p>준비:</p>
+<pre><code class="language-bash">npm init -y          # package.json 만들기 (Python의 requirements.txt 같은 것)
+npm install marked   # 변환 라이브러리 설치 (pip install 과 같음)
+node build.js        # 변환 실행
+</code></pre>
+<blockquote>
+<p>이 PC에는 Node.js v18이 이미 설치되어 있어 바로 해 볼 수 있다.</p>
+</blockquote>
+<hr>
+<h2 id="s6">6. 체험 코너(🔬)는 어떻게 하나</h2>
+<p>웹페이지 버전에는 직접 눌러 보는 <strong>체험 코너</strong>가 있다. 이건 Markdown 문법으로 표현할 수 없다.</p>
+<ul>
+<li><strong>Markdown 안에 HTML을 그대로 쓸 수 있다.</strong> 변환기는 HTML 태그를 건드리지 않고 그대로 통과시킨다.<pre><code class="language-markdown">## 4. JavaScript에서 다루기
+설명...
+
+&lt;div class=&quot;demo&quot;&gt;
+    &lt;button data-hash=&quot;css&quot;&gt;location.hash = &quot;css&quot;&lt;/button&gt;
+&lt;/div&gt;
+</code></pre>
+</li>
+<li>체험 코너의 JS는 별도 파일(<code>webdev-url_fragment.demo.js</code>)로 빼고, 템플릿에서 같은 이름의 JS가 있으면 연결하게 한다.</li>
+<li>GitHub에서 <code>.md</code>를 열면 HTML 부분은 일부만 보이지만, <strong>웹사이트에서는 완전하게 동작한다.</strong></li>
+</ul>
+<hr>
+<h2 id="s7">7. 주의할 점</h2>
+<ul>
+<li><strong>생성된 <code>.html</code>은 손으로 고치지 않는다.</strong> 다음 변환 때 덮어써져서 고친 내용이 사라진다. 파일 맨 위에 <code>&lt;!-- 자동 생성 파일: .md를 고치세요 --&gt;</code> 주석을 넣어 두면 좋다.</li>
+<li><strong>변환을 잊지 않는다.</strong> <code>.md</code>를 고친 뒤 <code>node build.js</code>를 안 돌리면 웹사이트에는 반영되지 않는다.
+→ 익숙해지면 파일이 바뀔 때마다 자동으로 변환(<code>--watch</code>)하거나, push할 때 GitHub Actions가 변환하게 할 수 있다.</li>
+<li><strong><code>node_modules/</code> 폴더는 Git에 올리지 않는다.</strong> <code>npm install</code>로 언제든 다시 만들 수 있는 폴더라 <code>.gitignore</code>에 넣는다. (Python의 <code>venv/</code>와 같다)</li>
+<li><strong>&quot;빌드 도구 없는 정적 사이트&quot;라는 지금 규칙이 바뀐다.</strong> 도입하면 <code>README.md</code>와 <code>CLAUDE.md</code>의 규칙도 함께 고친다.</li>
+</ul>
+<hr>
+<h2 id="s8">8. 이 사이트의 현재 상태</h2>
+<ul>
+<li><strong>이 문서와 &quot;Git 기초&quot; 노트의 웹페이지는 5장의 방법(Node.js + <code>marked</code>)으로 자동 변환해서 만들었다.</strong> 다만 아직 변환 스크립트가 프로젝트에 들어 있지 않은 일회성 변환이다.</li>
+<li>먼저 만든 노트 2개(<code>#</code> 프래그먼트, innerHTML vs createElement)는 체험 코너 때문에 <code>.html</code>을 손으로 작성했다.</li>
+<li>다음 단계 후보: <code>build.js</code>를 만들어 노트 <code>.html</code>을 자동 생성으로 바꾸기. (큰 구조 변경이라 따로 진행)</li>
+</ul>
+
+                <p class="back"><a href="#">↑ 맨 위로</a> · <a href="index_menu4_예제.html#webdev">← 웹개발 공부 목록으로</a></p>
+            </article>
+        </section>
+    </main>
+    <footer><p>안녕하세요. 곰도르 푸터 영역입니다.</p></footer>
+</body>
+</html>
