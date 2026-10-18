@@ -12,6 +12,10 @@ nav{
     border: 3px solid #FF1493;
     width : 150px;
     float : left;
+    word-break : keep-all; /* 한글을 글자 단위가 아닌 단어(띄어쓰기) 단위로 줄바꿈 */
+}
+nav ul ul{
+    padding-left : 20px; /* 하위 메뉴 들여쓰기 (기본값 40px은 좁은 메뉴에서 너무 넓음) */
 }
 section{
     border: 3px solid #00BFFF;
