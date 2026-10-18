@@ -1,0 +1,80 @@
+/* 웹개발 공부 노트 페이지 공통 스타일 (style.css 위에 덧씌움) */
+html {
+    scroll-behavior: smooth;        /* # 링크 이동을 부드럽게 */
+}
+article {
+    padding: 0 16px 24px;
+    line-height: 1.6;
+    word-break: keep-all;
+}
+article h2 {
+    margin-top: 2em;
+    padding-top: 4px;
+    border-top: 1px solid #ccc;
+    scroll-margin-top: 12px;        /* # 이동 시 제목이 화면 맨 끝에 붙지 않게 */
+}
+pre {
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    padding: 10px 12px;
+    overflow-x: auto;
+    line-height: 1.4;
+}
+code {
+    font-family: Consolas, "D2Coding", monospace;
+    background: #f5f5f5;
+    padding: 0 3px;
+}
+pre code {
+    padding: 0;
+}
+table {
+    border-collapse: collapse;
+    margin: 8px 0;
+}
+th, td {
+    border: 1px solid #ccc;
+    padding: 4px 10px;
+    text-align: left;
+    vertical-align: top;
+}
+th {
+    background: #f0f0f0;
+}
+blockquote {
+    margin: 8px 0;
+    padding: 6px 12px;
+    border-left: 4px solid #378854;
+    background: #f3faf5;
+}
+.toc {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    display: inline-block;
+}
+/* 직접 해 보는 체험 코너 */
+.demo {
+    border: 2px dashed #00BFFF;
+    padding: 10px 14px;
+    margin: 12px 0;
+    background: #f4fbff;
+}
+.demo-title {
+    font-weight: bold;
+    margin: 0 0 6px;
+}
+.demo button {
+    margin: 2px 4px 2px 0;
+}
+.demo-output {
+    font-family: Consolas, monospace;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 6px 8px;
+    min-height: 1.4em;
+    white-space: pre-wrap;
+}
+.back {
+    margin-top: 2em;
+}
