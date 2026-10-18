@@ -64,8 +64,9 @@ function applyPhysics(Shell, dt){
   Shell.y += Shell.vy * dt;
 
   // 바닥에 닿았으면 튀기기
-  if (Shell.y < 0) {
-    Shell.y = 0; // 바닥에 붙이기
+  // y는 공의 중심이다. 중심이 아니라 공의 아랫면(y - radius)이 바닥에 닿을 때 튄다.
+  if (Shell.y < Shell.radius) {
+    Shell.y = Shell.radius; // 바닥에 붙이기
     Shell.vy *= -bounce; // 위로 튀게 만들고 속도 줄이기
     // 꿈틀이 방지: 바닥에서 튈 때만 검사한다.
     // 밖에 두면 최고점(vy≈0)에서도 걸려서 공이 공중에 멈춘다.
@@ -82,9 +83,10 @@ function initializeShells() {
 
   for (let i = 0; i < shells.length; i++) {
     let shell = shells[i];
+    shell.radius = 5 + (mass / 20);
     shell.x = canvas.width / 6;
     //shell.y = canvas.height / 2;
-shell.y = 0;
+    shell.y = shell.radius; // 바닥 위에 올려놓고 발사
 
     // 발사 각도 약간씩 퍼뜨리기
     let spread = (Math.random() - 0.5) * 0.3; // ±15도 정도
@@ -94,7 +96,6 @@ shell.y = 0;
     shell.vy = speed * Math.sin(newAngle);
     shell.ax = 0;
     shell.ay = g;
-    shell.radius = 5 + (mass / 20);
   }
 }
 
