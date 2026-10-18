@@ -73,7 +73,9 @@ menu-unify            ●──●──●──●──●──●   ← 새
 | `git merge 이름` | 다른 브랜치의 커밋을 지금 브랜치에 **합치기** (내 PC 안에서만) |
 | `git branch` | 브랜치 목록 보기 |
 | `git branch -d 이름` | 다 쓴 브랜치 지우기 (합쳐진 경우만 지워짐) |
+| `git push origin --delete 이름` | **GitHub에 있는** 브랜치 지우기 (지우는 것도 GitHub에 반영하는 일이라 push를 쓴다) |
 
+- **`-d`(소문자)는 안전한 삭제**다. 아직 합쳐지지 않은 브랜치면 Git이 거부한다. **`-D`(대문자)는 강제 삭제**라 합쳐지지 않은 커밋을 잃을 수 있다.
 - **merge도 내 PC 안에서만 일어난다.** 합친 결과를 GitHub에 올리려면 역시 push가 필요하다.
 - 모바일 Claude가 만든 `claude/...` 브랜치도 같은 원리다. 모바일에서 브랜치를 만들어 작업하고 push까지 해 둬서 GitHub에 있었고, PC에서 그걸 받아 `main`에 합쳤다.
 
@@ -93,7 +95,39 @@ menu-unify            ●──●──●──●──●──●   ← 새
 
 ---
 
-## 5. 하루 작업 흐름
+## 5. stash — 커밋하지 않은 변경을 잠깐 치워 두는 서랍
+
+```
+작업하다가 ─▶ "급하게 다른 브랜치로 가야 하는데, 아직 커밋할 상태는 아니야"
+          ─▶ git stash        (변경을 서랍에 넣고, 작업 폴더를 깨끗하게)
+          ─▶ 다른 브랜치에서 일 보기
+          ─▶ git stash pop    (서랍에서 꺼내 다시 이어서 작업)
+```
+
+| 명령 | 하는 일 |
+|---|---|
+| `git stash` | 커밋하지 않은 변경을 서랍에 넣고 작업 폴더를 마지막 커밋 상태로 되돌림 |
+| `git stash list` | 서랍 목록 보기 (`stash@{0}`이 가장 최근) |
+| `git stash show --stat stash@{0}` | 서랍 안에 어떤 파일이 들었는지 보기 |
+| `git stash pop` | 가장 최근 서랍을 꺼내 작업 폴더에 되돌리고, 서랍에서는 지움 |
+| `git stash drop stash@{0}` | 꺼내지 않고 **버리기** (되돌리기 어려움) |
+
+- stash는 **브랜치도 커밋도 아니다.** 내 PC에만 있고 push해도 GitHub에 올라가지 않는다.
+- 오래 두면 무엇이 들었는지 잊어버린다. 잠깐 쓰고 바로 꺼내는 용도다. 오래 보관할 거라면 브랜치를 만들어 커밋하는 편이 낫다.
+
+### 비유
+- **책상 서랍**: 쓰던 서류를 서랍에 쓸어 넣고 책상을 비운 뒤 다른 일을 하고, 끝나면 다시 꺼내 펼친다.
+- **C/Python**: 함수 호출 전에 레지스터 값을 스택에 `push`해 두었다가 돌아와서 `pop`하는 것과 비슷하다. 명령 이름이 `pop`인 것도 그래서다. (`git push`와는 관계없다)
+
+### GitHub Desktop이 자동으로 만드는 stash
+GitHub Desktop은 브랜치를 바꿀 때 커밋하지 않은 변경이 있으면
+"이 변경을 새 브랜치로 가져갈까요, 지금 브랜치에 남겨 둘까요?"라고 묻는다.
+**남겨 두기**를 고르면 stash를 자동으로 만든다. 이름이 `!!GitHub_Desktop<브랜치이름>` 이다.
+GitHub Desktop 화면에서는 왼쪽 아래 **"Stashed Changes"** 로 보인다.
+
+---
+
+## 6. 하루 작업 흐름
 
 ```
 git pull                         # ① 시작 전: 다른 기기에서 한 작업 받아오기
@@ -108,7 +142,7 @@ PC와 모바일을 오가며 작업한다면 **① 시작 전 pull, ④ 끝날 �
 
 ---
 
-## 6. GitHub Desktop 버튼과의 대응
+## 7. GitHub Desktop 버튼과의 대응
 
 | GitHub Desktop | Git 명령 |
 |---|---|
@@ -117,11 +151,16 @@ PC와 모바일을 오가며 작업한다면 **① 시작 전 pull, ④ 끝날 �
 | 위쪽 **"Fetch origin"** | `git fetch` (GitHub에 새 커밋이 있는지 확인만) |
 | 위쪽 **"Pull origin ↓2"** | `git pull` (↓2 = 받아올 커밋 2개) |
 | 위쪽 **"Current branch"** | `git switch` |
+| 왼쪽 아래 **"Stashed Changes"** | `git stash list` / `git stash pop` |
 
 ---
 
-## 7. 이 사이트(Gomdor)에서 겪은 일
+## 8. 이 사이트(Gomdor)에서 겪은 일
 
 - **OneDrive와 Git의 충돌**: 프로젝트가 OneDrive 폴더 안에 있어서, OneDrive가 `.git` 안의 파일을 `main - 복사본`으로 복제해 `git fetch`가 고장 났다. 병합 도중 파일이 잠겨 빈 파일이 생긴 적도 있다.
   → Git 저장소는 **OneDrive 밖**에 두는 것이 좋다. 백업은 GitHub이 대신한다.
 - **23개 커밋 뒤처짐**: 다른 기기에서 push한 작업을 PC에서 pull하지 않아서 생겼다. → 작업 시작 전 `git pull`.
+- **기억에 없는 stash**: 2025년 7월, OneDrive가 만든 복사본 파일 31개가 "커밋하지 않은 변경"으로 잡혀 있던 상태에서 GitHub Desktop으로 브랜치를 바꾸면서 stash가 자동으로 만들어졌다.
+  1년 넘게 남아 있다가, 내용을 확인해 보니 복사본과 이미 `main`에 있는 파일뿐이라 `git stash drop`으로 지웠다.
+- **브랜치 정리**: 다 합쳐진 `menu-unify`, `oldMain`(내 PC)과 `claude/project-overview-...`(GitHub)을 지우고 `main` 하나만 남겼다.
+  지우기 전에 `git merge-base --is-ancestor 브랜치 main`으로 "이 브랜치의 커밋이 모두 `main`에 들어 있는지" 확인했다.
