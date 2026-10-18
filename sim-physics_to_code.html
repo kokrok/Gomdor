@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<!-- 자동 생성 파일: 이 파일 대신 같은 이름의 .md를 고치고 npm run build 하세요. -->
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>곰도르 - 물리를 코드로 옮길 때 생기는 문제들</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="webdev-note.css" />
+    <script src="menu.js" defer></script>
+    <script src="sim-physics_to_code.demo.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">곰도르의 홈페이지 해더 영역</a></h1>
+    </header>
+    <main>
+        <nav id="site-menu"></nav>
+        <section>
+            <article>
+<h1>물리를 코드로 옮길 때 생기는 문제들</h1>
+<p>물리 법칙은 맞게 적었는데, 화면 속 공은 이상하게 움직일 때가 있다.
+원인은 대부분 <strong>연속적인 시간을 잘게 끊어서 계산한다</strong>는 데 있다.
+<a href="index_menu4_%EC%98%88%EC%A0%9C_%ED%8F%AC%EB%AC%BC%EC%84%A0.html">포물선 예제</a>를 고치면서 실제로 만난 문제부터 하나씩 정리한다.</p>
+<p><strong>목차</strong></p>
+<ol>
+<li><a href="#jitter">최고점에서 멈추는 공 — 꿈틀이 방지의 함정</a></li>
+<li><a href="#euler_order">영원히 튀는 공 — 계산 순서와 에너지</a></li>
+<li><a href="#dt">모니터마다 다른 속도 — 프레임 대신 실제 시간</a></li>
+<li><a href="#radius">바닥에 묻히는 공 — 중심과 표면</a></li>
+<li><a href="#tunneling">벽을 뚫고 지나가는 공 — 터널링</a></li>
+<li><a href="#overlap">박스끼리 겹치는 충돌</a></li>
+<li><a href="#fixed_step">고정 dt와 누적기(accumulator)</a></li>
+<li><a href="#integrators">적분법 비교: Euler, Verlet, RK4</a></li>
+<li><a href="#float">부동소수점 오차의 누적</a></li>
+<li><a href="#summary">정리</a></li>
+</ol>
+<hr>
+<h2 id="jitter">1. 최고점에서 멈추는 공 — 꿈틀이 방지의 함정</h2>
+<p>바닥에 거의 멈춘 공은 아주 작게 계속 튀면서 꿈틀거린다.
+그래서 &quot;속도가 충분히 작으면 0으로 만든다&quot;는 코드를 흔히 넣는다.</p>
+<pre><code class="language-js">// 포물선 예제의 원래 코드
+if (Shell.y &lt; 0) {
+  Shell.y = 0;
+  Shell.vy *= -bounce;
+}
+if (Math.abs(Shell.vy) &lt; 0.2) {
+  Shell.vy = 0;          // 꿈틀이 방지
+}
+</code></pre>
+<p>문제는 이 검사가 <strong>바닥 밖에서, 매 프레임</strong> 실행된다는 점이다.
+공을 위로 던지면 vy는 줄어들다가 <strong>최고점에서 0을 지난다</strong>. 그 순간 검사에 걸려 vy = 0이 된다.
+다음 프레임에 중력 때문에 vy = −0.05가 되어도, 여전히 0.2보다 작으니 또 0이 된다.
+결국 공은 <strong>최고점에 영원히 떠 있다.</strong></p>
+<blockquote>
+<p>물리로 말하면: &quot;속도가 작다&quot;는 조건은 <strong>정지해 있다</strong>는 뜻이 아니다.
+최고점에서는 속도가 0이지만 가속도는 여전히 −g다. 정지는 <strong>바닥이 받쳐 줄 때만</strong> 일어난다.</p>
+</blockquote>
+<p>고친 코드: 검사를 바닥 충돌 안으로 옮긴다.</p>
+<pre><code class="language-js">if (Shell.y &lt; 0) {
+  Shell.y = 0;
+  Shell.vy *= -bounce;
+  if (Math.abs(Shell.vy) &lt; 0.2) {
+    Shell.vy = 0;        // 바닥에서 튈 때만
+  }
+}
+</code></pre>
+<div class="demo">
+<p class="demo-title">🔬 체험 1: 세 가지 코드로 공을 던져 보기</p>
+<canvas id="demo-jitter" height="240"></canvas>
+<p><button id="demo-jitter-reset">다시 던지기</button></p>
+<p>①은 꼭대기에서 멈춘다. ②는 땅에 떨어지지만 <b>튄 횟수가 끝없이 늘어난다</b> (아주 작게 튀어서 눈에는 거의 안 보인다). ③만 완전히 멈춘다. ②의 이유는 다음 절에서 본다.</p>
+</div>
+
+<hr>
+<h2 id="euler_order">2. 영원히 튀는 공 — 계산 순서와 에너지</h2>
+<p>1절을 고쳐도 공이 멈추지 않는다(체험 1의 ②). 원인은 <strong>위치와 속도를 갱신하는 순서</strong>다.</p>
+<pre><code class="language-js">// A. 위치 먼저 (explicit Euler)        // B. 속도 먼저 (semi-implicit Euler)
+y  += vy;                               vy += ay;
+vy += ay;                               y  += vy;
+</code></pre>
+<p>두 줄의 순서만 다른데 결과가 다르다. 한 번 튀어 올랐다가 다시 바닥에 닿을 때의 속도를 계산해 보면 이유가 보인다.
+속도 v로 튀어 오르고, 한 단계 시간을 h, 중력을 g라 하자.</p>
+<table>
+<thead>
+<tr>
+<th>방식</th>
+<th>다시 바닥에 닿을 때의 속력</th>
+<th>비행 한 번마다</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A. 위치 먼저</td>
+<td>v + g·h</td>
+<td>에너지가 <strong>늘어난다</strong></td>
+</tr>
+<tr>
+<td>B. 속도 먼저</td>
+<td>v − g·h</td>
+<td>에너지가 <strong>줄어든다</strong></td>
+</tr>
+<tr>
+<td>실제 물리</td>
+<td>v</td>
+<td>그대로</td>
+</tr>
+</tbody></table>
+<p>A에서는 올라갈 때 위치 계산에 &quot;중력이 아직 덜 작용한&quot; 속도를 쓰기 때문에, 공이 조금씩 더 멀리 간다.</p>
+<p>튈 때마다 반발계수 0.8만큼 속도가 줄지만, A는 착지할 때마다 g·h씩 다시 얻는다. 둘이 맞아떨어지는 속도가 있다.</p>
+<pre><code>v = 0.8 × (v + g·h)    →    v = 4·g·h = 4 × 0.05 = 0.2
+</code></pre>
+<p>이 속도가 꿈틀이 기준값 0.2와 <strong>같아서</strong>, 공은 기준선 바로 위에서 영원히 튄다.
+B는 비행할 때마다 오히려 손실이 생기므로 반드시 멈춘다.</p>
+<blockquote>
+<p>체험 코너와 포물선 예제는 B(semi-implicit Euler)를 쓴다. 게임 엔진 대부분도 이 방식을 쓴다.
+C로 치면 <code>for</code> 루프 안의 두 줄 순서만 바꾼 것인데, 수치해석에서는 서로 다른 적분법이다.</p>
+</blockquote>
+<hr>
+<h2 id="dt">3. 모니터마다 다른 속도 — 프레임 대신 실제 시간</h2>
+<p><code>requestAnimationFrame</code>은 <strong>모니터 주사율에 맞춰</strong> 불린다. 60Hz 모니터에서는 1초에 60번, 144Hz에서는 144번이다.
+매 프레임 <code>vy -= 0.05</code>를 하면 사실상 &quot;1프레임 = 시간 1&quot;로 계산하는 셈이라, 144Hz 모니터에서는 모든 것이 <strong>2.4배 빨라진다.</strong></p>
+<p>해결: 프레임 사이에 <strong>실제로 흐른 시간 dt</strong>를 재서 곱한다.</p>
+<pre><code class="language-js">let lastTime = null;
+
+function 프레임마다실행할거(now) {          // now: 브라우저가 넘겨주는 시각 (ms)
+  requestAnimationFrame(프레임마다실행할거);
+  if (lastTime === null) lastTime = now;
+  let dt = Math.min((now - lastTime) / 1000, 0.05);  // 초 단위, 상한 0.05초
+  lastTime = now;
+
+  shell.vy += g * dt;       // v = v + a·dt
+  shell.y  += shell.vy * dt; // x = x + v·dt
+}
+requestAnimationFrame(프레임마다실행할거);  // 직접 부르면 now가 undefined라서 rAF로 시작한다
+</code></pre>
+<ul>
+<li><strong>단위가 바뀐다</strong>: px/프레임 → px/s. 60fps 기준으로 환산하면 g = −0.05 × 60² = −180 px/s².</li>
+<li><strong>상한(0.05초)이 필요한 이유</strong>: 다른 탭에 갔다 오면 rAF가 멈춰 있다가 dt가 수십 초로 튄다. 그러면 공이 한 번에 바닥을 뚫고 지나간다(5절 참고).</li>
+<li>Python으로 치면 <code>time.perf_counter()</code>를 두 번 재서 뺀 값을 dt로 쓰는 것과 같다.</li>
+</ul>
+<div class="demo">
+<p class="demo-title">🔬 체험 2: 같은 공, 다른 주사율</p>
+<canvas id="demo-dt" height="240"></canvas>
+<p><button id="demo-dt-reset">다시 던지기</button></p>
+<p>가운데 공은 "1프레임 = 시간 1" 코드를 144Hz 화면에서 돌린 것이다. 혼자 2.4배 빠르다. 오른쪽은 같은 144Hz지만 dt를 써서 왼쪽(60Hz)과 같은 박자로 움직인다.</p>
+</div>
+
+<hr>
+<h2 id="radius">4. 바닥에 묻히는 공 — 중심과 표면</h2>
+<p><code>ctx.arc(x, y, radius, …)</code>의 (x, y)는 <strong>원의 중심</strong>이다. 그런데 바닥 판정을 <code>y &lt; 0</code>으로 하면,
+공의 중심이 바닥에 닿을 때 튀므로 <strong>아래쪽 절반이 바닥에 묻힌다.</strong></p>
+<pre><code class="language-js">if (Shell.y &lt; Shell.radius) {   // 아랫면(y − radius)이 바닥에 닿을 때
+  Shell.y = Shell.radius;
+  Shell.vy *= -bounce;
+}
+</code></pre>
+<blockquote>
+<p>물리에서 질점(point mass)으로 계산하던 습관이 그대로 넘어온 경우다.
+계산은 질점으로 해도 되지만, <strong>충돌은 크기가 있는 물체의 표면</strong>에서 일어난다.</p>
+</blockquote>
+<hr>
+<h2 id="tunneling">5. 벽을 뚫고 지나가는 공 — 터널링</h2>
+<blockquote>
+<p>준비 중. 한 단계에 움직이는 거리(v·dt)가 벽 두께보다 크면, 공이 벽 앞에서 벽 뒤로 &quot;순간 이동&quot;해서 충돌이 감지되지 않는다.</p>
+</blockquote>
+<hr>
+<h2 id="overlap">6. 박스끼리 겹치는 충돌</h2>
+<blockquote>
+<p>준비 중. <a href="index_menu4_%EC%98%88%EC%A0%9C_2%EC%B0%A8%EC%9B%90%EC%B6%A9%EB%8F%8C.html">2차원 충돌 예제</a>에서 다룬다.</p>
+</blockquote>
+<hr>
+<h2 id="fixed_step">7. 고정 dt와 누적기(accumulator)</h2>
+<blockquote>
+<p>준비 중. 체험 코너 JS가 이 방식을 쓴다.</p>
+</blockquote>
+<hr>
+<h2 id="integrators">8. 적분법 비교: Euler, Verlet, RK4</h2>
+<blockquote>
+<p>준비 중.</p>
+</blockquote>
+<hr>
+<h2 id="float">9. 부동소수점 오차의 누적</h2>
+<blockquote>
+<p>준비 중.</p>
+</blockquote>
+<hr>
+<h2 id="summary">10. 정리</h2>
+<table>
+<thead>
+<tr>
+<th>증상</th>
+<th>원인</th>
+<th>해결</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>공이 최고점에서 멈춤</td>
+<td>정지 조건(속도 작음)을 매 프레임 검사</td>
+<td>바닥에 닿았을 때만 검사</td>
+</tr>
+<tr>
+<td>공이 영원히 작게 튐</td>
+<td>위치 먼저 갱신 → 비행마다 에너지 증가</td>
+<td>속도 먼저 갱신 (semi-implicit Euler)</td>
+</tr>
+<tr>
+<td>모니터마다 속도가 다름</td>
+<td>1프레임 = 시간 1로 계산</td>
+<td>실제 dt를 곱함 + 상한</td>
+</tr>
+<tr>
+<td>공이 바닥에 반쯤 묻힘</td>
+<td>중심으로 충돌 판정</td>
+<td>표면(중심 ± 반지름)으로 판정</td>
+</tr>
+</tbody></table>
+<h3>이 사이트에서</h3>
+<ul>
+<li><a href="index_menu4_%EC%98%88%EC%A0%9C_%ED%8F%AC%EB%AC%BC%EC%84%A0.html">포물선 예제</a>: 1~4절을 모두 반영했다. 바닥 마찰과 좌우 벽도 넣었다.</li>
+<li><a href="sim-physics_to_code.demo.js"><code>sim-physics_to_code.demo.js</code></a>: 이 노트의 체험 코너.</li>
+</ul>
+
+                <p class="back"><a href="#">↑ 맨 위로</a> · <a href="index_menu4_예제.html#sim">← 시뮬레이션 노트 목록으로</a></p>
+            </article>
+        </section>
+    </main>
+    <footer><p>안녕하세요. 곰도르 푸터 영역입니다.</p></footer>
+</body>
+</html>

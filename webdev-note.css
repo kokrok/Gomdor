@@ -104,3 +104,10 @@ article :target {
 .back {
     margin-top: 2em;
 }
+/* 체험 코너 안의 캔버스 (JS가 화면 폭에 맞춰 해상도를 정한다) */
+.demo canvas {
+    display: block;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #ccc;
+}
