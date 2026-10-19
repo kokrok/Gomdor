@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>곰도르</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="elevator.css" />
+    <link rel="stylesheet" type="text/css" href="collision.css" />
+    <script src="index.js"></script>
+
+    <script src="menu.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">곰도르의 홈페이지 해더 영역</a></h1>
+    </header>
+    <main>
+        <nav id="site-menu"></nav>
+        <section>
+            <article>
+                <h1>1차원 충돌</h1>
+                <p><canvas id="canvas" height="200" width="900"></canvas></p>
+                <script src="collision_1d.js"></script>
+
+                <h2>1차원 완전 탄성 충돌 식</h2>
+                <p>질량 <math><msub><mi>m</mi><mn>1</mn></msub></math>, <math><msub><mi>m</mi><mn>2</mn></msub></math>인 두 공이
+                   한 직선 위에서 속도 <math><msub><mi>v</mi><mn>1</mn></msub></math>, <math><msub><mi>v</mi><mn>2</mn></msub></math>로 부딪힌다.
+                   충돌 뒤 속도는 <math><msubsup><mi>v</mi><mn>1</mn><mo>′</mo></msubsup></math>, <math><msubsup><mi>v</mi><mn>2</mn><mo>′</mo></msubsup></math>로 쓴다.</p>
+
+                <h3>보존 법칙 두 개</h3>
+                <div class="formula">
+                    <p>운동량 보존</p>
+                    <math display="block">
+                        <msub><mi>m</mi><mn>1</mn></msub><msub><mi>v</mi><mn>1</mn></msub><mo>+</mo>
+                        <msub><mi>m</mi><mn>2</mn></msub><msub><mi>v</mi><mn>2</mn></msub><mo>=</mo>
+                        <msub><mi>m</mi><mn>1</mn></msub><msubsup><mi>v</mi><mn>1</mn><mo>′</mo></msubsup><mo>+</mo>
+                        <msub><mi>m</mi><mn>2</mn></msub><msubsup><mi>v</mi><mn>2</mn><mo>′</mo></msubsup>
+                    </math>
+                    <p>운동에너지 보존 (완전 탄성)</p>
+                    <math display="block">
+                        <mfrac><mn>1</mn><mn>2</mn></mfrac><msub><mi>m</mi><mn>1</mn></msub><msubsup><mi>v</mi><mn>1</mn><mn>2</mn></msubsup><mo>+</mo>
+                        <mfrac><mn>1</mn><mn>2</mn></mfrac><msub><mi>m</mi><mn>2</mn></msub><msubsup><mi>v</mi><mn>2</mn><mn>2</mn></msubsup><mo>=</mo>
+                        <mfrac><mn>1</mn><mn>2</mn></mfrac><msub><mi>m</mi><mn>1</mn></msub><msubsup><mi>v</mi><mn>1</mn><mrow><mo>′</mo><mn>2</mn></mrow></msubsup><mo>+</mo>
+                        <mfrac><mn>1</mn><mn>2</mn></mfrac><msub><mi>m</mi><mn>2</mn></msub><msubsup><mi>v</mi><mn>2</mn><mrow><mo>′</mo><mn>2</mn></mrow></msubsup>
+                    </math>
+                </div>
+
+                <h3>두 식을 풀면</h3>
+                <div class="formula">
+                    <math display="block">
+                        <msubsup><mi>v</mi><mn>1</mn><mo>′</mo></msubsup><mo>=</mo>
+                        <mfrac>
+                            <mrow><mo>(</mo><msub><mi>m</mi><mn>1</mn></msub><mo>−</mo><msub><mi>m</mi><mn>2</mn></msub><mo>)</mo><msub><mi>v</mi><mn>1</mn></msub><mo>+</mo><mn>2</mn><msub><mi>m</mi><mn>2</mn></msub><msub><mi>v</mi><mn>2</mn></msub></mrow>
+                            <mrow><msub><mi>m</mi><mn>1</mn></msub><mo>+</mo><msub><mi>m</mi><mn>2</mn></msub></mrow>
+                        </mfrac>
+                    </math>
+                    <math display="block">
+                        <msubsup><mi>v</mi><mn>2</mn><mo>′</mo></msubsup><mo>=</mo>
+                        <mfrac>
+                            <mrow><mo>(</mo><msub><mi>m</mi><mn>2</mn></msub><mo>−</mo><msub><mi>m</mi><mn>1</mn></msub><mo>)</mo><msub><mi>v</mi><mn>2</mn></msub><mo>+</mo><mn>2</mn><msub><mi>m</mi><mn>1</mn></msub><msub><mi>v</mi><mn>1</mn></msub></mrow>
+                            <mrow><msub><mi>m</mi><mn>1</mn></msub><mo>+</mo><msub><mi>m</mi><mn>2</mn></msub></mrow>
+                        </mfrac>
+                    </math>
+                </div>
+                <p>코드의 <code>collide1D()</code>가 이 두 줄을 그대로 계산한다.</p>
+                <ul>
+                    <li>질량이 같으면(<math><msub><mi>m</mi><mn>1</mn></msub><mo>=</mo><msub><mi>m</mi><mn>2</mn></msub></math>) 두 공이 속도를 맞바꾼다.</li>
+                    <li>위 캔버스에서 운동에너지 합 E는 항상 같다. 운동량 합 p는 두 공끼리 부딪힐 때는 그대로지만, 벽에 부딪힐 때는 바뀐다. 벽이 공에 힘을 주기 때문이다.</li>
+                </ul>
+
+                <li><a href="index_menu4_예제.html">← 과학관으로</a></li>
+            </article>
+        </section>
+    </main>
+    <footer><p>안녕하세요. 곰도르 푸터 영역입니다.</p></footer>
+</body>
+</html>
