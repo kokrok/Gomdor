@@ -12,6 +12,7 @@ function toCanvasY(y) {
 // 단위: 길이는 px, 시간은 초(s), 질량은 kg. 중력은 없다 (당구대를 위에서 본 모습).
 const MAX_DT = 0.05;      // s. 탭을 오래 떠났다 돌아와도 한 번에 이 이상 진행하지 않는다
 const ARROW_SCALE = 0.3;  // 속도 화살표 길이 = 속력 × 이 값 (px)
+let restitution = 1;      // 반발계수 e. 1이면 완전 탄성, 0이면 완전 비탄성. 입력창(#input_restitution)으로 바꾼다
 const COLORS = ['#dd0000', '#0055cc', '#2e8b57', '#e08a00', '#8e44ad', '#16a085', '#c0392b', '#2c3e50'];
 
 /*Make Object*/
@@ -64,9 +65,9 @@ class Ball{
   }
 }
 
-// 2차원 완전 탄성 충돌.
+// 2차원 충돌.
 // 두 중심을 잇는 방향(법선 n)으로만 힘이 작용한다.
-// → 법선 성분은 1차원 충돌 식으로 바뀌고, 접선 성분은 그대로다. (캔버스 아래 식 참고)
+// → 법선 성분은 1차원 충돌 식(반발계수 e 포함)으로 바뀌고, 접선 성분은 그대로다. (캔버스 아래 식 참고)
 function collide2D(a, b){
   let dx = b.x - a.x;
   let dy = b.y - a.y;
@@ -81,8 +82,9 @@ function collide2D(a, b){
   let vn = (a.vx - b.vx) * nx + (a.vy - b.vy) * ny;
   if (vn > 0) {
     let m1 = a.mass, m2 = b.mass;
-    let k1 = 2 * m2 / (m1 + m2) * vn;
-    let k2 = 2 * m1 / (m1 + m2) * vn;
+    let e = restitution;
+    let k1 = (1 + e) * m2 / (m1 + m2) * vn;
+    let k2 = (1 + e) * m1 / (m1 + m2) * vn;
     a.vx -= k1 * nx;  a.vy -= k1 * ny;
     b.vx += k2 * nx;  b.vy += k2 * ny;
   }
@@ -126,9 +128,19 @@ function drawText(){
   ctx.fillStyle = '#333';
   ctx.font = '14px sans-serif';
   // 좁은 화면에서도 잘리지 않게 두 줄로 쓴다
-  ctx.fillText(`공 ${balls.length}개    E = ${E.toFixed(0)}`, 10, 20);
+  ctx.fillText(`공 ${balls.length}개    e = ${restitution}    E = ${E.toFixed(0)}`, 10, 20);
   ctx.fillText(`p = (${px.toFixed(0)}, ${py.toFixed(0)})`, 10, 40);
 }
+
+// 반발계수 입력창. 값이 바뀌면 다음 충돌부터 쓴다.
+const restitutionInput = document.getElementById('input_restitution');
+restitutionInput.addEventListener('input', () => {
+  let value = parseFloat(restitutionInput.value);
+  if (value >= 0 && value <= 1) {  // 빈칸이나 범위 밖은 무시하고 이전 값을 유지한다
+    restitution = value;
+  }
+});
+restitution = parseFloat(restitutionInput.value);
 
 const countInput = document.getElementById('input_count');
 document.getElementById('button_restart').addEventListener('click', () => {

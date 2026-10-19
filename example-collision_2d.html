@@ -25,12 +25,16 @@
                 <div>
                     <input type="number" id="input_count" min="2" max="30" value="8" step="1">
                     <label for="input_count">공 개수 (2~30)</label>
+                </div>
+                <div>
+                    <input type="number" id="input_restitution" min="0" max="1" value="1" step="0.1">
+                    <label for="input_restitution">반발계수 e (0~1)</label>
                     <button type="button" id="button_restart">다시 섞기</button>
                 </div>
                 <script src="collision_2d.js"></script>
                 <p>검은 선은 속도 화살표다. 공의 크기는 질량(1~5 kg)에 비례한다. 왼쪽 위의 E는 운동에너지 합, p는 운동량 합(x, y)이다.</p>
 
-                <h2>2차원 완전 탄성 충돌 식</h2>
+                <h2>2차원 충돌 식</h2>
                 <p>매끄러운 두 공이 부딪히면 힘은 <strong>두 중심을 잇는 방향</strong>으로만 작용한다.
                    이 방향의 단위 벡터를 법선 <math><mover><mi>n</mi><mo>^</mo></mover></math>이라 한다.</p>
                 <div class="formula">
@@ -41,22 +45,24 @@
                 <p>속도를 법선 성분(n)과 그에 수직인 접선 성분(t)으로 나눈다.</p>
                 <ul>
                     <li><strong>접선 성분은 그대로다.</strong> 그 방향으로는 힘이 없다. <math><msubsup><mi>v</mi><mrow><mn>1</mn><mi>t</mi></mrow><mo>′</mo></msubsup><mo>=</mo><msub><mi>v</mi><mrow><mn>1</mn><mi>t</mi></mrow></msub><mo>,</mo><mspace width='1em'/><msubsup><mi>v</mi><mrow><mn>2</mn><mi>t</mi></mrow><mo>′</mo></msubsup><mo>=</mo><msub><mi>v</mi><mrow><mn>2</mn><mi>t</mi></mrow></msub></math></li>
-                    <li><strong>법선 성분은 1차원 충돌이다.</strong> <a href="example-collision_1d.html">1차원 충돌</a> 식에 법선 성분을 넣으면 된다.</li>
+                    <li><strong>법선 성분은 1차원 충돌이다.</strong> <a href="example-collision_1d.html">1차원 충돌</a>의 반발계수 식에 법선 성분을 넣으면 된다.</li>
                 </ul>
                 <div class="formula">
-                    <math display="block"><msubsup><mi>v</mi><mrow><mn>1</mn><mi>n</mi></mrow><mo>′</mo></msubsup><mo>=</mo><mfrac><mrow><mo>(</mo><msub><mi>m</mi><mn>1</mn></msub><mo>−</mo><msub><mi>m</mi><mn>2</mn></msub><mo>)</mo><msub><mi>v</mi><mrow><mn>1</mn><mi>n</mi></mrow></msub><mo>+</mo><mn>2</mn><msub><mi>m</mi><mn>2</mn></msub><msub><mi>v</mi><mrow><mn>2</mn><mi>n</mi></mrow></msub></mrow><mrow><msub><mi>m</mi><mn>1</mn></msub><mo>+</mo><msub><mi>m</mi><mn>2</mn></msub></mrow></mfrac><mo>=</mo><msub><mi>v</mi><mrow><mn>1</mn><mi>n</mi></mrow></msub><mo>−</mo><mfrac><mrow><mn>2</mn><msub><mi>m</mi><mn>2</mn></msub></mrow><mrow><msub><mi>m</mi><mn>1</mn></msub><mo>+</mo><msub><mi>m</mi><mn>2</mn></msub></mrow></mfrac><mo>(</mo><msub><mi>v</mi><mrow><mn>1</mn><mi>n</mi></mrow></msub><mo>−</mo><msub><mi>v</mi><mrow><mn>2</mn><mi>n</mi></mrow></msub><mo>)</mo></math>
+                    <math display="block"><msubsup><mi>v</mi><mrow><mn>1</mn><mi>n</mi></mrow><mo>′</mo></msubsup><mo>=</mo><msub><mi>v</mi><mrow><mn>1</mn><mi>n</mi></mrow></msub><mo>−</mo><mfrac><mrow><mo>(</mo><mn>1</mn><mo>+</mo><mi>e</mi><mo>)</mo><msub><mi>m</mi><mn>2</mn></msub></mrow><mrow><msub><mi>m</mi><mn>1</mn></msub><mo>+</mo><msub><mi>m</mi><mn>2</mn></msub></mrow></mfrac><mo>(</mo><msub><mi>v</mi><mrow><mn>1</mn><mi>n</mi></mrow></msub><mo>−</mo><msub><mi>v</mi><mrow><mn>2</mn><mi>n</mi></mrow></msub><mo>)</mo></math>
+                    <math display="block"><msubsup><mi>v</mi><mrow><mn>2</mn><mi>n</mi></mrow><mo>′</mo></msubsup><mo>=</mo><msub><mi>v</mi><mrow><mn>2</mn><mi>n</mi></mrow></msub><mo>+</mo><mfrac><mrow><mo>(</mo><mn>1</mn><mo>+</mo><mi>e</mi><mo>)</mo><msub><mi>m</mi><mn>1</mn></msub></mrow><mrow><msub><mi>m</mi><mn>1</mn></msub><mo>+</mo><msub><mi>m</mi><mn>2</mn></msub></mrow></mfrac><mo>(</mo><msub><mi>v</mi><mrow><mn>1</mn><mi>n</mi></mrow></msub><mo>−</mo><msub><mi>v</mi><mrow><mn>2</mn><mi>n</mi></mrow></msub><mo>)</mo></math>
                 </div>
 
                 <h3>벡터로 한 줄에 쓰면</h3>
                 <div class="formula">
-                    <math display="block"><msubsup><mover><mi>v</mi><mo>→</mo></mover><mn>1</mn><mo>′</mo></msubsup><mo>=</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>1</mn></msub><mo>−</mo><mfrac><mrow><mn>2</mn><msub><mi>m</mi><mn>2</mn></msub></mrow><mrow><msub><mi>m</mi><mn>1</mn></msub><mo>+</mo><msub><mi>m</mi><mn>2</mn></msub></mrow></mfrac><mo>[</mo><mo>(</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>1</mn></msub><mo>−</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>2</mn></msub><mo>)</mo><mo>·</mo><mover><mi>n</mi><mo>^</mo></mover><mo>]</mo><mover><mi>n</mi><mo>^</mo></mover></math>
-                    <math display="block"><msubsup><mover><mi>v</mi><mo>→</mo></mover><mn>2</mn><mo>′</mo></msubsup><mo>=</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>2</mn></msub><mo>+</mo><mfrac><mrow><mn>2</mn><msub><mi>m</mi><mn>1</mn></msub></mrow><mrow><msub><mi>m</mi><mn>1</mn></msub><mo>+</mo><msub><mi>m</mi><mn>2</mn></msub></mrow></mfrac><mo>[</mo><mo>(</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>1</mn></msub><mo>−</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>2</mn></msub><mo>)</mo><mo>·</mo><mover><mi>n</mi><mo>^</mo></mover><mo>]</mo><mover><mi>n</mi><mo>^</mo></mover></math>
+                    <math display="block"><msubsup><mover><mi>v</mi><mo>→</mo></mover><mn>1</mn><mo>′</mo></msubsup><mo>=</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>1</mn></msub><mo>−</mo><mfrac><mrow><mo>(</mo><mn>1</mn><mo>+</mo><mi>e</mi><mo>)</mo><msub><mi>m</mi><mn>2</mn></msub></mrow><mrow><msub><mi>m</mi><mn>1</mn></msub><mo>+</mo><msub><mi>m</mi><mn>2</mn></msub></mrow></mfrac><mo>[</mo><mo>(</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>1</mn></msub><mo>−</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>2</mn></msub><mo>)</mo><mo>·</mo><mover><mi>n</mi><mo>^</mo></mover><mo>]</mo><mover><mi>n</mi><mo>^</mo></mover></math>
+                    <math display="block"><msubsup><mover><mi>v</mi><mo>→</mo></mover><mn>2</mn><mo>′</mo></msubsup><mo>=</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>2</mn></msub><mo>+</mo><mfrac><mrow><mo>(</mo><mn>1</mn><mo>+</mo><mi>e</mi><mo>)</mo><msub><mi>m</mi><mn>1</mn></msub></mrow><mrow><msub><mi>m</mi><mn>1</mn></msub><mo>+</mo><msub><mi>m</mi><mn>2</mn></msub></mrow></mfrac><mo>[</mo><mo>(</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>1</mn></msub><mo>−</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>2</mn></msub><mo>)</mo><mo>·</mo><mover><mi>n</mi><mo>^</mo></mover><mo>]</mo><mover><mi>n</mi><mo>^</mo></mover></math>
                 </div>
                 <p>코드의 <code>collide2D()</code>가 이 두 줄을 계산한다. 대괄호 안이 <code>vn</code>(상대 속도의 법선 성분)이다.</p>
                 <ul>
                     <li><math><mo>[</mo><mo>(</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>1</mn></msub><mo>−</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>2</mn></msub><mo>)</mo><mo>·</mo><mover><mi>n</mi><mo>^</mo></mover><mo>]</mo><mo>&gt;</mo><mn>0</mn></math>일 때만 튕긴다. 서로 다가가는 중이라는 뜻이다. 이미 멀어지는 중인데 아직 겹쳐 있는 공을 또 튕기면 두 공이 붙어서 떤다.</li>
                     <li>정면으로 부딪히면 <math><mover><mi>n</mi><mo>^</mo></mover></math>가 속도와 같은 방향이라 1차원 충돌과 같아진다. 비스듬히 부딪힐수록 접선 성분이 커서 방향만 살짝 바뀐다.</li>
-                    <li>캔버스 위 운동에너지 합 E는 항상 같다. 운동량 합 p는 공끼리 부딪힐 때는 그대로지만 벽에 부딪힐 때 바뀐다.</li>
+                    <li>e = 1(완전 탄성)이면 캔버스 위 운동에너지 합 E는 항상 같다. e &lt; 1이면 공끼리 부딪힐 때마다 E가 줄어든다. 벽은 완전 탄성으로 두었다. 운동량 합 p는 공끼리 부딪힐 때는 그대로지만 벽에 부딪힐 때 바뀐다.</li>
+                    <li>e = 0이면 법선 방향으로 붙어서 함께 움직이고, 접선 방향으로는 미끄러진다.</li>
                 </ul>
 
                 <li><a href="index_menu4_예제.html">← 과학관으로</a></li>

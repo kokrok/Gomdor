@@ -22,6 +22,11 @@
             <article>
                 <h1>1차원 충돌</h1>
                 <p><canvas id="canvas" height="200" width="900"></canvas></p>
+                <div>
+                    <input type="number" id="input_restitution" min="0" max="1" value="1" step="0.1">
+                    <label for="input_restitution">반발계수 e (0~1)</label>
+                    <button type="button" id="button_restart">처음부터</button>
+                </div>
                 <script src="collision_1d.js"></script>
 
                 <h2>1차원 완전 탄성 충돌 식</h2>
@@ -64,10 +69,28 @@
                         </mfrac>
                     </math>
                 </div>
-                <p>코드의 <code>collide1D()</code>가 이 두 줄을 그대로 계산한다.</p>
+                <p>아래 반발계수 식에서 e = 1로 놓은 것과 같다. 반발계수 입력창이 1이면 코드의 <code>collide1D()</code>가 이 값을 계산한다.</p>
                 <ul>
                     <li>질량이 같으면(<math><msub><mi>m</mi><mn>1</mn></msub><mo>=</mo><msub><mi>m</mi><mn>2</mn></msub></math>) 두 공이 속도를 맞바꾼다.</li>
-                    <li>위 캔버스에서 운동에너지 합 E는 항상 같다. 운동량 합 p는 두 공끼리 부딪힐 때는 그대로지만, 벽에 부딪힐 때는 바뀐다. 벽이 공에 힘을 주기 때문이다.</li>
+                    <li>e = 1일 때 위 캔버스의 운동에너지 합 E는 항상 같다. 운동량 합 p는 두 공끼리 부딪힐 때는 그대로지만, 벽에 부딪힐 때는 바뀐다. 벽이 공에 힘을 주기 때문이다.</li>
+                </ul>
+
+                <h2>반발계수 e가 있을 때</h2>
+                <p>실제 공은 부딪힐 때 에너지를 조금 잃는다. 이때는 운동에너지 보존 대신 <strong>반발계수</strong> e를 쓴다.
+                   e는 충돌 뒤 멀어지는 속력과 충돌 전 다가오는 속력의 비다.</p>
+                <div class="formula">
+                    <p>반발계수의 정의</p>
+                    <math display="block"><msubsup><mi>v</mi><mn>2</mn><mo>′</mo></msubsup><mo>−</mo><msubsup><mi>v</mi><mn>1</mn><mo>′</mo></msubsup><mo>=</mo><mi>e</mi><mo>(</mo><msub><mi>v</mi><mn>1</mn></msub><mo>−</mo><msub><mi>v</mi><mn>2</mn></msub><mo>)</mo><mo>,</mo><mspace width='1em'/><mn>0</mn><mo>≤</mo><mi>e</mi><mo>≤</mo><mn>1</mn></math>
+                    <p>운동량 보존과 함께 풀면</p>
+                    <math display="block"><msubsup><mi>v</mi><mn>1</mn><mo>′</mo></msubsup><mo>=</mo><msub><mi>v</mi><mn>1</mn></msub><mo>−</mo><mfrac><mrow><mo>(</mo><mn>1</mn><mo>+</mo><mi>e</mi><mo>)</mo><msub><mi>m</mi><mn>2</mn></msub></mrow><mrow><msub><mi>m</mi><mn>1</mn></msub><mo>+</mo><msub><mi>m</mi><mn>2</mn></msub></mrow></mfrac><mo>(</mo><msub><mi>v</mi><mn>1</mn></msub><mo>−</mo><msub><mi>v</mi><mn>2</mn></msub><mo>)</mo></math>
+                    <math display="block"><msubsup><mi>v</mi><mn>2</mn><mo>′</mo></msubsup><mo>=</mo><msub><mi>v</mi><mn>2</mn></msub><mo>+</mo><mfrac><mrow><mo>(</mo><mn>1</mn><mo>+</mo><mi>e</mi><mo>)</mo><msub><mi>m</mi><mn>1</mn></msub></mrow><mrow><msub><mi>m</mi><mn>1</mn></msub><mo>+</mo><msub><mi>m</mi><mn>2</mn></msub></mrow></mfrac><mo>(</mo><msub><mi>v</mi><mn>1</mn></msub><mo>−</mo><msub><mi>v</mi><mn>2</mn></msub><mo>)</mo></math>
+                    <p>잃는 운동에너지</p>
+                    <math display="block"><mi>Δ</mi><mi>E</mi><mo>=</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn></mrow></mfrac><mfrac><mrow><msub><mi>m</mi><mn>1</mn></msub><msub><mi>m</mi><mn>2</mn></msub></mrow><mrow><msub><mi>m</mi><mn>1</mn></msub><mo>+</mo><msub><mi>m</mi><mn>2</mn></msub></mrow></mfrac><mo>(</mo><mn>1</mn><mo>−</mo><msup><mi>e</mi><mn>2</mn></msup><mo>)</mo><msup><mrow><mo>(</mo><msub><mi>v</mi><mn>1</mn></msub><mo>−</mo><msub><mi>v</mi><mn>2</mn></msub><mo>)</mo></mrow><mn>2</mn></msup></math>
+                </div>
+                <ul>
+                    <li>e = 1이면 위의 완전 탄성 충돌 식과 같아지고 ΔE = 0이다. 코드의 <code>collide1D()</code>는 이 일반식을 계산한다.</li>
+                    <li>e = 0이면 완전 비탄성 충돌이다. 두 공이 같은 속도로 함께 움직인다.</li>
+                    <li>e를 1보다 작게 하면 공끼리 부딪힐 때마다 E가 줄어든다. 벽은 완전 탄성으로 두었으므로 벽에서는 E가 줄지 않는다. 입력창의 값은 다음 충돌부터 쓰인다. "처음부터"를 누르면 공이 처음 자리와 속도로 돌아간다.</li>
                 </ul>
 
                 <li><a href="index_menu4_예제.html">← 과학관으로</a></li>

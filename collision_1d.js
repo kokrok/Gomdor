@@ -7,6 +7,7 @@ canvas.height = 200;
 
 // 단위: 길이는 px, 시간은 초(s), 질량은 kg. 포물선 예제처럼 dt를 곱해 주사율과 상관없이 움직인다.
 const MAX_DT = 0.05;   // s. 탭을 오래 떠났다 돌아와도 한 번에 이 이상 진행하지 않는다
+let restitution = 1;   // 반발계수 e. 1이면 완전 탄성, 0이면 완전 비탄성. 입력창(#input_restitution)으로 바꾼다
 
 /*Make Object*/
 class Ball{
@@ -40,12 +41,17 @@ class Ball{
   }
 }
 
-var ball1 = new Ball('공1', '#dd0000', 10, 60, 150);
-var ball2 = new Ball('공2', '#0055cc', 30, canvas.width / 2, 0);
+var ball1, ball2;
+function resetBalls(){
+  ball1 = new Ball('공1', '#dd0000', 10, 60, 150);
+  ball2 = new Ball('공2', '#0055cc', 30, canvas.width / 2, 0);
+}
+resetBalls();
 
-// 1차원 완전 탄성 충돌.
+// 1차원 충돌.
 // 운동량 보존 m1v1 + m2v2 = m1v1' + m2v2' 과
-// 운동에너지 보존 ½m1v1² + ½m2v2² = ½m1v1'² + ½m2v2'² 을 함께 풀면 나오는 식이다. (캔버스 아래 식 참고)
+// 반발계수의 정의 v2' − v1' = e(v1 − v2) 를 함께 풀면 나오는 식이다. (캔버스 아래 식 참고)
+// e = 1이면 운동에너지 보존과 같아져서 완전 탄성 충돌 식이 된다.
 function collide1D(a, b){
   let dx = b.x - a.x;
   let overlap = a.radius + b.radius - Math.abs(dx);
@@ -57,8 +63,9 @@ function collide1D(a, b){
   if (approaching) {
     let m1 = a.mass, m2 = b.mass;
     let v1 = a.vx, v2 = b.vx;
-    a.vx = ((m1 - m2) * v1 + 2 * m2 * v2) / (m1 + m2);
-    b.vx = ((m2 - m1) * v2 + 2 * m1 * v1) / (m1 + m2);
+    let e = restitution;
+    a.vx = v1 - (1 + e) * m2 / (m1 + m2) * (v1 - v2);
+    b.vx = v2 + (1 + e) * m1 / (m1 + m2) * (v1 - v2);
   }
 
   // 겹친 만큼 질량에 반비례해서 떼어 놓는다 (무거운 공이 덜 밀린다)
@@ -73,8 +80,19 @@ function drawText(){
   ctx.fillStyle = '#333';
   ctx.font = '14px sans-serif';
   ctx.fillText(`${ball1.name}: m=${ball1.mass}, v=${ball1.vx.toFixed(1)}    ${ball2.name}: m=${ball2.mass}, v=${ball2.vx.toFixed(1)}`, 10, 20);
-  ctx.fillText(`운동량 합 p = ${p.toFixed(1)}    운동에너지 합 E = ${E.toFixed(0)}`, 10, 40);
+  ctx.fillText(`e = ${restitution}    운동량 합 p = ${p.toFixed(1)}    운동에너지 합 E = ${E.toFixed(0)}`, 10, 40);
 }
+
+// 반발계수 입력창. 값이 바뀌면 다음 충돌부터 쓴다.
+const restitutionInput = document.getElementById('input_restitution');
+restitutionInput.addEventListener('input', () => {
+  let value = parseFloat(restitutionInput.value);
+  if (value >= 0 && value <= 1) {  // 빈칸이나 범위 밖은 무시하고 이전 값을 유지한다
+    restitution = value;
+  }
+});
+restitution = parseFloat(restitutionInput.value);
+document.getElementById('button_restart').addEventListener('click', resetBalls);
 
 let lastTime = null;   // 직전 프레임의 시각 (ms)
 
