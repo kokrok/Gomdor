@@ -15,3 +15,15 @@
     margin: 8px 0;
     font-size: 1.15em;
 }
+table {
+    border-collapse: collapse;
+    margin: 8px 0 16px;
+}
+th, td {
+    border: 1px solid var(--line);
+    padding: 4px 12px;
+    text-align: center;
+}
+th {
+    background: #f7f9f8;
+}
