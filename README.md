@@ -64,6 +64,7 @@ npm run watch      # 감시 모드: 저장할 때마다 자동 변환 (끄려면
 | 1차원 충돌 | `example-collision_1d.html` | 두 공의 1차원 완전 탄성 충돌과 충돌 식 |
 | 2차원 충돌 | `example-collision_2d.html` | 여러 공의 2차원 완전 탄성 충돌(법선·접선 분해)과 충돌 식 |
 | 이차원 충돌2(부피고려) | `example-collision_2d-volume.html` | 반지름과 재료(밀도)로 질량을 계산하는 2차원 충돌 (m = ρ·4/3πr³) |
+| 이차원 충돌3(부피+회전 고려) | `example-collision_2d-volume-rotation.html` | 표면 마찰과 관성모멘트(I = 2/5·mr²)로 공이 도는 2차원 충돌 (충격량 방식) |
 | 중력장 | `index_menu4_예제_중력장_V00_20240907.html` | 중력장 시뮬레이션 |
 | 엘리베이터 | `index_menu4_예제_elevator.html` | 버튼 입력과 숫자 디스플레이 |
 | 잠금화면 | `index_menu4_예제_잠금화면.html` | 3×3 패턴 잠금 |
