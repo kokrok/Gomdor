@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>곰도르</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="elevator.css" />
+    <link rel="stylesheet" type="text/css" href="collision.css" />
+    <script src="index.js"></script>
+    
+    <script src="menu.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">곰도르의 홈페이지 해더 영역</a></h1>
+    </header>
+    <main>
+        <nav id="site-menu"></nav>
+        <section>
+            <article>
+                <h1>이차원 충돌2(부피고려)</h1>
+                <p><canvas id="canvas" height="400" width="900"></canvas></p>
+                <div>
+                    <input type="number" id="input_count" min="2" max="30" value="10" step="1">
+                    <label for="input_count">공 개수 (2~30)</label>
+                </div>
+                <div>
+                    <input type="number" id="input_restitution" min="0" max="1" value="1" step="0.1">
+                    <label for="input_restitution">반발계수 e (0~1)</label>
+                </div>
+                <div>
+                    <select id="select_material">
+                        <option value="mixed">재료 섞기 (나무, 물, 돌, 철)</option>
+                        <option value="same">모두 같은 밀도 (물)</option>
+                    </select>
+                    <label for="select_material">재료</label>
+                    <button type="button" id="button_restart">다시 섞기</button>
+                </div>
+                <script src="collision_2d-volume.js"></script>
+                <p>빨간 선은 속도 화살표다. 색은 재료를 나타내고, 큰 공 안의 숫자는 질량이다.</p>
+
+                <h2>무엇이 달라졌나</h2>
+                <p><a href="example-collision_2d.html">2차원 충돌</a> 예제는 질량을 먼저 정하고 반지름을 질량에 맞춰 대충 키웠다.
+                   이 예제는 반대로 <strong>크기(반지름)와 재료(밀도)를 정하고, 질량을 부피에서 계산한다.</strong>
+                   충돌 식은 그대로다. 질량만 실제 물체처럼 바뀐다.</p>
+
+                <h3>질량 = 밀도 × 부피</h3>
+                <p>공을 위에서 내려다본 구(당구공)로 본다.</p>
+                <div class="formula">
+                    <math display="block"><mi>m</mi><mo>=</mo><mi>ρ</mi><mi>V</mi><mo>=</mo><mi>ρ</mi><mo>·</mo><mfrac><mrow><mn>4</mn></mrow><mrow><mn>3</mn></mrow></mfrac><mi>π</mi><msup><mi>r</mi><mn>3</mn></msup></math>
+                </div>
+                <ul>
+                    <li>질량이 <strong>반지름의 세제곱</strong>에 비례한다. 반지름이 2배면 질량은 8배다. 화면에서는 조금 커 보여도 훨씬 무겁다.</li>
+                    <li>같은 크기라도 철(ρ = 7.8)은 나무(ρ = 0.7)보다 약 11배 무겁다.</li>
+                    <li>10 px를 1 cm로 보고 실제 밀도(g/cm³)를 썼다. 그래서 질량은 g 단위다.</li>
+                </ul>
+                <table>
+                    <tr><th>재료</th><th>밀도 ρ (g/cm³)</th></tr>
+                    <tr><td>나무</td><td>0.7</td></tr>
+                    <tr><td>물</td><td>1.0</td></tr>
+                    <tr><td>돌</td><td>2.6</td></tr>
+                    <tr><td>철</td><td>7.8</td></tr>
+                </table>
+
+                <h3>충돌 식 (2차원 충돌과 같다)</h3>
+                <div class="formula">
+                    <math display="block"><msubsup><mover><mi>v</mi><mo>→</mo></mover><mn>1</mn><mo>′</mo></msubsup><mo>=</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>1</mn></msub><mo>−</mo><mfrac><mrow><mo>(</mo><mn>1</mn><mo>+</mo><mi>e</mi><mo>)</mo><msub><mi>m</mi><mn>2</mn></msub></mrow><mrow><msub><mi>m</mi><mn>1</mn></msub><mo>+</mo><msub><mi>m</mi><mn>2</mn></msub></mrow></mfrac><mo>[</mo><mo>(</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>1</mn></msub><mo>−</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>2</mn></msub><mo>)</mo><mo>·</mo><mover><mi>n</mi><mo>^</mo></mover><mo>]</mo><mover><mi>n</mi><mo>^</mo></mover></math>
+                    <math display="block"><msubsup><mover><mi>v</mi><mo>→</mo></mover><mn>2</mn><mo>′</mo></msubsup><mo>=</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>2</mn></msub><mo>+</mo><mfrac><mrow><mo>(</mo><mn>1</mn><mo>+</mo><mi>e</mi><mo>)</mo><msub><mi>m</mi><mn>1</mn></msub></mrow><mrow><msub><mi>m</mi><mn>1</mn></msub><mo>+</mo><msub><mi>m</mi><mn>2</mn></msub></mrow></mfrac><mo>[</mo><mo>(</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>1</mn></msub><mo>−</mo><msub><mover><mi>v</mi><mo>→</mo></mover><mn>2</mn></msub><mo>)</mo><mo>·</mo><mover><mi>n</mi><mo>^</mo></mover><mo>]</mo><mover><mi>n</mi><mo>^</mo></mover></math>
+                </div>
+                <ul>
+                    <li>질량 비 <math><msub><mi>m</mi><mn>2</mn></msub><mo>/</mo><mo>(</mo><msub><mi>m</mi><mn>1</mn></msub><mo>+</mo><msub><mi>m</mi><mn>2</mn></msub><mo>)</mo></math>만 식에 들어간다. 그래서 작은 나무 공이 큰 철 공에 부딪히면 나무 공만 크게 튕기고 철 공은 거의 그대로 간다. 벽에 부딪히는 것과 비슷해진다.</li>
+                    <li>"모두 같은 밀도"를 고르면 질량 차이가 오직 크기에서만 생긴다. 이때도 반지름이 조금만 달라도 움직임이 크게 달라진다.</li>
+                </ul>
+
+                <h3>왜 원판이 아니라 구로 봤나</h3>
+                <p>화면은 2차원이지만, 당구공처럼 실제 공을 위에서 본다고 생각했다. 정말 납작한 원판(두께 h)이라면
+                   <math><mi>m</mi><mo>=</mo><mi>ρ</mi><mi>π</mi><msup><mi>r</mi><mn>2</mn></msup><mi>h</mi></math>로 반지름의 제곱에 비례한다.
+                   어느 쪽이든 충돌 식은 같고, 질량이 크기에 따라 얼마나 빨리 커지는지만 다르다.
+                   다음 예제(<a href="example-collision_2d-volume-rotation.html">이차원 충돌3</a>)에서는 이 구의 관성모멘트로 회전까지 다룬다.</p>
+
+                <li><a href="index_menu4_예제.html">← 과학관으로</a></li>
+            </article>
+        </section>
+    </main>
+    <footer><p>안녕하세요. 곰도르 푸터 영역입니다.</p></footer>
+</body>
+</html>

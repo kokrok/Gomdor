@@ -159,7 +159,7 @@ if (Shell.y < Shell.radius) {   // 아랫면(y − radius)이 바닥에 닿을 �
 
 ## 6. 박스끼리 겹치는 충돌 {#overlap}
 
-> 준비 중. [2차원 충돌 예제](index_menu4_예제_2차원충돌.html)에서 다룬다.
+> 준비 중. [2차원 충돌 예제](example-collision_2d.html)에서 다룬다.
 
 ---
 

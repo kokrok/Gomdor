@@ -1,0 +1,29 @@
+/* 충돌 예제(1차원, 2차원) 공통 스타일 (style.css 위에 덧씌움) */
+.formula {
+    background: #f7f9f8;
+    border-left: 3px solid var(--main);
+    padding: 8px 16px;
+    margin: 8px 0 16px;
+    overflow-x: auto;   /* 좁은 화면에서 긴 식은 가로 스크롤 */
+}
+.formula p {
+    margin: 8px 0 0;
+    font-size: 0.9em;
+    color: #555;
+}
+.formula math[display="block"] {
+    margin: 8px 0;
+    font-size: 1.15em;
+}
+table {
+    border-collapse: collapse;
+    margin: 8px 0 16px;
+}
+th, td {
+    border: 1px solid var(--line);
+    padding: 4px 12px;
+    text-align: center;
+}
+th {
+    background: #f7f9f8;
+}
