@@ -182,3 +182,40 @@ details.why summary {
 details.why ul {
     margin: 6px 0 0;
 }
+/* 0과 1에서 AI까지 2층: NAND 퍼즐 */
+.demo #gate-levels button[aria-pressed="true"] {
+    font-weight: bold;
+    background: #00BFFF;
+    color: #fff;
+}
+.gate-svg {
+    display: block;
+    width: 100%;
+    max-width: 480px;
+    background: #fff;
+    border: 1px solid #ccc;
+}
+.demo .gate-input {
+    width: 3em;
+}
+.gate-wiring {
+    font-family: Consolas, monospace;
+    line-height: 2;
+}
+.gate-wiring select {
+    font-family: inherit;
+}
+.gate-now {
+    background: #fff3b0;
+}
+.gate-result {
+    font-weight: bold;
+}
+.gate-ok {
+    color: #378854;
+}
+.gate-hint {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 6px 8px;
+}

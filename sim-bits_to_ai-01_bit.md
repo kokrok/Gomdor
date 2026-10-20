@@ -1,6 +1,6 @@
 # 1층. 비트 — 켜짐과 꺼짐이 정보가 되기까지
 
-<p><a href="sim-bits_to_ai.html">↑ 사다리로</a> · <b>1층 비트</b> · 다음: 2층 트랜지스터와 논리 게이트 (준비 중)</p>
+<p><a href="sim-bits_to_ai.html">↑ 사다리로</a> · <b>1층 비트</b> · 다음: <a href="sim-bits_to_ai-02_logic_gate.html">2층 트랜지스터와 논리 게이트</a></p>
 
 컴퓨터가 아는 것은 딱 두 가지, **켜짐**과 **꺼짐**이다. 이것을 **1**과 **0**이라고 쓴다.
 그런데 어떻게 이 두 가지만으로 글자와 사진과 음악을 담을까?
@@ -118,4 +118,4 @@
 - [RFC 20, "ASCII format for Network Interchange"](https://www.rfc-editor.org/rfc/rfc20) — 아스키 표. `A` = 65, `a` = 97의 근거.
 - [RFC 3629, "UTF-8"](https://www.rfc-editor.org/rfc/rfc3629) — 한글 한 글자(U+AC00 `가` 등)가 3바이트로 저장되는 근거.
 
-<p><a href="sim-bits_to_ai.html">↑ 사다리로</a> · 다음: 2층 트랜지스터와 논리 게이트 (준비 중)</p>
+<p><a href="sim-bits_to_ai.html">↑ 사다리로</a> · 다음: <a href="sim-bits_to_ai-02_logic_gate.html">2층 트랜지스터와 논리 게이트</a></p>

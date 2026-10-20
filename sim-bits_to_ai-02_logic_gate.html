@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<!-- 자동 생성 파일: 이 파일 대신 같은 이름의 .md를 고치고 npm run build 하세요. -->
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>곰도르 - 2층. 트랜지스터와 논리 게이트 — 스위치가 판단을 하기까지</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="webdev-note.css" />
+    <script src="menu.js" defer></script>
+    <script src="sim-bits_to_ai-02_logic_gate.demo.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">곰도르의 홈페이지 해더 영역</a></h1>
+    </header>
+    <main>
+        <nav id="site-menu"></nav>
+        <section>
+            <article>
+<h1>2층. 트랜지스터와 논리 게이트 — 스위치가 판단을 하기까지</h1>
+<p><a href="sim-bits_to_ai.html">↑ 사다리로</a> · 이전: <a href="sim-bits_to_ai-01_bit.html">1층 비트</a> · <b>2층 논리 게이트</b> · 다음: 3층 덧셈 회로 (준비 중)</p>
+
+<p>1층에서 비트는 켜지고 꺼지는 스위치라고 했다. 그런데 컴퓨터 안의 스위치는 사람이 누르지 않는다.
+<strong>스위치를 누르는 것도 전기</strong>다. 이 생각 하나에서 &quot;판단하는 회로&quot;가 나온다.</p>
+<p><strong>목차</strong></p>
+<ol>
+<li><a href="#transistor">전기로 누르는 스위치, 트랜지스터</a></li>
+<li><a href="#and_or">스위치 두 개로 만드는 판단</a></li>
+<li><a href="#gates">논리 게이트 다섯 가지</a></li>
+<li><a href="#nand">NAND 하나면 충분하다</a></li>
+<li><a href="#demo">체험: NAND로 모든 게이트 만들기</a></li>
+<li><a href="#summary">정리</a></li>
+<li><a href="#references">참고 자료</a></li>
+</ol>
+<hr>
+<h2 id="transistor">1. 전기로 누르는 스위치, 트랜지스터</h2>
+<p>수도꼭지를 떠올려 보자. 손잡이를 돌리면 물이 흐르고, 반대로 돌리면 멈춘다.
+<strong>트랜지스터</strong>는 손잡이 대신 <strong>전기 신호</strong>로 여닫는 수도꼭지다.
+신호 단자에 전압을 걸면 길이 열려 전류가 흐르고(1), 전압을 빼면 길이 닫힌다(0).</p>
+<p>중요한 점은 <strong>한 트랜지스터에서 나온 전기가 다른 트랜지스터의 손잡이를 돌릴 수 있다</strong>는 것이다.
+그래서 스위치끼리 서로를 켜고 끄며 사람 손 없이 일을 할 수 있다.</p>
+<p>같은 일을 하는 부품은 시대마다 바뀌었다.</p>
+<table>
+<thead>
+<tr>
+<th>시대</th>
+<th>부품</th>
+<th>크기</th>
+<th>1초에 켜고 끄는 횟수</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1930~40년대</td>
+<td>릴레이(전자석이 쇠붙이를 당기는 스위치)</td>
+<td>손가락 마디</td>
+<td>수십 번</td>
+</tr>
+<tr>
+<td>1940~50년대</td>
+<td>진공관</td>
+<td>전구</td>
+<td>수십만 번</td>
+</tr>
+<tr>
+<td>지금</td>
+<td>실리콘 트랜지스터</td>
+<td>바이러스보다 작음</td>
+<td>수십억 번</td>
+</tr>
+</tbody></table>
+<p>부품은 바뀌어도 하는 일은 같다. <strong>&quot;전기로 켜고 끄는 스위치.&quot;</strong> 이 층에서 필요한 것은 이것뿐이다.</p>
+<h2 id="and_or">2. 스위치 두 개로 만드는 판단</h2>
+<p>전구 하나와 스위치 A, B 두 개가 있다. 스위치를 어떻게 연결하느냐에 따라 전구가 켜지는 조건이 달라진다.</p>
+<ul>
+<li><strong>한 줄로 이으면(직렬)</strong>: A와 B가 <strong>둘 다</strong> 켜져야 전구가 켜진다. → <strong>AND</strong>(그리고)</li>
+<li><strong>나란히 이으면(병렬)</strong>: A나 B 중 <strong>하나만</strong> 켜져도 전구가 켜진다. → <strong>OR</strong>(또는)</li>
+</ul>
+<p>&quot;비가 오고 <strong>그리고</strong> 우산이 없으면 택시를 탄다&quot;, &quot;토요일이거나 <strong>또는</strong> 일요일이면 늦잠을 잔다&quot;처럼
+우리가 말로 하는 판단이 그대로 회로가 된다.
+1937년 클로드 섀넌은 이 사실을 정리해서, <strong>스위치 회로로 어떤 논리든 계산할 수 있다</strong>는 것을 보였다.</p>
+<h2 id="gates">3. 논리 게이트 다섯 가지</h2>
+<p>이런 판단 회로를 상자로 접은 것을 <strong>논리 게이트</strong>라고 부른다. 입력이 0/1이고 출력도 0/1이다.
+게이트가 하는 일은 <strong>진리표</strong>(입력의 모든 경우와 그때의 출력을 적은 표)로 완전히 정해진다.</p>
+<table>
+<thead>
+<tr>
+<th>입력 A</th>
+<th>입력 B</th>
+<th>AND</th>
+<th>OR</th>
+<th>XOR</th>
+<th>NAND</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>NOT</strong>: 입력이 하나다. 0이면 1, 1이면 0으로 뒤집는다.</li>
+<li><strong>AND</strong>: 둘 다 1일 때만 1.</li>
+<li><strong>OR</strong>: 하나라도 1이면 1.</li>
+<li><strong>XOR</strong>(배타적 OR): 두 입력이 <strong>다를 때만</strong> 1. &quot;둘 중 하나만&quot;이다.</li>
+<li><strong>NAND</strong>(NOT AND): AND의 결과를 뒤집은 것. 둘 다 1일 때만 0.</li>
+</ul>
+<blockquote>
+<p><strong>XOR을 기억해 두자.</strong> 1비트 두 개를 더해 보면 <code>0+0=0</code>, <code>0+1=1</code>, <code>1+0=1</code>, <code>1+1=10</code>(이진수 2)이다.
+일의 자리만 보면 0, 1, 1, 0 — XOR의 진리표와 똑같다. 3층에서 덧셈 회로의 핵심이 된다.</p>
+</blockquote>
+<h2 id="nand">4. NAND 하나면 충분하다</h2>
+<p>놀라운 사실이 있다. <strong>NAND 게이트만 잔뜩 있으면 다른 모든 게이트를 만들 수 있다.</strong>
+NOT도, AND도, OR도, XOR도. 그리고 이 시리즈의 끝까지 올라가면 CPU도 결국 이 게이트들의 조합이다.</p>
+<p>레고에 비유하면, 모양이 하나뿐인 블록만으로 성도 배도 만들 수 있다는 뜻이다.
+실제 반도체 칩에서도 NAND는 트랜지스터 4개로 만들 수 있는, 가장 작고 빠른 게이트 중 하나다.</p>
+<p>말로만 들으면 믿기 어렵다. 직접 만들어 보자.</p>
+<h2 id="demo">5. 체험: NAND로 모든 게이트 만들기</h2>
+<div class="demo">
+<p class="demo-title">🔬 체험: NAND 게이트 4개로 목표 게이트를 만들어 보세요</p>
+<p id="gate-levels"></p>
+<p id="gate-goal"></p>
+<svg id="gate-svg" class="gate-svg" viewBox="0 0 360 170" role="img" aria-label="NAND 회로도"></svg>
+<p>입력 스위치: <span id="gate-inputs"></span></p>
+<div id="gate-wiring" class="gate-wiring"></div>
+<div id="gate-table"></div>
+<p id="gate-result" class="gate-result"></p>
+<p><button id="gate-hint">힌트</button> <button id="gate-reset">처음부터</button></p>
+<p id="gate-hint-text" class="gate-hint" hidden></p>
+</div>
+
+<details class="why">
+<summary>이 체험을 만든 이유</summary>
+<ul>
+<li><b>왜 NAND 퍼즐인가</b>: "NAND 하나로 모든 것을 만든다"는 이 층의 핵심이자, 컴퓨터 전체가 아주 단순한 부품 하나의 조합이라는 시리즈 전체의 핵심이다. 말로 들으면 믿기 어렵지만, 직접 NOT과 AND를 만들어 보면 바로 납득된다. Nand2Tetris 강의의 첫 과제도 이것이다.</li>
+<li><b>왜 NOT → AND → OR → XOR 순서인가</b>: 앞에서 만든 것이 다음 문제의 실마리가 된다. NOT은 NAND의 두 입력을 묶으면 되고, AND는 NAND 뒤에 NOT을 붙이면 된다. 층마다 "앞 결과를 부품으로 접는다"는 시리즈의 방식을 퍼즐 안에서 한 번 더 겪게 했다.</li>
+<li><b>왜 선을 그리지 않고 고르게 했나</b>: 휴대폰에서 작은 단자에 선을 끌어 잇기는 어렵다. 게이트마다 "입력을 어디서 받을지"를 고르게 하면 손가락으로도 조작할 수 있고, 회로도는 고른 대로 자동으로 그려진다. 게이트는 앞쪽 게이트의 출력만 받을 수 있어서, 4층에서 다룰 "되돌아오는 선"은 아직 생기지 않는다.</li>
+<li><b>왜 선 색이 바뀌나</b>: 입력 스위치를 바꾸면 1이 흐르는 선이 주황색으로 바뀐다. 진리표의 한 줄이 회로 안에서 어떻게 흘러가는지 눈으로 따라갈 수 있다.</li>
+</ul>
+</details>
+
+<h2 id="summary">6. 정리</h2>
+<ul>
+<li><strong>트랜지스터</strong>는 전기로 켜고 끄는 스위치다. 한 스위치의 출력이 다른 스위치를 켤 수 있다.</li>
+<li>스위치를 직렬로 이으면 AND, 병렬로 이으면 OR이 된다. 이런 판단 회로를 <strong>논리 게이트</strong>라고 한다.</li>
+<li><strong>NAND 하나만으로 모든 게이트를 만들 수 있다.</strong></li>
+<li><strong>XOR</strong>의 진리표는 1비트 덧셈의 일의 자리와 같다.</li>
+</ul>
+<blockquote>
+<p><strong>이 층에서 접는 상자</strong>: &quot;게이트는 진리표대로 0과 1을 바꾸는 상자다.&quot;
+다음 층부터는 트랜지스터를 잊고, AND·OR·XOR 상자를 바로 가져다 쓴다.</p>
+</blockquote>
+<p>이제 게이트로 무엇을 할 수 있을까? 3층에서는 게이트 몇 개로 <strong>덧셈을 하는 회로</strong>를 만든다.</p>
+<h2 id="references">7. 참고 자료</h2>
+<ul>
+<li>Claude E. Shannon, &quot;A Symbolic Analysis of Relay and Switching Circuits&quot; (1938, 1937년 석사 논문) — 스위치 회로와 논리(불 대수)가 같다는 것을 보인 논문.</li>
+<li>Henry M. Sheffer, &quot;A set of five independent postulates for Boolean algebras&quot; (1913) — NAND 하나(셰퍼 스트로크)로 모든 논리 연산을 나타낼 수 있음을 보였다.</li>
+<li>Noam Nisan, Shimon Schocken, 『The Elements of Computing Systems』 2판 (MIT Press, 2021), <a href="https://www.nand2tetris.org/">nand2tetris.org</a> — 1장 과제가 NAND에서 NOT, AND, OR, XOR 등을 만드는 것이다. 이 체험의 모델이다.</li>
+<li>Charles Petzold, 『CODE』 2판 (Microsoft Press, 2022) — 릴레이로 논리 게이트를 만드는 과정을 그림으로 보여 준다.</li>
+</ul>
+<p><a href="sim-bits_to_ai.html">↑ 사다리로</a> · 이전: <a href="sim-bits_to_ai-01_bit.html">1층 비트</a> · 다음: 3층 덧셈 회로 (준비 중)</p>
+
+                <p class="back"><a href="#">↑ 맨 위로</a> · <a href="index_menu4_예제.html#sim">← 시뮬레이션 노트 목록으로</a></p>
+            </article>
+        </section>
+    </main>
+    <footer><p>안녕하세요. 곰도르 푸터 영역입니다.</p></footer>
+</body>
+</html>
