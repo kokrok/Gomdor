@@ -111,3 +111,59 @@ article :target {
     background: #fff;
     border: 1px solid #ccc;
 }
+/* 0과 1에서 AI까지 1층: 스위치 8개 체험 */
+.bit-switches {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 4px;
+    max-width: 480px;
+}
+.demo .bit-switch {
+    margin: 0;
+    padding: 6px 0;
+    border: 2px solid #888;
+    border-radius: 6px;
+    background: #eee;
+    color: #555;
+    cursor: pointer;
+}
+.demo .bit-switch[aria-pressed="true"] {
+    background: #ffd84d;
+    border-color: #c99a00;
+    color: #000;
+}
+.bit-digit {
+    display: block;
+    font: bold 1.4em Consolas, monospace;
+}
+.bit-place {
+    display: block;
+    font-size: 0.75em;
+}
+.bit-views {
+    margin: 10px 0;
+    line-height: 2;
+}
+.bit-label {
+    display: inline-block;
+    width: 3em;
+    color: #666;
+}
+.bit-char {
+    font: bold 1.3em Consolas, monospace;
+}
+.bit-swatch {
+    display: inline-block;
+    width: 2.4em;
+    height: 1.2em;
+    vertical-align: middle;
+    border: 1px solid #888;
+}
+.bit-goals {
+    list-style: none;
+    padding-left: 0;
+}
+.bit-goal-done {
+    color: #378854;
+    font-weight: bold;
+}
