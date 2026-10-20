@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<!-- 자동 생성 파일: 이 파일 대신 같은 이름의 .md를 고치고 npm run build 하세요. -->
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>곰도르 - 3층. 덧셈 회로 — 게이트가 계산을 하기까지</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="webdev-note.css" />
+    <script src="menu.js" defer></script>
+    <script src="sim-bits_to_ai-03_adder.demo.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">곰도르의 홈페이지 해더 영역</a></h1>
+    </header>
+    <main>
+        <nav id="site-menu"></nav>
+        <section>
+            <article>
+<h1>3층. 덧셈 회로 — 게이트가 계산을 하기까지</h1>
+<p><a href="sim-bits_to_ai.html">↑ 사다리로</a> · 이전: <a href="sim-bits_to_ai-02_logic_gate.html">2층 논리 게이트</a> · <b>3층 덧셈 회로</b> · 다음: 4층 기억과 클럭 (준비 중)</p>
+
+<p>2층에서 게이트는 &quot;판단&quot;을 했다. 둘 다 켜졌나(AND), 하나라도 켜졌나(OR), 서로 다른가(XOR).
+이번 층에서는 이 판단 몇 개를 엮어서 <strong>계산</strong>을 한다. 초등학교에서 배운 세로셈을 회로로 옮기는 것이다.</p>
+<p><strong>목차</strong></p>
+<ol>
+<li><a href="#column_add">세로셈을 다시 보자</a></li>
+<li><a href="#half_adder">한 자리 덧셈: 반가산기</a></li>
+<li><a href="#full_adder">올림까지 더하기: 전가산기</a></li>
+<li><a href="#ripple">줄 세우면 8비트 덧셈기</a></li>
+<li><a href="#demo">체험: 자리올림이 흘러가는 덧셈기</a></li>
+<li><a href="#alu">뺄셈과 곱셈은?</a></li>
+<li><a href="#summary">정리</a></li>
+<li><a href="#references">참고 자료</a></li>
+</ol>
+<hr>
+<h2 id="column_add">1. 세로셈을 다시 보자</h2>
+<p><code>158 + 67</code>을 손으로 계산해 보자.</p>
+<pre><code>   1 1        ← 받아올림
+   1 5 8
+ +   6 7
+ -------
+   2 2 5
+</code></pre>
+<p>우리는 <strong>오른쪽 자리부터</strong> 계산한다. 한 자리에서 하는 일은 늘 같다.</p>
+<ol>
+<li>그 자리의 두 숫자와 <strong>아랫자리에서 올라온 받아올림</strong>을 더한다.</li>
+<li>일의 자리는 그 자리에 쓰고, 넘친 것은 <strong>윗자리로 올린다</strong>.</li>
+</ol>
+<p>이진수도 똑같다. 다만 숫자가 0과 1뿐이라 훨씬 단순하다.</p>
+<table>
+<thead>
+<tr>
+<th>더하기</th>
+<th>결과(이진수)</th>
+<th>그 자리에 쓸 것</th>
+<th>윗자리로 올릴 것</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0 + 0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0 + 1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1 + 0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1 + 1</td>
+<td>10 (= 2)</td>
+<td>0</td>
+<td><strong>1</strong></td>
+</tr>
+</tbody></table>
+<h2 id="half_adder">2. 한 자리 덧셈: 반가산기</h2>
+<p>위 표의 오른쪽 두 열을 2층의 진리표와 비교해 보자.</p>
+<ul>
+<li><strong>그 자리에 쓸 것</strong>: 0, 1, 1, 0 → 두 입력이 다를 때만 1 → <strong>XOR</strong></li>
+<li><strong>윗자리로 올릴 것</strong>: 0, 0, 0, 1 → 둘 다 1일 때만 1 → <strong>AND</strong></li>
+</ul>
+<p>2층에서 예고한 대로다. <strong>XOR 하나와 AND 하나</strong>면 1비트 덧셈이 끝난다.
+이 상자를 <strong>반가산기</strong>(half adder)라고 부른다. &quot;반&quot;인 이유는 아랫자리에서 올라온 올림을 받지 못하기 때문이다.</p>
+<h2 id="full_adder">3. 올림까지 더하기: 전가산기</h2>
+<p>실제 세로셈에서는 한 자리에서 <strong>세 개</strong>를 더한다. A의 숫자, B의 숫자, 그리고 아랫자리에서 올라온 올림.
+세 개를 더해도 결과는 최대 <code>1 + 1 + 1 = 11</code>(= 3)이라, 여전히 &quot;쓸 것 하나, 올릴 것 하나&quot;로 충분하다.</p>
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>들어온 올림</th>
+<th>합(이진수)</th>
+<th>쓸 것</th>
+<th>올릴 것</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>00</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>01</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>10</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>11</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<p>(여덟 가지 경우 중 대표 네 줄만 적었다. 1의 <strong>개수</strong>만 중요하다는 것이 보인다.)</p>
+<ul>
+<li><strong>쓸 것</strong>: 1이 홀수 개면 1 → XOR 두 번</li>
+<li><strong>올릴 것</strong>: 1이 두 개 이상이면 1 → &quot;다수결&quot;</li>
+</ul>
+<p>반가산기 두 개와 OR 하나를 이으면 이 상자가 된다. 이것을 <strong>전가산기</strong>(full adder)라고 부른다.
+2층의 NAND 퍼즐처럼 따지면, 전가산기 하나는 NAND 9개로 만들 수 있다.</p>
+<h2 id="ripple">4. 줄 세우면 8비트 덧셈기</h2>
+<p>전가산기 하나가 세로셈의 <strong>한 칸</strong>이다. 그러면 8칸짜리 세로셈은?
+전가산기 8개를 옆으로 줄 세우고, 각 칸의 &quot;올릴 것&quot;을 왼쪽 칸의 &quot;들어온 올림&quot;에 이으면 된다.</p>
+<pre><code>  [FA]←[FA]←[FA]←[FA]←[FA]←[FA]←[FA]←[FA]
+   128   64   32   16    8    4    2    1      ← 자릿값
+</code></pre>
+<p>오른쪽 칸이 끝나야 왼쪽 칸이 자기 올림을 안다. 그래서 올림이 오른쪽에서 왼쪽으로 <strong>물결처럼 흘러간다.</strong>
+이 구조를 <strong>리플 캐리 덧셈기</strong>(ripple-carry adder, 물결 올림 덧셈기)라고 부른다.</p>
+<h2 id="demo">5. 체험: 자리올림이 흘러가는 덧셈기</h2>
+<div class="demo">
+<p class="demo-title">🔬 체험: 8비트 덧셈기</p>
+<p>스위치를 누르거나 숫자를 입력해서 두 수를 정하고, <b>더하기</b>를 누르세요.</p>
+<p class="add-numbers">
+<label>A = <input id="add-a" type="number" min="0" max="255" value="158"></label>
+<label>B = <input id="add-b" type="number" min="0" max="255" value="67"></label>
+</p>
+<div id="add-grid" class="add-grid"></div>
+<p id="add-status" class="demo-output"></p>
+<p><button id="add-run">더하기 ▶</button> <button id="add-step">한 칸씩</button></p>
+<p><b>도전 과제</b></p>
+<ul id="add-goals" class="bit-goals"></ul>
+</div>
+
+<details class="why">
+<summary>이 체험을 만든 이유</summary>
+<ul>
+<li><b>왜 세로셈 모양인가</b>: 누구나 아는 손 계산과 회로가 같은 일을 한다는 것을 보이려는 것이다. 받아올림을 숫자 위에 작게 적는 습관까지 그대로 따랐다. 새로운 것은 "숫자가 0과 1뿐"이라는 점 하나다.</li>
+<li><b>왜 한 칸씩 움직이나</b>: 한 번에 답을 보여 주면 "회로가 그냥 안다"고 느끼기 쉽다. 실제 덧셈기도 오른쪽 칸이 끝나야 왼쪽 칸이 올림을 알 수 있다. 칸마다 "1 + 1 + 올림 1 = 11"처럼 무엇을 했는지 보여 주어, 전가산기 하나가 세로셈 한 칸이라는 것을 확인하게 했다.</li>
+<li><b>왜 "8칸 내내 올림" 과제를 넣었나</b>: 255 + 1처럼 올림이 끝까지 흘러가는 덧셈이 이 덧셈기에서 가장 오래 걸린다. 덧셈 속도가 수에 따라 달라진다는 것은 실제 칩 설계의 중요한 문제이고, 심화편에서 이를 해결하는 회로(올림 미리 보기)를 다룬다.</li>
+<li><b>왜 넘침 과제를 넣었나</b>: 8칸에는 255까지만 들어간다. 200 + 100의 답이 44로 보이는 것은 컴퓨터가 "틀린" 것이 아니라 칸이 모자란 것이다. 게임 점수나 계좌 잔액에서 실제로 일어나는 버그의 원인이기도 하다.</li>
+</ul>
+</details>
+
+<h2 id="alu">6. 뺄셈과 곱셈은?</h2>
+<ul>
+<li><strong>뺄셈</strong>: 빼는 수를 특별한 방법(2의 보수: 비트를 모두 뒤집고 1을 더하기)으로 바꾸면 <strong>덧셈기를 그대로</strong> 쓸 수 있다. 회로를 새로 만들 필요가 없다.</li>
+<li><strong>곱셈</strong>: 손으로 하는 곱셈처럼 &quot;자리를 옮겨 가며 더하기&quot;를 반복한다. 역시 덧셈기가 핵심이다.</li>
+<li><strong>ALU</strong>: 덧셈기에 AND, OR 같은 게이트를 함께 넣고, &quot;이번엔 무엇을 할지&quot; 고르는 신호를 붙인 상자를 <strong>ALU</strong>(산술 논리 장치)라고 부른다. CPU 안에서 실제 계산을 하는 부분이다.</li>
+</ul>
+<h2 id="summary">7. 정리</h2>
+<ul>
+<li>이진수 한 자리 덧셈은 <strong>쓸 것 = XOR, 올릴 것 = AND</strong>다. 이것이 반가산기다.</li>
+<li>아랫자리 올림까지 받는 <strong>전가산기</strong>가 세로셈의 한 칸이다.</li>
+<li>전가산기를 줄 세우면 여러 자리 덧셈기가 된다. 올림은 오른쪽에서 왼쪽으로 <strong>물결처럼</strong> 흐른다.</li>
+<li>칸 수를 넘는 결과는 <strong>넘침</strong>(오버플로)이 된다.</li>
+<li>뺄셈과 곱셈도 덧셈기로 한다. 여기에 다른 게이트를 더한 상자가 <strong>ALU</strong>다.</li>
+</ul>
+<blockquote>
+<p><strong>이 층에서 접는 상자</strong>: &quot;ALU — 두 수와 명령을 넣으면 계산 결과가 나오는 상자.&quot;
+다음 층부터는 덧셈이 게이트로 어떻게 되는지 잊고, ALU 상자를 가져다 쓴다.</p>
+</blockquote>
+<p>그런데 계산 결과는 어디에 둘까? 지금 회로는 입력 스위치를 바꾸면 결과도 바로 바뀌고, 이전 결과는 사라진다.
+4층에서는 선 하나를 되돌려 이어서 <strong>값을 기억하는 회로</strong>를 만든다.</p>
+<h2 id="references">8. 참고 자료</h2>
+<ul>
+<li>Noam Nisan, Shimon Schocken, 『The Elements of Computing Systems』 2판 (MIT Press, 2021), <a href="https://www.nand2tetris.org/">nand2tetris.org</a> — 2장 과제가 반가산기, 전가산기, 여러 비트 덧셈기, ALU를 차례로 만드는 것이다. 이 층의 순서가 이 과제를 따른다.</li>
+<li>Charles Petzold, 『CODE』 2판 (Microsoft Press, 2022) — 릴레이로 만든 게이트를 엮어 덧셈 기계를 만드는 과정을 그림으로 보여 준다.</li>
+</ul>
+<p><a href="sim-bits_to_ai.html">↑ 사다리로</a> · 이전: <a href="sim-bits_to_ai-02_logic_gate.html">2층 논리 게이트</a> · 다음: 4층 기억과 클럭 (준비 중)</p>
+
+                <p class="back"><a href="#">↑ 맨 위로</a> · <a href="index_menu4_예제.html#sim">← 시뮬레이션 노트 목록으로</a></p>
+            </article>
+        </section>
+    </main>
+    <footer><p>안녕하세요. 곰도르 푸터 영역입니다.</p></footer>
+</body>
+</html>

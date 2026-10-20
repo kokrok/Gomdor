@@ -1,6 +1,6 @@
 # 2층. 트랜지스터와 논리 게이트 — 스위치가 판단을 하기까지
 
-<p><a href="sim-bits_to_ai.html">↑ 사다리로</a> · 이전: <a href="sim-bits_to_ai-01_bit.html">1층 비트</a> · <b>2층 논리 게이트</b> · 다음: 3층 덧셈 회로 (준비 중)</p>
+<p><a href="sim-bits_to_ai.html">↑ 사다리로</a> · 이전: <a href="sim-bits_to_ai-01_bit.html">1층 비트</a> · <b>2층 논리 게이트</b> · 다음: <a href="sim-bits_to_ai-03_adder.html">3층 덧셈 회로</a></p>
 
 1층에서 비트는 켜지고 꺼지는 스위치라고 했다. 그런데 컴퓨터 안의 스위치는 사람이 누르지 않는다.
 **스위치를 누르는 것도 전기**다. 이 생각 하나에서 "판단하는 회로"가 나온다.
@@ -122,4 +122,4 @@ NOT도, AND도, OR도, XOR도. 그리고 이 시리즈의 끝까지 올라가면
 - Noam Nisan, Shimon Schocken, 『The Elements of Computing Systems』 2판 (MIT Press, 2021), [nand2tetris.org](https://www.nand2tetris.org/) — 1장 과제가 NAND에서 NOT, AND, OR, XOR 등을 만드는 것이다. 이 체험의 모델이다.
 - Charles Petzold, 『CODE』 2판 (Microsoft Press, 2022) — 릴레이로 논리 게이트를 만드는 과정을 그림으로 보여 준다.
 
-<p><a href="sim-bits_to_ai.html">↑ 사다리로</a> · 이전: <a href="sim-bits_to_ai-01_bit.html">1층 비트</a> · 다음: 3층 덧셈 회로 (준비 중)</p>
+<p><a href="sim-bits_to_ai.html">↑ 사다리로</a> · 이전: <a href="sim-bits_to_ai-01_bit.html">1층 비트</a> · 다음: <a href="sim-bits_to_ai-03_adder.html">3층 덧셈 회로</a></p>

@@ -219,3 +219,50 @@ details.why ul {
     border: 1px solid #ccc;
     padding: 6px 8px;
 }
+/* 0과 1에서 AI까지 3층: 8비트 덧셈기 (이름 칸 + 넘침 칸 + 8칸) */
+.add-grid {
+    display: grid;
+    grid-template-columns: 2.6em repeat(9, 1fr);
+    gap: 3px;
+    max-width: 480px;
+    margin: 8px 0;
+    font-family: Consolas, monospace;
+}
+.add-cell {
+    text-align: center;
+    min-height: 1.6em;
+    line-height: 1.6em;
+}
+.add-name {
+    text-align: left;
+    color: #666;
+    font-family: sans-serif;
+}
+.add-place {
+    font-size: 0.7em;
+    color: #888;
+}
+.add-carry {
+    color: #e08000;
+    font-weight: bold;
+}
+.demo .add-switch {
+    width: 100%;
+    padding: 4px 0;
+    font: bold 1.1em Consolas, monospace;
+}
+.add-sum-row {
+    border-top: 2px solid #333;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+.add-working {
+    background: #fff3b0;
+    border-radius: 4px;
+}
+.add-overflow {
+    color: #c00;
+}
+.add-numbers input {
+    width: 4.5em;
+}
