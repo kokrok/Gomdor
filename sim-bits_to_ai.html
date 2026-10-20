@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!-- 자동 생성 파일: 이 파일 대신 같은 이름의 .md를 고치고 npm run build 하세요. -->
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>곰도르 - 0과 1에서 AI까지 — 11단계로 올라가는 사다리</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="webdev-note.css" />
+    <script src="menu.js" defer></script>
+    
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">곰도르의 홈페이지 해더 영역</a></h1>
+    </header>
+    <main>
+        <nav id="site-menu"></nav>
+        <section>
+            <article>
+<h1>0과 1에서 AI까지 — 11단계로 올라가는 사다리</h1>
+<p>휴대폰 속 AI도, 공장의 로봇도, 맨 아래로 내려가면 <strong>켜짐(1)과 꺼짐(0)</strong> 뿐이다.
+이 시리즈는 0과 1에서 출발해 계산하는 기계, 프로그램, 인터넷, 로봇, AI까지 한 칸씩 올라간다.</p>
+<p>단계마다 <strong>직접 눌러 보는 체험</strong>이 하나씩 있다. 수식은 거의 없다.</p>
+<h2 id="how">이렇게 읽으세요</h2>
+<ul>
+<li>한 단계에서 만든 것은 다음 단계에서 <strong>상자 하나</strong>로 접힌다.
+상자 안이 어떻게 생겼는지는 잊고, 상자가 하는 일만 기억하면 된다.
+이렇게 안을 숨기고 겉만 쓰는 것을 <strong>추상화</strong>라고 부른다. 이 시리즈에서 가장 중요한 단어다.</li>
+<li><strong>XOR</strong>이라는 작은 규칙이 여러 번 나온다. 2단계에서 처음 만나고, 3단계에서 덧셈의 핵심이 되고,
+10단계에서 AI를 한 번 좌절시키고, 11단계에서 마침내 풀린다. 다시 나올 때마다 반가워해 주세요.</li>
+</ul>
+<h2 id="ladder">사다리</h2>
+<p>아래에서 위로 올라간다. 아직 만들지 않은 단계는 링크가 없다.</p>
+<table>
+<thead>
+<tr>
+<th>층</th>
+<th>단계</th>
+<th>핵심 질문</th>
+<th>직접 해 보는 것</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>11</td>
+<td>신경망과 AI</td>
+<td>층을 쌓으면 무엇이 되나?</td>
+<td>은닉층을 더해 XOR 풀기, 전체 줌아웃</td>
+</tr>
+<tr>
+<td>10</td>
+<td>학습: 퍼셉트론</td>
+<td>규칙을 짜지 않고 데이터로 찾을 수 있나?</td>
+<td>점을 찍으면 경계선이 스스로 움직인다</td>
+</tr>
+<tr>
+<td>9</td>
+<td>로봇: 피드백 제어</td>
+<td>로봇은 어떻게 목표를 따라가나?</td>
+<td>로봇 팔의 P·I·D 값 조절</td>
+</tr>
+<tr>
+<td>8</td>
+<td>네트워크와 인터넷</td>
+<td>0과 1이 어떻게 지구 반대편까지 가나?</td>
+<td>메시지를 패킷으로 나눠 보내고, 잃어버린 패킷 다시 보내기</td>
+</tr>
+<tr>
+<td>7</td>
+<td>입출력과 운영체제</td>
+<td>프로그램이 어떻게 바깥 세상을 만지나?</td>
+<td>주소에 값을 쓰면 LED가 켜진다</td>
+</tr>
+<tr>
+<td>6</td>
+<td>프로그래밍 언어</td>
+<td>사람의 코드가 어떻게 기계어가 되나?</td>
+<td>코드 · 어셈블리 · 기계어 나란히 보기</td>
+</tr>
+<tr>
+<td>5</td>
+<td>CPU</td>
+<td>회로가 어떻게 명령을 따르나?</td>
+<td>장난감 CPU를 한 단계씩 돌리기</td>
+</tr>
+<tr>
+<td>4</td>
+<td>기억과 클럭</td>
+<td>회로가 어떻게 값을 기억하나?</td>
+<td>선 하나를 되돌려 연결하면 기억이 생긴다</td>
+</tr>
+<tr>
+<td>3</td>
+<td>덧셈 회로</td>
+<td>스위치로 어떻게 계산을 하나?</td>
+<td>자리올림이 전파되는 8비트 덧셈기</td>
+</tr>
+<tr>
+<td>2</td>
+<td>트랜지스터와 논리 게이트</td>
+<td>스위치로 어떻게 판단을 하나?</td>
+<td>NAND만으로 XOR 만들기</td>
+</tr>
+<tr>
+<td>1</td>
+<td><a href="sim-bits_to_ai-01_bit.html">비트</a></td>
+<td>켜짐과 꺼짐이 어떻게 정보가 되나?</td>
+<td>스위치 8개로 숫자·글자·색 만들기</td>
+</tr>
+</tbody></table>
+<h2 id="groups">세 묶음으로 보면</h2>
+<ul>
+<li><strong>1~5층 하드웨어</strong>: 스위치에서 출발해 계산하고 기억하고 명령을 따르는 기계(CPU)를 만든다.</li>
+<li><strong>6~8층 소프트웨어</strong>: 사람이 쓴 글(코드)이 기계어가 되고, 바깥 세상과 다른 컴퓨터에 닿는다.</li>
+<li><strong>9~11층 로봇과 AI</strong>: 정해진 규칙으로 움직이는 기계에서, 데이터로 규칙을 스스로 찾는 기계로 넘어간다.</li>
+</ul>
+<blockquote>
+<p>일반인용 11단계를 먼저 만들고, 그다음 단계마다 <strong>심화편</strong>(반도체 소자, 회로 지연, 파이프라인, 역전파 수식 등)을 따로 붙일 예정이다.</p>
+</blockquote>
+
+                <p class="back"><a href="#">↑ 맨 위로</a> · <a href="index_menu4_예제.html#sim">← 시뮬레이션 노트 목록으로</a></p>
+            </article>
+        </section>
+    </main>
+    <footer><p>안녕하세요. 곰도르 푸터 영역입니다.</p></footer>
+</body>
+</html>
