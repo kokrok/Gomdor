@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<!-- 자동 생성 파일: 이 파일 대신 같은 이름의 .md를 고치고 npm run build 하세요. -->
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>곰도르 - 1층. 비트 — 켜짐과 꺼짐이 정보가 되기까지</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="webdev-note.css" />
+    <script src="menu.js" defer></script>
+    <script src="sim-bits_to_ai-01_bit.demo.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">곰도르의 홈페이지 해더 영역</a></h1>
+    </header>
+    <main>
+        <nav id="site-menu"></nav>
+        <section>
+            <article>
+<h1>1층. 비트 — 켜짐과 꺼짐이 정보가 되기까지</h1>
+<p><a href="sim-bits_to_ai.html">↑ 사다리로</a> · <b>1층 비트</b> · 다음: <a href="sim-bits_to_ai-02_logic_gate.html">2층 트랜지스터와 논리 게이트</a></p>
+
+<p>컴퓨터가 아는 것은 딱 두 가지, <strong>켜짐</strong>과 <strong>꺼짐</strong>이다. 이것을 <strong>1</strong>과 <strong>0</strong>이라고 쓴다.
+그런데 어떻게 이 두 가지만으로 글자와 사진과 음악을 담을까?</p>
+<p><strong>목차</strong></p>
+<ol>
+<li><a href="#switch">스위치 하나 = 비트 하나</a></li>
+<li><a href="#why_two">왜 두 가지만 쓰나</a></li>
+<li><a href="#byte">비트를 모으면</a></li>
+<li><a href="#demo">체험: 스위치 8개</a></li>
+<li><a href="#meaning">같은 비트, 다른 뜻</a></li>
+<li><a href="#summary">정리</a></li>
+<li><a href="#references">참고 자료</a></li>
+</ol>
+<hr>
+<h2 id="switch">1. 스위치 하나 = 비트 하나</h2>
+<p>방의 전등 스위치를 떠올려 보자. 스위치는 켜져 있거나 꺼져 있다. 그 중간은 없다.
+스위치 하나가 담을 수 있는 정보는 &quot;예 / 아니요&quot; 하나다. 이 정보의 가장 작은 단위를 **비트(bit)**라고 부른다.</p>
+<p>컴퓨터 안에도 스위치가 있다. 다만 손으로 누르는 스위치가 아니라 <strong>전기로 켜고 끄는 아주 작은 스위치</strong>다.
+휴대폰 칩 하나에 이런 스위치가 <strong>수백억 개</strong> 들어 있고, 1초에 <strong>수십억 번</strong> 켜졌다 꺼진다.
+이 스위치의 정체(트랜지스터)는 다음 층에서 자세히 본다.</p>
+<h2 id="why_two">2. 왜 두 가지만 쓰나</h2>
+<p>전기는 0볼트, 0.3볼트, 0.7볼트처럼 얼마든지 잘게 나눌 수 있다. 그런데 왜 굳이 &quot;켜짐/꺼짐&quot; 두 가지만 쓸까?</p>
+<p><strong>헷갈리지 않기 위해서다.</strong> 멀리 있는 친구에게 손전등으로 신호를 보낸다고 해 보자.</p>
+<ul>
+<li>밝기를 10단계로 나눠 숫자를 보내면, 안개가 끼거나 건전지가 약해질 때 &quot;6이었나, 7이었나?&quot; 헷갈린다.</li>
+<li>&quot;켰다 / 껐다&quot;만 보내면, 안개가 껴도 웬만해서는 틀리지 않는다.</li>
+</ul>
+<p>전선 속 전기 신호도 늘 조금씩 흔들린다(잡음). 그래서 컴퓨터는 &quot;기준보다 높으면 1, 낮으면 0&quot;으로 넉넉하게 판단한다.
+조금 흔들려도 답이 바뀌지 않는 것, 이것이 디지털의 힘이다.</p>
+<h2 id="byte">3. 비트를 모으면</h2>
+<p>스위치 하나로는 두 가지(0, 1)밖에 말할 수 없다. 스위치를 늘리면 말할 수 있는 것이 <strong>두 배씩</strong> 늘어난다.</p>
+<table>
+<thead>
+<tr>
+<th>스위치 개수</th>
+<th>가능한 조합</th>
+<th>경우의 수</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1개</td>
+<td>0, 1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>2개</td>
+<td>00, 01, 10, 11</td>
+<td>4</td>
+</tr>
+<tr>
+<td>3개</td>
+<td>000, 001, …, 111</td>
+<td>8</td>
+</tr>
+<tr>
+<td>8개</td>
+<td>00000000 ~ 11111111</td>
+<td><strong>256</strong></td>
+</tr>
+</tbody></table>
+<p>비트 8개 묶음을 **바이트(byte)**라고 부른다. 256가지면 숫자 0~255를 나타낼 수 있다.</p>
+<p>어떻게 숫자로 읽을까? 우리가 쓰는 십진수에서 <code>305</code>는 <code>3×100 + 0×10 + 5×1</code>이다. 자리마다 <strong>자릿값</strong>(1, 10, 100…)이 있다.
+이진수도 똑같다. 다만 자릿값이 10배가 아니라 <strong>2배씩</strong> 커진다.</p>
+<table>
+<thead>
+<tr>
+<th>자릿값</th>
+<th>128</th>
+<th>64</th>
+<th>32</th>
+<th>16</th>
+<th>8</th>
+<th>4</th>
+<th>2</th>
+<th>1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>스위치</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<p>켜진 자리의 자릿값만 더하면 된다. 위의 예는 <code>64 + 1 = 65</code>다.</p>
+<h2 id="demo">4. 체험: 스위치 8개</h2>
+<div class="demo">
+<p class="demo-title">🔬 체험: 스위치를 눌러 보세요</p>
+<div id="bit-switches" class="bit-switches"></div>
+<div id="bit-views" class="bit-views"></div>
+<p><b>도전 과제</b> — 스위치를 눌러서 만들어 보세요.</p>
+<ul id="bit-goals" class="bit-goals"></ul>
+<p><button id="bit-reset">모두 끄기</button></p>
+</div>
+
+<details class="why">
+<summary>이 체험을 만든 이유</summary>
+<ul>
+<li><b>왜 8개인가</b>: 8비트는 1바이트다. 아스키 글자 하나와 회색 밝기 한 단계(0~255)가 정확히 이 크기라서, 한 묶음을 세 가지로 동시에 해석해 보일 수 있다.</li>
+<li><b>왜 세 가지 해석을 동시에 보이나</b>: 처음 배우는 사람은 흔히 "01000001은 원래 A다"처럼 비트에 뜻이 박혀 있다고 생각한다. 같은 비트가 동시에 65이고 A이고 어두운 회색인 것을 보면 이 오해가 바로 깨진다.</li>
+<li><b>왜 A와 a 과제를 넣었나</b>: 아스키는 대문자와 소문자가 32(비트 하나)만 다르도록 일부러 설계되었다. 약속은 사람이 다루기 편하게 만든 것이라는 점을 직접 발견하게 하려는 것이다.</li>
+<li><b>왜 버튼에 자릿값을 적었나</b>: CS Unplugged의 이진수 카드 활동(점 1, 2, 4, 8, 16개가 그려진 카드를 뒤집어 수를 만든다)과 같은 방식이다. 2진법 공식을 몰라도 켜진 자리를 더하기만 하면 숫자가 나온다. 초등학생 대상으로 널리 검증된 활동이다.</li>
+</ul>
+</details>
+
+<p>같은 8개의 스위치가 <strong>숫자로도, 글자로도, 밝기로도</strong> 읽힌다는 데 주목하자.
+도전 과제의 <code>A</code>(65)와 <code>a</code>(97)는 스위치 <strong>딱 하나</strong>만 다르다. 어느 스위치인지 찾아보자.</p>
+<h2 id="meaning">5. 같은 비트, 다른 뜻</h2>
+<p><code>01000001</code>은 숫자일까, 글자일까, 색일까? <strong>비트 자체에는 뜻이 없다.</strong> 뜻은 사람들이 정한 <strong>약속</strong>이 준다.</p>
+<ul>
+<li><strong>글자</strong>: &quot;65번은 <code>A</code>, 66번은 <code>B</code>…&quot; 하고 번호표를 붙인 약속이 **아스키(ASCII)**다.
+한글은 글자 수가 많아서 바이트 여러 개를 쓴다. 예를 들어 <code>가</code>는 <strong>3바이트</strong>(비트 24개)로 저장된다.</li>
+<li><strong>색</strong>: 화면의 점(화소) 하나는 빨강·초록·파랑의 밝기를 바이트 하나씩, 모두 <strong>3바이트</strong>로 나타낸다.
+1200만 화소 사진이면 압축하기 전 3600만 바이트, 약 <strong>36 MB</strong>다.</li>
+<li><strong>소리</strong>: 마이크로 들어온 공기의 떨림을 1초에 4만 번 넘게 재서 숫자로 적는다.</li>
+<li><strong>프로그램</strong>: 컴퓨터에게 내리는 명령도 결국 바이트다. 이것은 5층(CPU)에서 다시 만난다.</li>
+</ul>
+<p>그래서 컴퓨터는 파일 이름 끝의 <code>.txt</code>, <code>.jpg</code>, <code>.mp3</code>나 파일 맨 앞에 적힌 표시를 보고 &quot;이 비트들은 어떤 약속으로 읽어라&quot;를 정한다.
+약속을 잘못 고르면 글자가 깨져서 <code>ë¬¸ìž</code> 같은 이상한 글자가 보인다. 비트는 그대로인데 해석만 틀린 것이다.</p>
+<h2 id="summary">6. 정리</h2>
+<ul>
+<li><strong>비트</strong>는 켜짐(1)/꺼짐(0) 하나, <strong>바이트</strong>는 비트 8개(256가지)다.</li>
+<li>두 가지만 쓰는 이유는 <strong>잡음에 강하기 때문</strong>이다.</li>
+<li>비트에는 뜻이 없다. **약속(해석)**이 숫자, 글자, 색, 소리, 명령으로 만든다.</li>
+</ul>
+<blockquote>
+<p><strong>이 층에서 접는 상자</strong>: &quot;비트 묶음은 무엇이든 나타낼 수 있다.&quot;
+다음 층부터는 비트를 일일이 세지 않고, &quot;숫자 하나&quot;, &quot;글자 하나&quot;처럼 묶음으로 생각한다.</p>
+</blockquote>
+<p>그런데 이 스위치는 <strong>누가</strong> 켜고 끌까? 사람이 누르지 않는데도 말이다.
+답은 &quot;스위치가 다른 스위치를 켠다&quot;이다. 이것이 <strong>트랜지스터</strong>이고, 2층의 주제다.</p>
+<h2 id="references">7. 참고 자료</h2>
+<ul>
+<li><a href="https://classic.csunplugged.org/activities/binary-numbers/">CS Unplugged, &quot;Binary Numbers&quot;</a> — 점 카드로 이진수를 세는 활동. 이 체험의 직접적인 모델이다.</li>
+<li>Charles Petzold, 『CODE』 2판 (Microsoft Press, 2022) — 손전등 신호에서 출발해 컴퓨터까지 올라가는 책. 이 시리즈 전체 흐름의 모델이다.</li>
+<li>Noam Nisan, Shimon Schocken, 『The Elements of Computing Systems』 2판 (MIT Press, 2021), <a href="https://www.nand2tetris.org/">nand2tetris.org</a> — NAND 게이트 하나에서 CPU와 컴파일러까지 직접 만드는 과정. 2~6층의 모델이다.</li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc20">RFC 20, &quot;ASCII format for Network Interchange&quot;</a> — 아스키 표. <code>A</code> = 65, <code>a</code> = 97의 근거.</li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc3629">RFC 3629, &quot;UTF-8&quot;</a> — 한글 한 글자(U+AC00 <code>가</code> 등)가 3바이트로 저장되는 근거.</li>
+</ul>
+<p><a href="sim-bits_to_ai.html">↑ 사다리로</a> · 다음: <a href="sim-bits_to_ai-02_logic_gate.html">2층 트랜지스터와 논리 게이트</a></p>
+
+                <p class="back"><a href="#">↑ 맨 위로</a> · <a href="index_menu4_예제.html#sim">← 시뮬레이션 노트 목록으로</a></p>
+            </article>
+        </section>
+    </main>
+    <footer><p>안녕하세요. 곰도르 푸터 영역입니다.</p></footer>
+</body>
+</html>

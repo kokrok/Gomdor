@@ -111,3 +111,158 @@ article :target {
     background: #fff;
     border: 1px solid #ccc;
 }
+/* 0과 1에서 AI까지 1층: 스위치 8개 체험 */
+.bit-switches {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 4px;
+    max-width: 480px;
+}
+.demo .bit-switch {
+    margin: 0;
+    padding: 6px 0;
+    border: 2px solid #888;
+    border-radius: 6px;
+    background: #eee;
+    color: #555;
+    cursor: pointer;
+}
+.demo .bit-switch[aria-pressed="true"] {
+    background: #ffd84d;
+    border-color: #c99a00;
+    color: #000;
+}
+.bit-digit {
+    display: block;
+    font: bold 1.4em Consolas, monospace;
+}
+.bit-place {
+    display: block;
+    font-size: 0.75em;
+}
+.bit-views {
+    margin: 10px 0;
+    line-height: 2;
+}
+.bit-label {
+    display: inline-block;
+    width: 3em;
+    color: #666;
+}
+.bit-char {
+    font: bold 1.3em Consolas, monospace;
+}
+.bit-swatch {
+    display: inline-block;
+    width: 2.4em;
+    height: 1.2em;
+    vertical-align: middle;
+    border: 1px solid #888;
+}
+.bit-goals {
+    list-style: none;
+    padding-left: 0;
+}
+.bit-goal-done {
+    color: #378854;
+    font-weight: bold;
+}
+/* 체험 아래 "이 체험을 만든 이유" (접어 두기) */
+details.why {
+    margin: 8px 0 12px;
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    background: #fafafa;
+}
+details.why summary {
+    cursor: pointer;
+    color: #555;
+    font-weight: bold;
+}
+details.why ul {
+    margin: 6px 0 0;
+}
+/* 0과 1에서 AI까지 2층: NAND 퍼즐 */
+.demo #gate-levels button[aria-pressed="true"] {
+    font-weight: bold;
+    background: #00BFFF;
+    color: #fff;
+}
+.gate-svg {
+    display: block;
+    width: 100%;
+    max-width: 480px;
+    background: #fff;
+    border: 1px solid #ccc;
+}
+.demo .gate-input {
+    width: 3em;
+}
+.gate-wiring {
+    font-family: Consolas, monospace;
+    line-height: 2;
+}
+.gate-wiring select {
+    font-family: inherit;
+}
+.gate-now {
+    background: #fff3b0;
+}
+.gate-result {
+    font-weight: bold;
+}
+.gate-ok {
+    color: #378854;
+}
+.gate-hint {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 6px 8px;
+}
+/* 0과 1에서 AI까지 3층: 8비트 덧셈기 (이름 칸 + 넘침 칸 + 8칸) */
+.add-grid {
+    display: grid;
+    grid-template-columns: 2.6em repeat(9, 1fr);
+    gap: 3px;
+    max-width: 480px;
+    margin: 8px 0;
+    font-family: Consolas, monospace;
+}
+.add-cell {
+    text-align: center;
+    min-height: 1.6em;
+    line-height: 1.6em;
+}
+.add-name {
+    text-align: left;
+    color: #666;
+    font-family: sans-serif;
+}
+.add-place {
+    font-size: 0.7em;
+    color: #888;
+}
+.add-carry {
+    color: #e08000;
+    font-weight: bold;
+}
+.demo .add-switch {
+    width: 100%;
+    padding: 4px 0;
+    font: bold 1.1em Consolas, monospace;
+}
+.add-sum-row {
+    border-top: 2px solid #333;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+.add-working {
+    background: #fff3b0;
+    border-radius: 4px;
+}
+.add-overflow {
+    color: #c00;
+}
+.add-numbers input {
+    width: 4.5em;
+}
