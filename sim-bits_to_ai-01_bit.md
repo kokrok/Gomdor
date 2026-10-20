@@ -13,6 +13,7 @@
 4. [체험: 스위치 8개](#demo)
 5. [같은 비트, 다른 뜻](#meaning)
 6. [정리](#summary)
+7. [참고 자료](#references)
 
 ---
 
@@ -70,6 +71,16 @@
 <p><button id="bit-reset">모두 끄기</button></p>
 </div>
 
+<details class="why">
+<summary>이 체험을 만든 이유</summary>
+<ul>
+<li><b>왜 8개인가</b>: 8비트는 1바이트다. 아스키 글자 하나와 회색 밝기 한 단계(0~255)가 정확히 이 크기라서, 한 묶음을 세 가지로 동시에 해석해 보일 수 있다.</li>
+<li><b>왜 세 가지 해석을 동시에 보이나</b>: 처음 배우는 사람은 흔히 "01000001은 원래 A다"처럼 비트에 뜻이 박혀 있다고 생각한다. 같은 비트가 동시에 65이고 A이고 어두운 회색인 것을 보면 이 오해가 바로 깨진다.</li>
+<li><b>왜 A와 a 과제를 넣었나</b>: 아스키는 대문자와 소문자가 32(비트 하나)만 다르도록 일부러 설계되었다. 약속은 사람이 다루기 편하게 만든 것이라는 점을 직접 발견하게 하려는 것이다.</li>
+<li><b>왜 버튼에 자릿값을 적었나</b>: CS Unplugged의 이진수 카드 활동(점 1, 2, 4, 8, 16개가 그려진 카드를 뒤집어 수를 만든다)과 같은 방식이다. 2진법 공식을 몰라도 켜진 자리를 더하기만 하면 숫자가 나온다. 초등학생 대상으로 널리 검증된 활동이다.</li>
+</ul>
+</details>
+
 같은 8개의 스위치가 **숫자로도, 글자로도, 밝기로도** 읽힌다는 데 주목하자.
 도전 과제의 `A`(65)와 `a`(97)는 스위치 **딱 하나**만 다르다. 어느 스위치인지 찾아보자.
 
@@ -98,5 +109,13 @@
 
 그런데 이 스위치는 **누가** 켜고 끌까? 사람이 누르지 않는데도 말이다.
 답은 "스위치가 다른 스위치를 켠다"이다. 이것이 **트랜지스터**이고, 2층의 주제다.
+
+## 7. 참고 자료 {#references}
+
+- [CS Unplugged, "Binary Numbers"](https://classic.csunplugged.org/activities/binary-numbers/) — 점 카드로 이진수를 세는 활동. 이 체험의 직접적인 모델이다.
+- Charles Petzold, 『CODE』 2판 (Microsoft Press, 2022) — 손전등 신호에서 출발해 컴퓨터까지 올라가는 책. 이 시리즈 전체 흐름의 모델이다.
+- Noam Nisan, Shimon Schocken, 『The Elements of Computing Systems』 2판 (MIT Press, 2021), [nand2tetris.org](https://www.nand2tetris.org/) — NAND 게이트 하나에서 CPU와 컴파일러까지 직접 만드는 과정. 2~6층의 모델이다.
+- [RFC 20, "ASCII format for Network Interchange"](https://www.rfc-editor.org/rfc/rfc20) — 아스키 표. `A` = 65, `a` = 97의 근거.
+- [RFC 3629, "UTF-8"](https://www.rfc-editor.org/rfc/rfc3629) — 한글 한 글자(U+AC00 `가` 등)가 3바이트로 저장되는 근거.
 
 <p><a href="sim-bits_to_ai.html">↑ 사다리로</a> · 다음: 2층 트랜지스터와 논리 게이트 (준비 중)</p>
